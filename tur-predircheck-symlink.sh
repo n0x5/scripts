@@ -1,6 +1,7 @@
 #!/bin/bash
 VER=1.4.1
 
+# modified for adding symlink automatically
 #--[ Different Case Settings ]----------------------------------------#
 
 SKIPSECTIONS=""
