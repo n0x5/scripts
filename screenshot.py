@@ -6,7 +6,7 @@ driver = webdriver.PhantomJS()
 htt = 'http://'
 url2 = sys.argv[1]
 url = htt + url2
-today = time.strftime("_%m_%Y")
+today = time.strftime("__%m_%Y_%R")
 
 driver.get(url)
 driver.get_screenshot_as_file('screen_{1}_{0}.jpg' .format(today, url2))
