@@ -13,8 +13,7 @@ from os import walk
 str(drpath)
 f = []
 for (dirpath, dirnames, filenames) in walk(drpath):
-    #f.extend('{0!s}'.format(ftype))
-    #for f in dirnames:
+  
         
     f.extend(dirnames)
     b = open( fname, 'a' )
