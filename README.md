@@ -1,3 +1,3 @@
-# screenshot.py
+# scripts
 
-Create a screenshot with python
+various scripts
