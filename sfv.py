@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Python SFV Creator sfv.py <file> 
 import sys
 import binascii
 
