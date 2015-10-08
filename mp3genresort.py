@@ -5,7 +5,7 @@ import os
 import errno
 from mutagen.id3 import ID3
 
-rootdir = 'F:\python\mp3'
+rootdir = 'J:\\archive\mp3\mp3-2'
 
 
 for subdir, dirs, files in os.walk(rootdir):
@@ -16,10 +16,10 @@ for subdir, dirs, files in os.walk(rootdir):
                 audio = ID3(file2)
                 sf = format(audio['TCON'].text[0])
                 path2 = os.path.join(subdir)
-                rootdir2 = 'F:\python\mp3\{}' .format(sf)
+                rootdir2 = os.path.join(rootdir, sf)
                 if not os.path.exists(rootdir2): os.makedirs(rootdir2)
                 basenm2 = os.path.basename(path2)
                 basen3 = path2, os.path.join(rootdir2, basenm2)
-                shutil.move(path2, os.path.join(rootdir2, basenm2))
+                shutil.copytree(path2, os.path.join(rootdir2, basenm2), copy_function=os.symlink)
             except:
                 pass
