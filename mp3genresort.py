@@ -20,6 +20,6 @@ for subdir, dirs, files in os.walk(rootdir):
                 if not os.path.exists(rootdir2): os.makedirs(rootdir2)
                 basenm2 = os.path.basename(path2)
                 basen3 = path2, os.path.join(rootdir2, basenm2)
-                shutil.copytree(path2, os.path.join(rootdir2, basenm2), copy_function=os.link)
+                shutil.move(path2, os.path.join(rootdir2, basenm2))
             except:
                 pass
