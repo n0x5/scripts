@@ -6,7 +6,6 @@ import datetime
 import pymysql
 import itertools
 
-
 rootdir = 'S:\\archive\\mp3\\'
 labelfile = 'F:\\python\\labels.txt'
 
@@ -25,8 +24,6 @@ def labels(fn):
         outpt = [item for item in labels if item in nfos]
         return ( ", ".join( str(e) for e in outpt ) )
 
-
-
 for subdir, dirs, files in os.walk(rootdir):
     for fn in files:
         if fn.endswith(".nfo"):
@@ -38,7 +35,6 @@ for subdir, dirs, files in os.walk(rootdir):
                 file5 = file4[-1:]
                 file6 = "[]".join(file5) 
                 store(basenm2, file6, labels(file2))
-                  
             except:
                 pass
  
