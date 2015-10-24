@@ -19,7 +19,7 @@ def store(title, grp, label):
 def labels(fn):
     with open(file2, "r") as f, open(labelfile, "r") as g:
         labels = [line.strip().lower().replace(".", " ").replace(" ", "") for line in g.readlines()]
-        nfos = [line.strip().lower().replace(".", " ").replace("/", "").replace("|", "").replace("\\", "").replace("_", "").replace(":", "").replace("!", " ").replace("label", " ").replace(" ", "") for line in f.readlines()]
+        nfos = [line.strip().lower().replace(".", " ").replace("/", "").replace("|", "").replace("\", "").replace("_", "").replace(":", "").replace("!", " ").replace("label", " ").replace(" ", "") for line in f.readlines()]
         outpt = [item for item in labels if item in nfos]
         return ( ", ".join( str(e) for e in outpt ) )
 
