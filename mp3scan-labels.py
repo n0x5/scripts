@@ -4,7 +4,6 @@ import shutil
 import os
 import datetime
 import pymysql
-import itertools
 
 rootdir = 'S:\\archive\\mp3\\'
 labelfile = 'F:\\python\\labels.txt'
