@@ -24,7 +24,7 @@ def genrs(fn):
             elif "sci-fi" in genres.lower():
                 return 'Sci-Fi'
             elif "adventure" in genres.lower():
-                return 'adventure'
+                return 'Adventure'
             elif "romance" in genres.lower():
                 return 'Romance'
             elif "drama" in genres.lower():
