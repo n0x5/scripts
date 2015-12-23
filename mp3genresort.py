@@ -9,7 +9,7 @@ rootdir = 'J:\\archive\\mp3\\mp3-2'
 
 for subdir, dirs, files in os.walk(rootdir):
     for fn in files:
-        if fn.endswith(".mp3"):
+        if fn.startswith("01"):
             try:
                 file2 = os.path.join(subdir, fn)
                 audio = ID3(file2)
