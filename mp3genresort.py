@@ -2,10 +2,9 @@
 
 import shutil
 import os
-import errno
 from mutagen.id3 import ID3
 
-rootdir = 'J:\\archive\mp3\mp3-2'
+rootdir = 'J:\\archive\\mp3\\mp3-2'
 
 
 for subdir, dirs, files in os.walk(rootdir):
