@@ -3,9 +3,8 @@
 import shutil
 import os
 import datetime
-import pymysql
 
-rootdir = 'I:\\path\\to\\movies'
+rootdir = 'F:\\archive\\xvid-old-DONE'
 fname = 'xvidgenres.html'
 b = open( fname, 'a' )
 b.write("<!DOCTYPE html><html><body><h2>Movie List</h2><table class=\"sortable\" style=\"width:100%\"><script src=\"sorttable.js\"></script>")
@@ -19,21 +18,25 @@ def store(title, grp, genre):
 def genrs(fn):
     filn = open(fn, "r")
     for genres in filn:
-        if "genre".lower() in genres.lower():
-            if "horror".lower() in genres.lower():
-                return ('Horror')
-            elif "sci-fi".lower() in genres.lower():
-                return ('Sci-Fi')
-            elif "drama".lower() in genres.lower():
-                return ('Drama')
-            elif "fantasy".lower() in genres.lower():
-                return ('Fantasy')
-            elif "thriller".lower() in genres.lower():
-                return ('Thriller')
-            elif "comedy".lower() in genres.lower():
-                return ('Comedy')
-            elif "action".lower() in genres.lower():
-                return ('Action')
+        if "genre" in genres.lower():
+            if "horror" in genres.lower():
+                return 'Horror'
+            elif "sci-fi" in genres.lower():
+                return 'Sci-Fi'
+            elif "adventure" in genres.lower():
+                return 'adventure'
+            elif "romance" in genres.lower():
+                return 'Romance'
+            elif "drama" in genres.lower():
+                return 'Drama'
+            elif "fantasy" in genres.lower():
+                return 'Fantasy'
+            elif "thriller" in genres.lower():
+                return 'Thriller'
+            elif "comedy" in genres.lower():
+                return 'Comedy'
+            elif "action" in genres.lower():
+                return 'Action'
     filn.close()
 
 for subdir, dirs, files in os.walk(rootdir):
@@ -41,13 +44,9 @@ for subdir, dirs, files in os.walk(rootdir):
         if fn.endswith(".nfo"):
             try:
                 file2 = os.path.join(subdir, fn)
-                path2 = os.path.join(subdir)
-                basenm2 = os.path.basename(path2)
-                file4 = basenm2.split('-')
-                file5 = file4[-1:]
-                file6 = "[]".join(file5)
-                store(basenm2, file6, genrs(file2))
-                                
+                basenm2 = os.path.basename(os.path.join(subdir))
+                file6 = "[]".join(basenm2.split('-')[-1:])
+                store(basenm2, file6, genrs(os.path.join(subdir, fn)))
             except:
                 pass
 
