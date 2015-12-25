@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
+import shutil
 import os
 import datetime
 import time
 
 today = time.strftime("__%m_%Y_%H_%M_%S")
-rootdir = 'F:\\archive\\xvid-old-DONE'
+
+cwd = os.getcwd()
+os.chdir(cwd)
+
+rootdir = cwd
+
 fname = 'xvidgenres_{}.html' .format(today)
 b = open( fname, 'a' )
 b.write("<!DOCTYPE html><html><body><h2>Movie List</h2><table class=\"sortable\" style=\"width:100%\"><script src=\"sorttable.js\"></script>")
