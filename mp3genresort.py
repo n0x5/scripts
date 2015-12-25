@@ -4,8 +4,10 @@ import shutil
 import os
 from mutagen.id3 import ID3
 
-rootdir = 'J:\\archive\\mp3\\mp3-2'
+cwd = os.getcwd()
+os.chdir(cwd)
 
+rootdir = cwd
 
 for subdir, dirs, files in os.walk(rootdir):
     for fn in files:
