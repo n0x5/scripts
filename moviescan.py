@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 
-import shutil
 import os
 import datetime
+import time
 
+today = time.strftime("__%m_%Y_%H_%M_%S")
 rootdir = 'F:\\archive\\xvid-old-DONE'
-fname = 'xvidgenres.html'
+fname = 'xvidgenres_{}.html' .format(today)
 b = open( fname, 'a' )
 b.write("<!DOCTYPE html><html><body><h2>Movie List</h2><table class=\"sortable\" style=\"width:100%\"><script src=\"sorttable.js\"></script>")
-b.write("<tr><th style=\"text-align:left\">Release</th><th style=\"text-align:left\">Group</th><th style=\"text-align:left\">Genre</th></tr>")
-b.write("<tr>")
+b.write("<tr><th style=\"text-align:left\">Release</th><th style=\"text-align:left\">Group</th><th style=\"text-align:left\">Genre</th><th style=\"text-align:left\">Format</th></tr>")
 
 def store(title, grp, genre):
-    print ("(\"{}\" \"{}\" \"{}\")" .format(basenm2, file6, genrs(file2)))
-    b.write("<tr><td>{}</td>  <td>{}</td> <td>{}</td></tr>\n" .format(basenm2, file6, genrs(file2)))
+    print ("(\"{}\" \"{}\" \"{}\" \"{}\")" .format(basenm2, file6, genrs(file2), file6, file7))
+    b.write("<tr><td>{}</td>  <td>{}</td> <td>{}</td><td>{}</td></tr>\n" .format(basenm2, file6, genrs(file2), file7))
 
 def genrs(fn):
     filn = open(fn, "r")
@@ -46,6 +46,7 @@ for subdir, dirs, files in os.walk(rootdir):
                 file2 = os.path.join(subdir, fn)
                 basenm2 = os.path.basename(os.path.join(subdir))
                 file6 = "[]".join(basenm2.split('-')[-1:])
+                file7 = "[]".join(basenm2.split('.')[-1:]).split('-')[0]
                 store(basenm2, file6, genrs(os.path.join(subdir, fn)))
             except:
                 pass
