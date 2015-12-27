@@ -14,8 +14,8 @@ rootdir = cwd
 
 fname = 'xvidgenres_{}.html' .format(today)
 b = open( fname, 'a' )
-b.write("<!DOCTYPE html><html><body><h2>Movie List</h2><table class=\"sortable\" style=\"width:100%\"><script src=\"sorttable.js\"></script>")
-b.write("<tr><th style=\"text-align:left\">Release</th><th style=\"text-align:left\">Group</th><th style=\"text-align:left\">Genre</th><th style=\"text-align:left\">Format</th></tr>")
+b.write('<!DOCTYPE html><html><body><h2>Movie List</h2><table class="sortable" style="width:100%"><script src="sorttable.js"></script>')
+b.write('<tr><th style="text-align:left">Release</th><th style="text-align:left">Group</th><th style="text-align:left">Genre</th><th style="text-align:left">Format</th></tr>\n')
 
 def store(title, grp, genre):
     print ("(\"{}\" \"{}\" \"{}\" \"{}\")" .format(basenm2, file6, genrs(file2), file6, file7))
@@ -43,7 +43,6 @@ def genrs(fn):
                 return 'Comedy'
             elif "action" in genres.lower():
                 return 'Action'
-    filn.close()
 
 for subdir, dirs, files in os.walk(rootdir):
     for fn in files:
@@ -53,9 +52,9 @@ for subdir, dirs, files in os.walk(rootdir):
                 basenm2 = os.path.basename(os.path.join(subdir))
                 file6 = "[]".join(basenm2.split('-')[-1:])
                 file7 = "[]".join(basenm2.split('.')[-1:]).split('-')[0]
-                store(basenm2, file6, genrs(os.path.join(subdir, fn)))
+                store(basenm2, file6, genrs(file2))
             except:
                 pass
 
-b.write("</table>")
+b.write("</table>\n</body>\n</html>")
 b.close()
