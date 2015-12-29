@@ -12,9 +12,10 @@ os.chdir(cwd)
 
 rootdir = cwd
 
+
 def store(title, grp, genre):
     print ("{} {}" .format(genrs(file2), rating(file2)))
-    os.makedirs(file3+'__'+rating(file2))
+    os.makedirs(file3+'__'+'Rating__'+rating(file2))
 
 def genrs(fn):
     filn = open(fn, "r")
@@ -45,7 +46,7 @@ def rating(fn):
         if 'rating' in ratings.lower():
             ratings2 = '0123456789,./'
             outpt = [l for l in ratings if l in ratings2]
-            return("".join(outpt).replace("/", "___"))
+            return("".join(outpt).replace("/", "__Votes__").lstrip('.').rstrip('.'))
 
 for subdir, dirs, files in os.walk(rootdir):
     for fn in files:
