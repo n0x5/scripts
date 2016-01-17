@@ -51,7 +51,7 @@ for subdir, dirs, files in os.walk(rootdir):
                 file2 = os.path.join(subdir, fn)
                 basenm2 = os.path.basename(os.path.join(subdir))
                 file6 = "[]".join(basenm2.split('-')[-1:])
-                file7 = "[]".join(basenm2.split('.')[-1:]).split('-')[0]
+                file7 = file6.split('-')[0]
                 store(basenm2, file6, genrs(file2))
             except:
                 pass
