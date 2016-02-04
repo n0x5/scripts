@@ -11,9 +11,9 @@ os.chdir(cwd)
 
 rootdir = cwd
 
-fname = 'list_{}.html' .format(today)
+fname = 'list_{}_{}.html' .format(os.path.basename(cwd), today)
 b = open( fname, 'a' )
-b.write('<!DOCTYPE html><html><body><h2>Movie List</h2><table class="sortable" style="width:100%"><script src="sorttable.js"></script>')
+b.write('<!DOCTYPE html><html><body><h2><a href="{}">{} List</a></h2><table class="sortable" style="width:100%"><script src="sorttable.js"></script>' .format(fname, os.path.basename(cwd)))
 b.write('<tr><th style="text-align:left">Release</th><th style="text-align:left">Group</th><th style="text-align:left">Genre</th><th style="text-align:left">Format</th></tr>\n')
 
 def store(title, grp, genre):
