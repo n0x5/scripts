@@ -11,7 +11,7 @@ os.chdir(cwd)
 
 rootdir = cwd
 
-fname = 'xvidgenres_{}.html' .format(today)
+fname = 'list_{}.html' .format(today)
 b = open( fname, 'a' )
 b.write('<!DOCTYPE html><html><body><h2>Movie List</h2><table class="sortable" style="width:100%"><script src="sorttable.js"></script>')
 b.write('<tr><th style="text-align:left">Release</th><th style="text-align:left">Group</th><th style="text-align:left">Genre</th><th style="text-align:left">Format</th></tr>\n')
