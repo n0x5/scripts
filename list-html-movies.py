@@ -9,7 +9,6 @@ today = time.strftime("__%m_%Y_%H_%M_%S")
 cwd = os.getcwd()
 os.chdir(cwd)
 number = 1
-rootdir = cwd
 fname = 'list_{}_{}.html' .format(os.path.basename(cwd), today)
 b = open( fname, 'a' )
 b.write('<!DOCTYPE html><html><body><h2><a href="{}">{} List</a></h2><table class="sortable" style="width:100%"><script src="sorttable.js"></script>' .format(fname, os.path.basename(cwd)))
@@ -54,7 +53,7 @@ def genrs(fn):
             elif "action" in genres.lower():
                 return 'Action'
 
-for subdir, dirs, files in os.walk(rootdir):
+for subdir, dirs, files in os.walk(cwd):
     for fn in files:
         if fn.endswith(".nfo"):
             try:
