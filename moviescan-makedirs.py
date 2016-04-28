@@ -19,14 +19,20 @@ def genrs(fn):
                 return 'Horror'
             elif "animation" in genres.lower():
                 return 'Animation'
+            elif "mystery" in genres.lower():
+                return 'Mystery'
             elif "documentary" in genres.lower():
                 return 'Documentary'
+            elif "crime" in genres.lower():
+                return 'Crime'
             elif "family" in genres.lower():
                 return 'Family'
             elif "sport" in genres.lower():
                 return 'Sport'
             elif "biography" in genres.lower():
                 return 'Biography'
+            elif "history" in genres.lower():
+                return 'History'
             elif "western" in genres.lower():
                 return 'Western'
             elif "sci-fi" in genres.lower():
