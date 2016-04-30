@@ -10,15 +10,14 @@ b = open("this.sfv", 'w' )
 
 def crc32(file2):
     sf = open(file2,'rb').read()
-    sf = format(zlib.crc32(sf), '08x')
-    print("{} is {}" .format(fn, sf))
-    b.write("{} {}\n" .format(fn, sf))
+    sf2 = format(zlib.crc32(sf), '08x')
+    print("{} is {}" .format(fn, sf2))
+    b.write("{} {}\n" .format(fn, sf2))
 
 for subdir, dirs, files in os.walk(cwd):
     for fn in files:
         if fn.endswith(".mp3") or fn.endswith(".flac"):
             try:
-                file2 = os.path.join(subdir, fn)
-                crc32(file2)
+                crc32(os.path.join(subdir, fn))
             except:
                 pass
