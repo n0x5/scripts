@@ -30,4 +30,5 @@ soup = BeautifulSoup(response.text, "html.parser")
 
 for link in soup.findAll(string=re.compile("i.imgur.com")):
     print(link)
-    urllib.request.urlretrieve(link, link[-11:])
+    link2 = link.replace("?1", "")
+    urllib.request.urlretrieve(link2, link2[-11:])
