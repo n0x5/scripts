@@ -23,6 +23,7 @@ url = "https://www.reddit.com/r/{}/search?q=timestamp%3A{}..{}&restrict_sr=on&so
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 
+print("searching", url)
 for link in soup.findAll(string=re.compile("i.imgur.com")):
     link2 = re.sub(r"[?]\d", "", link)
     if os.path.isfile(link2[-11:]):
