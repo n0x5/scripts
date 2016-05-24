@@ -1,4 +1,5 @@
 import requests
+import bs4
 from bs4 import BeautifulSoup
 import re
 import time
@@ -29,5 +30,8 @@ for link in soup.findAll(string=re.compile("i.imgur.com")):
     if os.path.isfile(link2[-11:]):
         print('file exists - skipping')
     else:
-        urllib.request.urlretrieve(link2, link2[-11:])
-        print(link)
+        try:
+            urllib.request.urlretrieve(link2, link2[-11:])
+            print(link)
+        except FileNotFoundError:
+            continue
