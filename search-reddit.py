@@ -5,10 +5,10 @@ import time
 import argparse
 import calendar
 import urllib.request
+import os
 
 def crdate(datestr):
     return calendar.timegm(time.strptime(datestr, '%Y-%m-%d'))
-
 parser=argparse.ArgumentParser()
 parser.add_argument('subreddit')
 parser.add_argument('tstamp1', type=crdate)
@@ -23,6 +23,9 @@ response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 
 for link in soup.findAll(string=re.compile("i.imgur.com")):
-    print(link)
     link2 = link.replace("?1", "")
-    urllib.request.urlretrieve(link2, link2[-11:])
+    if os.path.isfile(link2[-11:]):
+        print('file exists - skipping')
+    else:
+        urllib.request.urlretrieve(link2, link2[-11:])
+        print(link)
