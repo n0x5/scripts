@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Search gamespot for games not released on PC:
 #
 # Command: 'console.py #' where # is the page number
