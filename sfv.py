@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Creates .sfv file for all mp3 and flac in folder
+
 import sys
 import os
 import zlib
