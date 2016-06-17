@@ -45,6 +45,7 @@ def systems(game):
 
 for row in gameslist.find_all('div', class_="media-body") or row:
     if systems(row) is not None:
+        print(title(row), systems(row))
         b.write("<tr><td class=\"title\">{}</td> <td class=\"systems\">{}</td></tr>\n" .format(title(row), systems(row)))
 
 b.write("</table>\n</body>\n</html>")
