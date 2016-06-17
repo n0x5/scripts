@@ -4,12 +4,11 @@
 #
 # Command: 'console.py #' where # is the page number
 
-
 import requests
 import bs4
 from bs4 import BeautifulSoup
 import argparse
-import urllib.request
+
 
 
 parser=argparse.ArgumentParser()
@@ -21,7 +20,7 @@ headers = {
 }
 
 b = open('console.html', 'a' )
-b.write('<!DOCTYPE html><html><body><h2>Games not released on PC</h2><table class="sortable" style="width:100%"><script src="sorttable.js"></script>')
+b.write('<!DOCTYPE html><html><body><table class="sortable" style="width:100%"><script src="sorttable.js"></script>')
 b.write('<tr><th style="text-align:left">Title</th><th style="text-align:left">Systems</th></tr>\n')
 
 
@@ -33,9 +32,8 @@ gameslist = soup.find('section', attrs={'class': 'editorial river'})
 
 
 def title(game):
-    for title in row.find_all('div', class_="media-body") or row:
-        for title2 in title.find_all('h3', class_="media-title") or row:
-            return(title2.get_text(' ', strip=True))
+    for title2 in row.find_all('h3', class_="media-title") or row:
+        return(title2.get_text(' ', strip=True))
 
 def systems(game):
     for systems in row.find_all('ul', class_="system-list") or row:
