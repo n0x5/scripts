@@ -2,7 +2,7 @@
 
 # Create a list of movies in a folder
 # It uses currently active directory so cd into the folder
-# then run ./list-html.movies.py and it will make a html file in the same folder
+# then run ./list-html-movies.py and it will make a html file in the same folder
 
 import os
 import datetime
