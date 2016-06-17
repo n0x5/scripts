@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+# Create sorted folders based on id3 tags
+# Creates 'Genres' and 'Group' folders in the 
+# folder you cd into to run the command
+
+
 import shutil
 import os
 from mutagen.id3 import ID3
