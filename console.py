@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Search gamespot for games not released on PC
-# Default section is PS2 but can be change to any or none
+# Default section is PS2 but can be changed to any or none
 #
 # Command: 'console.py #' where # is the page number
 
