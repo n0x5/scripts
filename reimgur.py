@@ -1,30 +1,30 @@
-#!/usr/bin/env python
-
-# search-reddit.py - Search reddit for imgur.com pictures
-# Example command - "python search-reddit.py pics 2015-06-05 2015-07-01" - where 'pics' is the subreddit name
-
-import requests
-from bs4 import BeautifulSoup
 import re
 import time
 import argparse
 import calendar
 import urllib.request
 import os
+import requests
+from bs4 import BeautifulSoup
 
 def crdate(datestr):
     return calendar.timegm(time.strptime(datestr, '%Y-%m-%d'))
 
-parser=argparse.ArgumentParser()
+parser = argparse.ArgumentParser()
 parser.add_argument('subreddit')
 parser.add_argument('tstamp1', type=crdate)
 parser.add_argument('tstamp2', type=crdate)
-args=parser.parse_args()
+args = parser.parse_args()
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
+    'User-Agent': ('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
+                   ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
 }
-url = "https://www.reddit.com/r/{}/search?q=timestamp%3A{}..{}&restrict_sr=on&sort=new&t=all&limit=100&syntax=cloudsearch" .format(args.subreddit, args.tstamp1, args.tstamp2)
+
+url = ('https://www.reddit.com/r/%s/search?q=timestamp%%3A%s..%s&restr'
+       'ict_sr=on&sort=new&t=all&limit=30&syntax=cloudsearch'
+       % (args.subreddit, args.tstamp1, args.tstamp2))
+
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 
@@ -37,5 +37,5 @@ for link in soup.findAll(string=re.compile("i.imgur.com")):
         try:
             urllib.request.urlretrieve(link2, link2[-11:])
             print(link)
-        except FileNotFoundError:
+        except:
             continue
