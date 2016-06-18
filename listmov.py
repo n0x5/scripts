@@ -2,11 +2,10 @@
 
 # Create a list of movies in a folder
 # It uses currently active directory so cd into the folder
-# then run ./listmov.py and it will make a html file 
+# then run ./list-html-movies.py and it will make a html file
 # in the same folder
 
 import os
-import datetime
 import time
 import re
 
@@ -17,7 +16,7 @@ os.chdir(cwd)
 number = 1
 
 fname = 'list_{}_{}.html' .format(os.path.basename(cwd), today)
-hfile = open( fname, 'a' )
+hfile = open(fname, 'a')
 hfile.write('<!DOCTYPE html><html><body><h2><a href="{}">{} List</a></h2><ta'
             'ble class="sortable" style="width:100%"><script src="sorttable.'
             'js"></script>' .format(fname, os.path.basename(cwd)))
@@ -38,10 +37,10 @@ def imdburl(fn):
                 return ""
 
 def store(title, grp, genre):
-    print('{} - {} - {} - {} - {}' 
-        .format(basenm2, file6, genrs(file2), file7, number), imdburl(file2))
+    print('{} - {} - {} - {} - {}'
+          .format(basenm2, file6, genrs(file2), file7, number), imdburl(file2))
     hfile.write('<tr><td><a href="{}">{}</a></td>  <td>{}</td> <td>{}</td><t'
-                'd>{}</td></tr>\n' 
+                'd>{}</td></tr>\n'
                 .format(imdburl(file2), basenm2, file6, genrs(file2), file7))
 
 def genrs(fn):
@@ -94,13 +93,13 @@ for subdir, dirs, files in os.walk(cwd):
                 file6 = "[]".join(basenm2.split('-')[-1:])
                 file7 = "[]".join(basenm2.split('.')[-1:]).split('-')[0]
                 if ('cd1' not in file2.lower() and 'cd2' not in file2.lower()
-                and 'sample' not in file2.lower() and 'vobsub' 
-                not in file2.lower() and 'subs' not in file2.lower()):
+                        and 'sample' not in file2.lower() and 'vobsub'
+                        not in file2.lower() and 'subs' not in file2.lower()):
                     store(basenm2, file6, genrs(file2))
                     number += 1
             except:
                 pass
 hfile.write('<div class="total" style="font-weight:bold;">Total number'
-            ' of items: {} </br></br></div>" .format(number)')
+            ' of items: {} </br></br></div>' .format(number))
 hfile.write('</table>\n</body>\n</html>')
 hfile.close()
