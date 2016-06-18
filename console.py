@@ -18,16 +18,16 @@ headers = {
 }
 
 wsite = open('console.html', 'a')
-wsite.write('<!DOCTYPE html><html><body><table class="sortable" style="width:100'
-            '%"><script src="sorttable.js"></script>')
-wsite.write('<tr><th style="text-align:left">Title</th><th style="text-align:lef'
-            't">Systems</th></tr>\n')
+wsite.write('<!DOCTYPE html><html><body><table class="sortable" style="wid'
+            'th:100%"><script src="sorttable.js"></script>')
+wsite.write('<tr><th style="text-align:left">Title</th><th style="text-ali'
+            'gn:left">Systems</th></tr>\n')
 
-url = ('http://www.gamespot.com/new-games/?sort=date&game_filter_type%5Bplat'
-       'form%5D=94&game_filter_type%5BminRating%5D=&game_filter_type%5BtimeF'
-       'rame%5D=&game_filter_type%5BstartDate%5D=&game_filter_type%5BendDate'
-       '%5D=&game_filter_type%5Btheme%5D=&game_filter_type%5Bregion%5D=1&gam'
-       'e_filter_type%5Bletter%5D=&page={}') .format(args.page)
+url = ('http://www.gamespot.com/new-games/?sort=date&game_filter_type%5Bpl'
+       'atform%5D=94&game_filter_type%5BminRating%5D=&game_filter_type%5Bt'
+       'imeFrame%5D=&game_filter_type%5BstartDate%5D=&game_filter_type%5Be'
+       'ndDate%5D=&game_filter_type%5Btheme%5D=&game_filter_type%5Bregion%'
+       '5D=1&game_filter_type%5Bletter%5D=&page={}') .format(args.page)
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
@@ -47,8 +47,8 @@ def systems(row):
 for row in gameslist.find_all('div', class_="media-body") or row:
     if systems(row) is not None:
         print(title(row), systems(row))
-        wsite.write(('<tr><td class="title">{}</td> <td class="systems">{}</td>'
-                     '</tr>\n') .format(title(row), systems(row)))
+        wsite.write(('<tr><td class="title">{}</td> <td class="systems">{}'
+                     '</td></tr>\n') .format(title(row), systems(row)))
 
 wsite.write("</table>\n</body>\n</html>")
 wsite.close()
