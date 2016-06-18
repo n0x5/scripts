@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Create sorted folders for movies from a folder you cd into
-# it needs and .nfo file in order to get the information
+# it needs an .nfo file in order to get the information
 
 import os
 
