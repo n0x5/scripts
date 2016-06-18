@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+# Download all images on a subreddit from imgur.com
+#
+# reimgur.py 'subreddit' 2015-01-01 2015-01-10 e.g.
+# 'reimgur.py pics 2015-01-01 2015-01-10'
+
 import re
 import time
 import argparse
@@ -21,8 +28,7 @@ headers = {
                    ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
 }
 
-url = ('https://www.reddit.com/r/%s/search?q=timestamp%%3A%s..%s&restr'
-       'ict_sr=on&sort=new&t=all&limit=30&syntax=cloudsearch'
+url = ('https://www.reddit.com/r/%s/search?q=timestamp%%3A%s..%s&restrict_sr=on&sort=new&t=all&limit=30&syntax=cloudsearch'
        % (args.subreddit, args.tstamp1, args.tstamp2))
 
 response = requests.get(url, headers=headers)
