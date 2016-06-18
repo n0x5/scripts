@@ -23,11 +23,7 @@ wsite.write('<!DOCTYPE html><html><body><table class="sortable" style="wid'
 wsite.write('<tr><th style="text-align:left">Title</th><th style="text-ali'
             'gn:left">Systems</th></tr>\n')
 
-url = ('http://www.gamespot.com/new-games/?sort=date&game_filter_type%5Bpl'
-       'atform%5D=94&game_filter_type%5BminRating%5D=&game_filter_type%5Bt'
-       'imeFrame%5D=&game_filter_type%5BstartDate%5D=&game_filter_type%5Be'
-       'ndDate%5D=&game_filter_type%5Btheme%5D=&game_filter_type%5Bregion%'
-       '5D=1&game_filter_type%5Bletter%5D=&page={}') .format(args.page)
+url = 'http://www.gamespot.com/new-games/?sort=date&game_filter_type%5Bplatform%5D=94&game_filter_type%5BminRating%5D=&game_filter_type%5BtmeFrame%5D=&game_filter_type%5BstartDate%5D=&game_filter_type%5BendDate%5D=&game_filter_type%5Btheme%5D=&game_filter_type%5Bregion%5D=1&game_filter_type%5Bletter%5D=&page={}' .format(args.page)
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
