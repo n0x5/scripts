@@ -8,10 +8,11 @@ import os
 cwd = os.getcwd()
 os.chdir(cwd)
 rootdir = cwd
+nfodir = '[iNFO]'
 
 def store(title, grp, genre):
-    print ("{} {}" .format(genrs(file2), rating(file2)))
-    os.makedirs(file3+'__'+'Rating__'+rating(file2))
+    print(file4+' '+genrs(file2)+'_Rating_'+rating(file2))
+    os.makedirs(file4+' '+genrs(file2)+'_Rating_'+rating(file2))
 
 def genrs(fn):
     filn = open(fn, "r")
@@ -60,7 +61,8 @@ def rating(fn):
         if 'rating' in ratings.lower():
             ratings2 = '0123456789,./'
             outpt = [l for l in ratings if l in ratings2]
-            return("".join(outpt).replace("/", "__Votes__").lstrip('.').rstrip('.'))
+            return(''.join(outpt).replace("/", "__Votes__")
+                   .lstrip('.').rstrip('.'))
 
 for subdir, dirs, files in os.walk(rootdir):
     for fn in files:
@@ -69,8 +71,8 @@ for subdir, dirs, files in os.walk(rootdir):
                 file2 = os.path.join(subdir, fn)
                 basenm2 = os.path.basename(os.path.join(subdir))
                 file3 = os.path.join(subdir, genrs(file2))
+                file4 = os.path.join(subdir, '[iNFO]')
                 file6 = "[]".join(basenm2.split('-')[-1:])
                 file7 = file6.split('-')[0]
                 store(basenm2, file6, genrs(file2))
-            except:
-                pass
+            except Exception as e: print(e)
