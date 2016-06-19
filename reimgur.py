@@ -4,6 +4,8 @@
 #
 # reimgur.py 'subreddit' 2015-01-01 2015-01-10 e.g.
 # 'reimgur.py pics 2015-01-01 2015-01-10'
+# can change the &limit=30 part up to 1000 but im not sure thats a good idea -
+# might get banned 
 
 import re
 import time
