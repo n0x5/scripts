@@ -13,7 +13,7 @@ today = time.strftime("__%m_%Y_%H_%M_%S")
 
 cwd = os.getcwd()
 os.chdir(cwd)
-number = 1
+number = 0
 
 fname = 'list_{}_{}.html' .format(os.path.basename(cwd), today)
 hfile = open(fname, 'a')
