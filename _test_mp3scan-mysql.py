@@ -1,40 +1,122 @@
 #!/usr/bin/env python
 
-import shutil
 import os
-import datetime
+from datetime import datetime
+import calendar
 import pymysql
-
+import hashlib
+from functools import partial
 from mutagen.id3 import ID3
+from mutagen.mp3 import MP3
 
-rootdir = 'K:\\archive\\mp3\\_LABELS'
+rootdir = '/mp3/folder'
 
 
-conn = pymysql.connect(host ='127.0.0.1', user ='', passwd = '', db= 'mysql', charset ='utf8')
+conn = pymysql.connect(host ='', user ='', passwd = '', db= 'mysql', charset ='utf8')
 cur = conn.cursor()
-cur.execute("USE NordDB")
+cur.execute("USE tFB")
 
-def store(headline, grp, genre):
-    cur.execute ("INSERT INTO music1 (headline, grp, genre) VALUES (\"{}\" , \"{}\" , \"{}\")" .format(basenm2, file6, sf))
+def store(unixtime, basenm2, fileb, fsize, hashd):
+    print("INSERT INTO fileinfo (`time`, `release`, `filename`, `filesize`, `hash`) VALUES ('{}, {}, {}, {}, {}')" .format(unixtime, basenm2, fileb, fsize, hashd))
+    cur.execute ("INSERT INTO fileinfo (`time`, `release`, `filename`, `filesize`, `hash`) VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" .format(unixtime, basenm2, fileb, fsize, hashd))
     cur.connection.commit()
+
+def store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode):
+    print("INSERT INTO id3c (`Time`, `Release`, `Genre`, `Year`, `Samplerate`, `Channels`, `Bitrate`, `Bitratemode`) VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" .format(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode))
+
+    cur.execute("INSERT INTO id3c (`Time`, `Release`, `Genre`, `Year`, `Samplerate`, `Channels`, `Bitrate`, `Bitratemode`) VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" .format(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode))
+    cur.connection.commit()
+
     
 
-for subdir, dirs, files in os.walk(rootdir):
-    for fn in files:
-        if fn.startswith("01"):
-            try:
-                file2 = os.path.join(subdir, fn)
-                audio = ID3(file2)
-                sf = format(audio['TCON'].text[0])
-                path2 = os.path.join(subdir)
-                rootdir2 = os.path.join(rootdir, sf)
-                basenm2 = os.path.basename(path2)
-                file4 = basenm2.split('-')       
-                file5 = file4[-1:]
-                file6 = "[]".join(file5)
-                store (basenm2, file6, sf)     
-            except:
-                pass
+def md5sum(file2):
+    with open(file2, mode='rb') as f:
+        d = hashlib.md5()
+        for buf in iter(partial(f.read, 128), b''):
+            d.update(buf)
+    return d.hexdigest()
+
+def fninfo(subdir, fn):
+    file2 = os.path.join(subdir, fn)
+    fsize = os.path.getsize(file2)
+    path2 = os.path.join(subdir)
+    d = datetime.utcnow()
+    unixtime = calendar.timegm(d.utctimetuple())
+    hashd = md5sum(file2)
+    basenm2 = os.path.basename(path2)
+    fileb = os.path.basename(file2)
+    file4 = basenm2.split('-')       
+    file5 = file4[-1:]
+    file6 = "[]".join(file5)
+    if not fn.endswith('.message') and not fn.endswith('.m3u'):
+        store(unixtime, basenm2, fileb, fsize, hashd)
+
+def minfo(subdir, fn):
+    if fn.endswith('.mp3'):
+        file2 = os.path.join(subdir, fn) 
+        audio = ID3(file2)
+        audio2 = MP3(file2)
+        d = datetime.utcnow()
+        unixtime = calendar.timegm(d.utctimetuple())
+        path2 = os.path.join(subdir)
+        basenm2 = os.path.basename(path2)
+        genre = format(audio['TCON'].text[0])
+        year2 = format(audio["TDRC"].text[0])
+        year = year2[:4]
+        bitrate2 = audio2.info.bitrate
+        bitrate3 = str(bitrate2)
+        bitrate = bitrate3[:3]
+        samplerate = audio2.info.sample_rate
+        channelsi = audio2.info.channels
+        bitratemode = audio2.info.mode
+        bitmode2 = audio2.info.bitrate_mode
+        bitmode3 = str(bitmode2)
+        bitmode = bitmode3[-3:]
+        rootdir2 = os.path.join(rootdir, year)
+
+        if bitratemode == 0:
+            bitratemode = 'Stereo'
+            if bitmode == 'OWN':
+                bitmode = 'CBR'
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+            else:
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+
+        elif bitratemode == 1:
+            bitratemode = 'Joint-Stereo'
+            if bitmode == 'OWN':
+                bitmode = 'CBR'
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+            else:
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+
+        elif bitratemode == 2:
+            bitratemode = 'Dual-Channel'
+            if bitmode == 'OWN':
+                bitmode = 'CBR'
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+            else:
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
  
+        elif bitratemode == 3:
+            bitratemode = 'Mono'
+            if bitmode == 'OWN':
+                bitmode = 'CBR'
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+            else:
+                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+
+def tscan():
+    for subdir, dirs, files in os.walk(rootdir):
+        for fn in files:
+            try:
+                fninfo(subdir, fn)
+                minfo(subdir, fn)
+            except Exception as e:
+                print(str(e))
+
+tscan()
+
+
 cur.close()
 conn.close()
