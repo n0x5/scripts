@@ -14,20 +14,24 @@ rootdir = '/mp3/folder'
 
 conn = pymysql.connect(host ='', user ='', passwd = '', db= 'mysql', charset ='utf8')
 cur = conn.cursor()
-cur.execute("USE tFB")
+cur.execute("USE db")
 
-def store(unixtime, basenm2, fileb, fsize, hashd):
-    print("INSERT INTO fileinfo (`time`, `release`, `filename`, `filesize`, `hash`) VALUES ('{}, {}, {}, {}, {}')" .format(unixtime, basenm2, fileb, fsize, hashd))
-    cur.execute ("INSERT INTO fileinfo (`time`, `release`, `filename`, `filesize`, `hash`) VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" .format(unixtime, basenm2, fileb, fsize, hashd))
+
+def store_fileinfo_in_db(unixtime, basenm2, fileb, fsize, hashd):
+    sql = ("INSERT INTO fileinfo (`time`, `release`, `filename`, `filesize`, `hash`) "
+           "VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" .format(unixtime, basenm2, fileb, fsize, hashd))
+    print(sql)
+    cur.execute (sql)
     cur.connection.commit()
 
-def store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode):
-    print("INSERT INTO id3c (`Time`, `Release`, `Genre`, `Year`, `Samplerate`, `Channels`, `Bitrate`, `Bitratemode`) VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" .format(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode))
-
-    cur.execute("INSERT INTO id3c (`Time`, `Release`, `Genre`, `Year`, `Samplerate`, `Channels`, `Bitrate`, `Bitratemode`) VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" .format(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode))
+def store_id3_in_db(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode):
+    sql2 = ("INSERT INTO id3c (`Time`, `Release`, `Genre`, `Year`, `Samplerate`, `Channels`, `Bitrate`, `Bitratemode`) "
+            "VALUES (\"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\")" 
+            .format(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode))
+    print(sql2)
+    cur.execute(sql2)
     cur.connection.commit()
 
-    
 
 def md5sum(file2):
     with open(file2, mode='rb') as f:
@@ -36,7 +40,7 @@ def md5sum(file2):
             d.update(buf)
     return d.hexdigest()
 
-def fninfo(subdir, fn):
+def get_fileinfo(subdir, fn):
     file2 = os.path.join(subdir, fn)
     fsize = os.path.getsize(file2)
     path2 = os.path.join(subdir)
@@ -45,13 +49,10 @@ def fninfo(subdir, fn):
     hashd = md5sum(file2)
     basenm2 = os.path.basename(path2)
     fileb = os.path.basename(file2)
-    file4 = basenm2.split('-')       
-    file5 = file4[-1:]
-    file6 = "[]".join(file5)
     if not fn.endswith('.message') and not fn.endswith('.m3u'):
-        store(unixtime, basenm2, fileb, fsize, hashd)
+        store_fileinfo_in_db(unixtime, basenm2, fileb, fsize, hashd)
 
-def minfo(subdir, fn):
+def get_id3_audio_info(subdir, fn):
     if fn.endswith('.mp3'):
         file2 = os.path.join(subdir, fn) 
         audio = ID3(file2)
@@ -60,7 +61,7 @@ def minfo(subdir, fn):
         unixtime = calendar.timegm(d.utctimetuple())
         path2 = os.path.join(subdir)
         basenm2 = os.path.basename(path2)
-        genre = format(audio['TCON'].text[0])
+        genre = format(audio['TCON'].text[0]).replace(' ', '_').replace('&', 'and').replace('+', '_').replace('/', '_')
         year2 = format(audio["TDRC"].text[0])
         year = year2[:4]
         bitrate2 = audio2.info.bitrate
@@ -74,7 +75,7 @@ def minfo(subdir, fn):
         bitmode = bitmode3[-3:]
         rootdir2 = os.path.join(rootdir, year)
 
-       if bitratemode == 0:
+        if bitratemode == 0:
             bitratemode = 'Stereo'
         elif bitratemode == 1:
             bitratemode = 'Joint-Stereo'
@@ -85,19 +86,18 @@ def minfo(subdir, fn):
  
         if bitmode == 'OWN':
             bitmode = 'CBR'
-        store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+        store_id3_in_db(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
 
-def tscan():
+def run_main():
     for subdir, dirs, files in os.walk(rootdir):
         for fn in files:
             try:
-                fninfo(subdir, fn)
-                minfo(subdir, fn)
+                get_fileinfo(subdir, fn)
+                get_id3_audio_info(subdir, fn)
             except Exception as e:
                 print(str(e))
 
-tscan()
-
+run_main()
 
 cur.close()
 conn.close()
