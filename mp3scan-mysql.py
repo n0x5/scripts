@@ -74,37 +74,18 @@ def minfo(subdir, fn):
         bitmode = bitmode3[-3:]
         rootdir2 = os.path.join(rootdir, year)
 
-        if bitratemode == 0:
+       if bitratemode == 0:
             bitratemode = 'Stereo'
-            if bitmode == 'OWN':
-                bitmode = 'CBR'
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
-            else:
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
-
         elif bitratemode == 1:
             bitratemode = 'Joint-Stereo'
-            if bitmode == 'OWN':
-                bitmode = 'CBR'
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
-            else:
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
-
         elif bitratemode == 2:
             bitratemode = 'Dual-Channel'
-            if bitmode == 'OWN':
-                bitmode = 'CBR'
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
-            else:
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
- 
         elif bitratemode == 3:
             bitratemode = 'Mono'
-            if bitmode == 'OWN':
-                bitmode = 'CBR'
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
-            else:
-                store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
+ 
+        if bitmode == 'OWN':
+            bitmode = 'CBR'
+        store2(unixtime, basenm2, genre, year, samplerate, bitratemode, bitrate, bitmode)
 
 def tscan():
     for subdir, dirs, files in os.walk(rootdir):
