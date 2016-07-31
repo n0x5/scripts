@@ -43,12 +43,11 @@ class GrabIt(urllib.request.FancyURLopener):
                      ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
         urllib.request.FancyURLopener.__init__(self)
     def download_file(self, url, path):
-        success = True
         try:
             urlretrieve = GrabIt().retrieve
             urlretrieve(url, path)
         except Exception:
-            success = False
+            pass
 
 
 response = requests.get(url, headers=headers)
