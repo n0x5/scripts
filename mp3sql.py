@@ -11,10 +11,10 @@ from mutagen.mp3 import MP3
 
 rootdir = '/mp3/folder'
 
-
-conn = pymysql.connect(host ='', user ='', passwd = '', db= 'mysql', charset ='utf8')
+conn = pymysql.connect(host ='', user ='', passwd = '', db= 'DBname', charset ='utf8')
 cur = conn.cursor()
-cur.execute("USE db")
+cur.execute("USE DBname")
+
 
 
 def store_fileinfo_in_db(unixtime, basenm2, fileb, fsize, hashd):
@@ -53,7 +53,7 @@ def get_fileinfo(subdir, fn):
         store_fileinfo_in_db(unixtime, basenm2, fileb, fsize, hashd)
 
 def get_id3_audio_info(subdir, fn):
-    if fn.endswith('.mp3'):
+    if fn.startswith("01") or fn.startswith("101") or fn.startswith("a"):
         file2 = os.path.join(subdir, fn) 
         audio = ID3(file2)
         audio2 = MP3(file2)
