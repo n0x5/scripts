@@ -38,17 +38,14 @@ url = ('https://www.reddit.com/r/%s/search?q=timestamp%%3A%s..%s&restrict_sr=on&
        % (args.subreddit, args.tstamp1, args.tstamp2))
 
 class GrabIt(urllib.request.FancyURLopener):
-    def __init__(self):
-        self.version = ('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
-                     ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
-        urllib.request.FancyURLopener.__init__(self)
+    version = ('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
+            ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
     def download_file(self, url, path):
-        try:
-            urlretrieve = GrabIt().retrieve
-            urlretrieve(url, path)
-        except Exception:
-            pass
-
+            try:
+                urlretrieve = GrabIt().retrieve
+                urlretrieve(url, path)
+            except Exception:
+                pass
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
