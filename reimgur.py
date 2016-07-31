@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Download all images on a subreddit from imgur and reddit self hosted
+# Download all images on a subreddit from imgur.com
 #
 # Now supports imgur albums and i.redd.it hosted images
 # 
@@ -42,15 +42,13 @@ class GrabIt(urllib.request.FancyURLopener):
         self.version = ('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
                      ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
         urllib.request.FancyURLopener.__init__(self)
-    def download_file(self, url, outpath):
-        successful = True
+    def download_file(self, url, path):
+        success = True
         try:
             urlretrieve = GrabIt().retrieve
-            urlretrieve(url, outpath)
-            return successful
+            urlretrieve(url, path)
         except Exception:
-            successful = False
-            return successful
+            success = False
 
 
 response = requests.get(url, headers=headers)
