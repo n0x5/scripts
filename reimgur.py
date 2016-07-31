@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Download all images on a subreddit from imgur.com
+# Download all images on a subreddit from imgur and reddit self hosted
 #
 # Now supports imgur albums and i.redd.it hosted images
 # 
