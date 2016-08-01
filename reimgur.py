@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+# Retrieve Imgur ++
 # Download all images on a subreddit from imgur.com
 #
 # Now supports imgur albums and i.redd.it hosted images
