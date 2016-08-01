@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Retrieve Imgur ++
+# Retrieve Imgur+
 # Download all images on a subreddit from imgur.com
 #
 # Now supports imgur albums and i.redd.it hosted images
@@ -73,8 +73,8 @@ def get_album(soup, headers, grab1):
         print(link)
         response2 = requests.get(link, headers=headers)
         soup2 = BeautifulSoup(response2.text, "html.parser")
-        for link2 in soup2.findAll('img', src=re.compile('\/\/i.imgur.com\/\w\w\w\w\w\w\w(.jpg)')):
-            link3 = link2['src']
+        for link2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w\w\w\w\w\w\w(.jpg)')):
+            link3 = link2['href']
             if os.path.isfile(link3[-11:]):
                 print('file exists - skipping')
             else:
@@ -86,11 +86,11 @@ def get_album(soup, headers, grab1):
 
 def get_reddit_img(soup, grab1):
     for link3 in soup.findAll(string=re.compile("i.redd.it")):
-        if os.path.isfile(link3[-16:]):
+        if os.path.isfile(link3[-16:].replace('/', '')):
             print('file exists - skipping')
         else:
             try:
-                grab1.download_file(link3, link3[-16:])
+                grab1.download_file(link3, link3[-16:].replace('/', ''))
                 print(link3)
             except:
                 pass
