@@ -13,7 +13,7 @@ b = open("this.sfv", 'w' )
 def crc32(file2):
     sf = open(file2,'rb').read()
     sf2 = format(zlib.crc32(sf), '08x')
-    print("{} is {}" .format(fn, sf2))
+    print("{} {}" .format(fn, sf2))
     b.write("{} {}\n" .format(fn, sf2))
 
 for subdir, dirs, files in os.walk(cwd):
