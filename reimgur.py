@@ -44,12 +44,14 @@ class GrabIt(urllib.request.FancyURLopener):
             try:
                 urlretrieve = GrabIt().retrieve
                 urlretrieve(url, path)
-            except Exception:
-                pass
+            except Exception as e:
+                print(str(e))
+
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 grab1 = GrabIt()
+
 
 print("searching", url)
 
@@ -63,7 +65,7 @@ def get_single(soup, grab1):
                 grab1.download_file(link2, link2[-11:])
                 print(link)
             except:
-                continue
+                pass
 
 def get_album(soup, headers, grab1):
     for link in soup.findAll(string=re.compile("imgur.com/a/")):
@@ -76,10 +78,10 @@ def get_album(soup, headers, grab1):
                 print('file exists - skipping')
             else:
                 try:
-                    grab1.download_file(link3, link3[-11:])
-                    print(link3)
+                    grab1.download_file('http:'+link3, link3[-11:])
+                    print(link3.strip('/'))
                 except:
-                    continue
+                    pass
 
 def get_reddit_img(soup, grab1):
     for link3 in soup.findAll(string=re.compile("i.redd.it")):
@@ -90,7 +92,7 @@ def get_reddit_img(soup, grab1):
                 grab1.download_file(link3, link3[-16:])
                 print(link3)
             except:
-                continue
+                pass
 
 get_single(soup, grab1)
 get_album(soup, headers, grab1)
