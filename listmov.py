@@ -44,45 +44,13 @@ def store(title, grp, genre):
                 .format(imdburl(file2), basenm2, file6, genrs(file2), file7))
 
 def genrs(fn):
+    genrelist = (["romance", "comedy", "animation", "mystery", "documentary", "crime", "family", "sport", 
+                "biography", "history", "western", "sci-fi", "horror", "adventure", "drama", "fantasy", "thriller", "action"])
     filn = open(fn, "r")
     for genres in filn:
         if "genre" in genres.lower():
-            if "horror" in genres.lower():
-                return 'Horror'
-            elif "animation" in genres.lower():
-                return 'Animation'
-            elif "mystery" in genres.lower():
-                return 'Mystery'
-            elif "documentary" in genres.lower():
-                return 'Documentary'
-            elif "crime" in genres.lower():
-                return 'Crime'
-            elif "family" in genres.lower():
-                return 'Family'
-            elif "sport" in genres.lower():
-                return 'Sport'
-            elif "biography" in genres.lower():
-                return 'Biography'
-            elif "history" in genres.lower():
-                return 'History'
-            elif "western" in genres.lower():
-                return 'Western'
-            elif "sci-fi" in genres.lower():
-                return 'Sci-Fi'
-            elif "adventure" in genres.lower():
-                return 'Adventure'
-            elif "romance" in genres.lower():
-                return 'Romance'
-            elif "drama" in genres.lower():
-                return 'Drama'
-            elif "fantasy" in genres.lower():
-                return 'Fantasy'
-            elif "thriller" in genres.lower():
-                return 'Thriller'
-            elif "comedy" in genres.lower():
-                return 'Comedy'
-            elif "action" in genres.lower():
-                return 'Action'
+            output = [item.title() for item in genrelist if item in genres.lower()]
+            return(", ".join(repr(e).replace("'", "") for e in output))
 
 for subdir, dirs, files in os.walk(cwd):
     for fn in files:
