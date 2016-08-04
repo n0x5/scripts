@@ -49,7 +49,7 @@ def genrs(fn):
     filn = open(fn, "r")
     for genres in filn:
         if "genre" in genres.lower():
-            output = [item.title() for item in genrelist if item in genres.lower()]
+            output = [genres4.title() for genres4 in genrelist if genres4 in genres.lower()]
             return(", ".join(repr(e).replace("'", "") for e in output))
 
 for subdir, dirs, files in os.walk(cwd):
