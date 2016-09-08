@@ -2,12 +2,12 @@
 #
 # write the name of the user you want to download in USER_NAME_HERE
 # python instagrab.py
-# only grabs latest / first page images so far
 
 import re
 from selenium import webdriver
 import time
 import sys
+import os
 import urllib.request
 from urllib.request import FancyURLopener
 
@@ -36,8 +36,14 @@ for ii in elem:
         content3 = re.sub(r's\w\w\wx\w\w\w\/', '', content2, flags=re.IGNORECASE)
         content4 = re.sub(r'https:\/\/\w{8}-\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
         content5 = re.sub(r'\?ig_cache_key=\w{26}(\S+)', '', content4, flags=re.IGNORECASE)
-        time.sleep(4)
-        grab1.download_file(content3, content5)
-        print(content5)
+        if os.path.isfile(content5):
+            print('file exists - skipping')
+        else:
+            try:
+                time.sleep(4)
+                grab1.download_file(content3, content5)
+                print(content5)
+            except Exception as e:
+                print(str(e))
 
 driver.quit()
