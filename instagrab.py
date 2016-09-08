@@ -1,8 +1,6 @@
 # instagrab.py - download images from instagram
 #
 # write the names of the user you want to download in 'users' list (user1, user2' etc)
-# supports an unlimited amount of users
-# only grabs latest images for now
 # python instagrab.py
 
 import re
@@ -21,8 +19,8 @@ class GrabIt(urllib.request.FancyURLopener):
                 ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
         def download_file(self, url, path):
                 try:
-                    urlretrieve = GrabIt().retrieve
-                    urlretrieve(url, path)
+                    self.urlretrieve = GrabIt().retrieve
+                    self.urlretrieve(url, path)
                 except Exception as e:
                     print(str(e))
 
@@ -51,8 +49,9 @@ def grab_img(user):
                     print(content5)
                 except Exception as e:
                     print(str(e))
+    driver.quit()
 
 for user in users:
     grab_img(user)
 
-driver.quit()
+
