@@ -1,6 +1,7 @@
 # instagrab.py - download images from instagram
 #
 # write the names of the user you want to download in 'users' list (user1, user2' etc)
+# supports unlimited amount of users
 # python instagrab.py
 
 import re
