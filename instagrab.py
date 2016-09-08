@@ -2,6 +2,7 @@
 #
 # write the names of the user you want to download in 'users' list (user1, user2' etc)
 # supports an unlimited amount of users
+# only grabs latest images for now
 # python instagrab.py
 
 import re
