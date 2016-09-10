@@ -1,5 +1,10 @@
 # instagrabALL.py - download ALL images from instagram user
 #
+# might take a bit longer to complete if the user has very few
+# images and the itertool has to run through 60 iterations.
+# 60 is just to make sure to get ALL pages, but change according
+# to instagram user post history
+#
 # write the names of the user you want to download in 'users' list (user1, user2' etc)
 # supports unlimited amount of users
 # python instagrab.py
