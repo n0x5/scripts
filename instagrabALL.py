@@ -31,7 +31,6 @@ class GrabIt(urllib.request.FancyURLopener):
                 except Exception as e:
                     print(str(e))
 
-
 def grab_img(user):
     grab1 = GrabIt()
     driver = webdriver.Firefox()
