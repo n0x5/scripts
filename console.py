@@ -37,7 +37,7 @@ def title(row):
 def rlsdate(row):
     for dat2 in row.find_all('time', class_="media-date") or row:
         dat3 = dat2.get_text(' ', strip=True)
-        dat4 = re.search(r'\w\w\w\W*.\d,\s\d\d\d\d', dat3)
+        dat4 = re.search(r'\w{3}\W*.\d,\s\d{4}', dat3)
         if dat4 is not None:
             return dat4.group(0)
         else:
