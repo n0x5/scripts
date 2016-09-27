@@ -57,7 +57,6 @@ def grab_img(user):
             content4 = re.sub(r'https:\/\/\w{8}-\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
             content5 = re.sub(r'\?ig_cache_key=\w+(\S+)', '', content4, flags=re.IGNORECASE)
             endpoint = os.path.join(os.path.dirname(__file__), user, content5)
-            print(endpoint)
             if not os.path.exists(user):
                 os.makedirs(user)
             if os.path.isfile(endpoint):
@@ -67,7 +66,6 @@ def grab_img(user):
                     time.sleep(4)
                     print(content6)
                     grab1.download_file(content6, endpoint)
-                    #print(content5)
                 except Exception as e:
                     print(str(e))
 
