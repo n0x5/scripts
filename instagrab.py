@@ -36,6 +36,8 @@ def grab_img(user):
         if 'https://scontent-' in ii.get_attribute('src'):
             content2 = ii.get_attribute('src')
             content3 = re.sub(r's\w\w\wx\w\w\w\/', '', content2, flags=re.IGNORECASE)
+            content7 = re.sub(r'\w{3}\.\w{2}\/', '', content3, flags=re.IGNORECASE)
+            content6 = re.sub(r'\w{0,4}\.\d{0,4}\.\d{0,4}\.\d{0,5}\/', '', content7, flags=re.IGNORECASE)
             content4 = re.sub(r'https:\/\/\w{8}-\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
             content5 = re.sub(r'\?ig_cache_key=\w+(\S+)', '', content4, flags=re.IGNORECASE)
             endpoint = os.path.join(os.path.dirname(__file__), user, content5)
@@ -46,7 +48,7 @@ def grab_img(user):
             else:
                 try:
                     time.sleep(4)
-                    grab1.download_file(content3, endpoint)
+                    grab1.download_file(content6, endpoint)
                 except Exception as e:
                     print(str(e))
     driver.quit()
