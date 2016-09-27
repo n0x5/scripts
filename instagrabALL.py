@@ -31,6 +31,7 @@ class GrabIt(urllib.request.FancyURLopener):
                 except Exception as e:
                     print(str(e))
 
+
 def grab_img(user):
     grab1 = GrabIt()
     driver = webdriver.Firefox()
@@ -39,7 +40,7 @@ def grab_img(user):
     driver.implicitly_wait(5)
     driver.find_element_by_xpath("//a[text()[contains(.,'Load more')]]").click();
     driver.implicitly_wait(5)
-    for _ in itertools.repeat(None, 60):
+    for _ in itertools.repeat(None, 2):
         driver.implicitly_wait(3)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
@@ -51,6 +52,8 @@ def grab_img(user):
         if 'https://scontent-' in ii.get_attribute('src'):
             content2 = ii.get_attribute('src')
             content3 = re.sub(r's\w\w\wx\w\w\w\/', '', content2, flags=re.IGNORECASE)
+            content7 = re.sub(r'\w{3}\.\w{2}\/', '', content3, flags=re.IGNORECASE)
+            content6 = re.sub(r'\w{0,4}\.\d{0,4}\.\d{0,4}\.\d{0,5}\/', '', content7, flags=re.IGNORECASE)
             content4 = re.sub(r'https:\/\/\w{8}-\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
             content5 = re.sub(r'\?ig_cache_key=\w+(\S+)', '', content4, flags=re.IGNORECASE)
             endpoint = os.path.join(os.path.dirname(__file__), user, content5)
@@ -62,11 +65,15 @@ def grab_img(user):
             else:
                 try:
                     time.sleep(4)
-                    grab1.download_file(content3, endpoint)
+                    print(content6)
+                    grab1.download_file(content6, endpoint)
+                    #print(content5)
                 except Exception as e:
                     print(str(e))
 
-    #driver.quit()
+    driver.quit()
 
 for user in users:
     grab_img(user)
+
+
