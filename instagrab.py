@@ -47,7 +47,6 @@ def grab_img(user):
                 try:
                     time.sleep(4)
                     grab1.download_file(content3, endpoint)
-                    print(content5)
                 except Exception as e:
                     print(str(e))
     driver.quit()
