@@ -33,7 +33,7 @@ def grab_img(user):
     elem = driver.find_elements_by_xpath('//*[@src]')
 
     for ii in elem:
-        if 'https://scontent-' in ii.get_attribute('src'):
+        if 'https://scontent' in ii.get_attribute('src'):
             content2 = ii.get_attribute('src')
             content3 = re.sub(r's\w\w\wx\w\w\w\/', '', content2, flags=re.IGNORECASE)
             content7 = re.sub(r'\w{3}\.\w{2}\/', '', content3, flags=re.IGNORECASE)
