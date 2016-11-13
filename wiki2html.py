@@ -13,7 +13,6 @@
 import xml.etree.ElementTree as ET
 import os
 
-
 tree = ET.parse('your.xml')
 root = tree.getroot()
 
