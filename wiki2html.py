@@ -25,13 +25,13 @@ for elem in root.iter():
         fname = (os.path.join(filestrip+'.html'))
         title = re.sub('[/:"]', '', elem.text)
         try:
-            hfile = open(fname, 'ab')
+            hfile = open(fname, mode='a', encoding='utf8')
             print(fname)
-            hfile.write('<h1>'.encode('utf8')+title.encode('utf8')+'</h1>'.encode('utf8'))
+            hfile.write('<h1>'+title+'</h1>')
         except Exception as e:
             print(str(e))
 
     if 'export-0.6/}text' in elem.tag and elem.text is not None:
-        hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />'.encode('utf8'))
-        hfile.write('<pre>'.encode('utf8'))
-        hfile.write(elem.text.replace('[', '<b>').replace(']', '</b>').replace('\'', '').encode('utf8'))
+        hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />')
+        hfile.write('<pre>')
+        hfile.write(elem.text.replace('[', '<b>').replace(']', '</b>').replace('\'', ''))
