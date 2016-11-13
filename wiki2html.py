@@ -13,19 +13,20 @@
 import xml.etree.ElementTree as ET
 import os
 
+
 tree = ET.parse('your.xml')
 root = tree.getroot()
 
 for elem in root.iter():
     if ('export-0.6/}title' in elem.tag and elem.text is not None and 'User talk:' not in elem.text 
-    and 'Template:' not in elem.text and 'Category:' not in elem.text and 'User:' not in elem.text
-    and 'Shadowrun talk:' not in elem.text and 'File:' not in elem.text and 'Talk:' not in elem.text
-    and 'Shadowrun Wiki:' not in elem.text and 'Contributor:' not in elem.text
-    and 'User blog:' not in elem.text and 'User blog comment:' not in elem.text):
+        and 'Template:' not in elem.text and 'Category:' not in elem.text and 'User:' not in elem.text
+        and 'Shadowrun talk:' not in elem.text and 'File:' not in elem.text and 'Talk:' not in elem.text
+        and 'Shadowrun Wiki:' not in elem.text and 'Contributor:' not in elem.text
+        and 'User blog:' not in elem.text and 'User blog comment:' not in elem.text):
 
         fname = (os.path.join(elem.text.strip().replace('/', ' ').replace(':', '').replace('"', '')
-        .replace('?', '').replace('!', '').replace('*', '').replace('\\', ' ')
-        .replace('|', '').replace('>', '').replace('<', '').replace(';', '').replace(' ', '_')+'.html'))
+                .replace('?', '').replace('!', '').replace('*', '').replace('\\', ' ')
+                .replace('|', '').replace('>', '').replace('<', '').replace(';', '').replace(' ', '_')+'.html'))
         title = elem.text.replace('/', '').replace(':', '').replace('"', '')
         try:
             hfile = open(fname, 'ab')
