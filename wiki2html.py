@@ -15,7 +15,7 @@ import os
 import re
 import traceback
 
-tree = ET.parse('yourt.xml')
+tree = ET.parse('your.xml')
 root = tree.getroot()
 items = (['Category:', 'User talk:', 'Template:', 'User:', 'Shadowrun talk:', 'File:', 'Talk:', 
           'Shadowrun Wiki:', 'User blog:', 'User blog comment:'])
