@@ -17,7 +17,7 @@ tree = ET.parse('your.xml')
 root = tree.getroot()
 
 for elem in root.iter():
-    if ('export-0.6/}title' in elem.tag and elem.text is not None and'User talk:' not in elem.text 
+    if ('export-0.6/}title' in elem.tag and elem.text is not None and 'User talk:' not in elem.text 
     and 'Template:' not in elem.text and 'Category:' not in elem.text and 'User:' not in elem.text
     and 'Shadowrun talk:' not in elem.text and 'File:' not in elem.text and 'Talk:' not in elem.text
     and 'Shadowrun Wiki:' not in elem.text and 'Contributor:' not in elem.text
