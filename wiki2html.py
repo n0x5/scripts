@@ -13,26 +13,25 @@
 import xml.etree.ElementTree as ET
 import os
 import re
-import traceback
 
-tree = ET.parse('your.xml', encoding='utf8')
+tree = ET.parse('your.xml')
 root = tree.getroot()
-items = (['Category:', 'User talk:', 'Template:', 'User:', 'Shadowrun talk:', 'File:', 'Talk:', 
-          'Shadowrun Wiki:', 'User blog:', 'User blog comment:'])
+items = (['Category', 'User talk', 'Template', 'User', 'Shadowrun talk', 'File', 'Talk', 
+          'Shadowrun Wiki', 'User blog', 'User blog comment', 'Contributor'])
 
 for elem in root.iter():
-    if ('export-0.6/}title' in elem.tag and elem.text is not None and items not in elem.text.split(':')[0]):
+    if 'export-0.6/}title' in elem.tag and elem.text is not None and elem.text.split(':')[0] not in items:
         filestrip = re.sub(r'[\;*?!<>|/:"]', '', elem.text)
-        fname = (os.path.join(filestrip.strip().replace(' ', '_')+'.html'))
+        fname = (os.path.join(filestrip+'.html'))
         title = re.sub('[/:"]', '', elem.text)
         try:
             hfile = open(fname, 'ab')
             print(fname)
-            hfile.write('<h1>'+title+'</h1>')
+            hfile.write('<h1>'.encode('utf8')+title.encode('utf8')+'</h1>'.encode('utf8'))
         except Exception as e:
             print(str(e))
 
     if 'export-0.6/}text' in elem.tag and elem.text is not None:
-        hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />')
-        hfile.write('<pre>')
-        hfile.write(elem.text.replace('[', '<b>').replace(']', '</b>').replace('\'', ''))
+        hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />'.encode('utf8'))
+        hfile.write('<pre>'.encode('utf8'))
+        hfile.write(elem.text.replace('[', '<b>').replace(']', '</b>').replace('\'', '').encode('utf8'))
