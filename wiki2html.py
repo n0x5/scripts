@@ -13,15 +13,16 @@
 import xml.etree.ElementTree as ET
 import os
 import re
+import traceback
 
-tree = ET.parse('your.xml')
+tree = ET.parse('yourt.xml')
 root = tree.getroot()
 items = (['Category:', 'User talk:', 'Template:', 'User:', 'Shadowrun talk:', 'File:', 'Talk:', 
           'Shadowrun Wiki:', 'User blog:', 'User blog comment:'])
 
 for elem in root.iter():
     if ('export-0.6/}title' in elem.tag and elem.text is not None and items not in elem.text.split(':')[0]):
-        filestrip = re.sub('[\;*?!<>|/:"]', '', elem.text)
+        filestrip = re.sub(r'[\;*?!<>|/:"]', '', elem.text)
         fname = (os.path.join(filestrip.strip().replace(' ', '_')+'.html'))
         title = re.sub('[/:"]', '', elem.text)
         try:
