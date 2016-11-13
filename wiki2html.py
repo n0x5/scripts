@@ -12,7 +12,7 @@
 
 import xml.etree.ElementTree as ET
 import os
-
+import re
 
 tree = ET.parse('your.xml')
 root = tree.getroot()
@@ -21,11 +21,9 @@ items = (['Category:', 'User talk:', 'Template:', 'User:', 'Shadowrun talk:', 'F
 
 for elem in root.iter():
     if ('export-0.6/}title' in elem.tag and elem.text is not None and items not in elem.text.split(':')[0]):
-
-        fname = (os.path.join(elem.text.strip().replace('/', ' ').replace(':', '').replace('"', '')
-        .replace('?', '').replace('!', '').replace('*', '').replace('\\', ' ')
-        .replace('|', '').replace('>', '').replace('<', '').replace(';', '').replace(' ', '_')+'.html'))
-        title = elem.text.replace('/', '').replace(':', '').replace('"', '')
+        filestrip = re.sub('[\;*?!<>|/:"]', '', elem.text)
+        fname = (os.path.join(filestrip.strip().replace(' ', '_')+'.html'))
+        title = re.sub('[/:"]', '', elem.text)
         try:
             hfile = open(fname, 'ab')
             print(fname)
