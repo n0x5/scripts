@@ -15,7 +15,7 @@ import os
 import re
 import traceback
 
-tree = ET.parse('your.xml')
+tree = ET.parse('your.xml', encoding='utf8')
 root = tree.getroot()
 items = (['Category:', 'User talk:', 'Template:', 'User:', 'Shadowrun talk:', 'File:', 'Talk:', 
           'Shadowrun Wiki:', 'User blog:', 'User blog comment:'])
@@ -28,11 +28,11 @@ for elem in root.iter():
         try:
             hfile = open(fname, 'ab')
             print(fname)
-            hfile.write('<h1>'.encode('utf8')+title.encode('utf8')+'</h1>'.encode('utf8'))
+            hfile.write('<h1>'+title+'</h1>')
         except Exception as e:
             print(str(e))
 
     if 'export-0.6/}text' in elem.tag and elem.text is not None:
-        hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />'.encode('utf8'))
-        hfile.write('<pre>'.encode('utf8'))
-        hfile.write(elem.text.replace('[', '<b>').replace(']', '</b>').replace('\'', '').encode('utf8'))
+        hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />')
+        hfile.write('<pre>')
+        hfile.write(elem.text.replace('[', '<b>').replace(']', '</b>').replace('\'', ''))
