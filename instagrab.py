@@ -40,6 +40,7 @@ def grab_img(user):
             content6 = re.sub(r'\w{0,4}\.\d{0,4}\.\d{0,4}\.\d{0,5}\/', '', content7, flags=re.IGNORECASE)
             content4 = re.sub(r'https:\/\/\w{8}\S+\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
             content5 = re.sub(r'\?ig_cache_key=\w+(\S+)', '', content4, flags=re.IGNORECASE)
+            endpoint = os.path.join(os.path.dirname(__file__), user, content5)
             if not os.path.exists(user):
                 os.makedirs(user)
             if os.path.isfile(endpoint):
