@@ -3,7 +3,8 @@
 # Convert a wikimedia/wikia .xml to html files
 # where the title of the article is the name of the file
 # 
-# Some formatting is removed, no internal wiki links work, a <pre> tag is added, 
+# Some formatting is removed, internal wiki links converted to a href, 
+#a <pre> tag is added, 
 # and a style.css file is linked to automatically that you can
 # customize 
 # 
