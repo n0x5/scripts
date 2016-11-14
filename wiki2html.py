@@ -3,7 +3,7 @@
 # Convert a wikimedia/wikia .xml to html files
 # where the title of the article is the name of the file
 # 
-# Some formatting is removed, no internal wiki links work, a <pre> tag is added, 
+# Some formatting is removed, internal links work, a <pre> tag is added, 
 # and a style.css file is linked to automatically that you can
 # customize 
 # 
@@ -25,13 +25,15 @@ for elem in root.iter():
         fname = (os.path.join(filestrip+'.html'))
         title = re.sub('[/:"]', '', elem.text)
         try:
-            hfile = open(fname, mode='a', encoding='utf8')
+            hfile = open(fname, mode='w', encoding='utf8')
             print(fname)
             hfile.write('<h1>'+title+'</h1>')
         except Exception as e:
             print(str(e))
 
     if 'export-0.6/}text' in elem.tag and elem.text is not None:
+        links = re.sub(r'(\[\[(\S+\s{0,5}\w+){0,3}\]\])', r'<a href="\1.html">\1</a>', elem.text)
+        links2 =  re.sub(r'[][]', '', links)
         hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />')
         hfile.write('<pre>')
-        hfile.write(elem.text.replace('[', '<b>').replace(']', '</b>').replace('\'', ''))
+        hfile.write(links2)
