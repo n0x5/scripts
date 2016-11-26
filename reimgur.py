@@ -2,6 +2,9 @@
 
 # Retrieve Imgur+
 # Download all images on a subreddit from imgur.com
+# BRAND NEW 26 NOVEMBER 2016
+# - Names the files after reddit title of post
+# - Several fixes for edgecases of weird chars etc
 #
 # Now supports imgur albums and i.redd.it hosted images
 # 
@@ -21,6 +24,7 @@ from urllib.request import FancyURLopener
 import os
 import requests
 from bs4 import BeautifulSoup
+import itertools
 
 def crdate(datestr):
     return calendar.timegm(time.strptime(datestr, '%Y-%m-%d'))
@@ -36,7 +40,7 @@ headers = {
                    ' (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
 }
 
-url = ('https://www.reddit.com/r/%s/search?q=timestamp%%3A%s..%s&restrict_sr=on&sort=new&t=all&limit=60&syntax=cloudsearch'
+url = ('https://www.reddit.com/r/%s/search?q=timestamp%%3A%s..%s&restrict_sr=on&sort=hot&t=all&limit=60&syntax=cloudsearch'
        % (args.subreddit, args.tstamp1, args.tstamp2))
 
 class GrabIt(urllib.request.FancyURLopener):
@@ -49,53 +53,50 @@ class GrabIt(urllib.request.FancyURLopener):
             except Exception as e:
                 print(str(e))
 
-
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 grab1 = GrabIt()
+cont = soup.find('div', attrs={'class': 'contents'})
 
+def title(contentz):
+    for title2 in contentz.find_all('a', class_="search-title may-blank") or contentz:
+        return title2.get_text(' ', strip=True)
+
+def single(contentz):
+    for link in contentz.find_all('a', class_="search-link may-blank") or contentz:
+        return link.text
 
 print("searching", url)
 
-def get_single(soup, grab1):
-    for link in soup.findAll(string=re.compile("i.imgur.com")):
-        link2 = re.sub(r"[?]\d", "", link)
-        if os.path.isfile(link2[-11:]):
+for contentz in cont.find_all('div', class_=" search-result search-result-link has-thumbnail no-linkflair ") or contentz:
+    print(title(contentz), single(contentz))
+    title2 = title(contentz)
+    link2 = single(contentz)
+    if 'i.imgur.com' in link2:
+        if os.path.isfile(title2.replace(' ', '_')+'_'+link2[-11:]):
             print('file exists - skipping')
         else:
-            try:
-                grab1.download_file(link2, link2[-11:])
-                print(link)
-            except:
-                pass
+            grab1.download_file(link2, title2.replace(' ', '_')+'_'+link2[-11:])
+            print(title2.replace(' ', '_')+'_'+link2[-11:])
 
-def get_album(soup, headers, grab1):
-    for link in soup.findAll(string=re.compile("imgur.com/a/")):
-        print(link)
-        response2 = requests.get(link, headers=headers)
+    if 'imgur.com/a' in link2 or 'https://imgur.com/' in link2:
+        number = 0
+        response2 = requests.get(link2, headers=headers)
         soup2 = BeautifulSoup(response2.text, "html.parser")
-        for link2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w\w\w\w\w\w\w(.jpg)')):
-            link3 = link2['href']
-            if os.path.isfile(link3[-11:]):
+        for linkalb2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
+            number += 1
+            link3 = linkalb2['href']
+            print(title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:])
+            if os.path.isfile(title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:]):
                 print('file exists - skipping')
             else:
-                try:
-                    grab1.download_file('http:'+link3, link3[-11:])
-                    print(link3.strip('/'))
-                except:
-                    pass
+                grab1.download_file('http:'+link3, title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:])
+                print(title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:])
 
-def get_reddit_img(soup, grab1):
-    for link3 in soup.findAll(string=re.compile("i.redd")):
-        if os.path.isfile(link3[-16:].replace('/', '')):
-            print('file exists - skipping')
-        else:
-            try:
-                grab1.download_file(link3, link3[-16:].replace('/', ''))
-                print(link3)
-            except:
-                pass
+    if 'i.redd.it' in link2:
+        grab1.download_file(link2, title2.replace(' ', '_')+'_'+link2[17:].replace('/', '_'))
+        print(link2[17:])
 
-get_single(soup, grab1)
-get_album(soup, headers, grab1)
-get_reddit_img(soup, grab1)
+    if 'i.reddituploads.com' in link2:
+        grab1.download_file(link2, title2.replace(' ', '_')+'_redditup_'+link2[-17:].replace('/', '_')+'.jpg')
+        print(link2[17:]+'.jpg')
