@@ -73,11 +73,12 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
     title2 = title(contentz)
     link2 = single(contentz)
     if 'i.imgur.com' in link2:
-        if os.path.isfile(title2.replace(' ', '_')+'_'+link2[-11:]):
+        locl = title2.replace(' ', '_')+'_'+link2[-11:]
+        if os.path.isfile(locl):
             print('file exists - skipping')
         else:
-            grab1.download_file(link2, title2.replace(' ', '_')+'_'+link2[-11:])
-            print(title2.replace(' ', '_')+'_'+link2[-11:])
+            grab1.download_file(link2, locl)
+            print(locl)
 
     if 'imgur.com/a' in link2 or 'https://imgur.com/' in link2:
         number = 0
@@ -86,12 +87,13 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
         for linkalb2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
             number += 1
             link3 = linkalb2['href']
-            print(title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:])
-            if os.path.isfile(title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:]):
+            locl = title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:]
+            print(locl)
+            if os.path.isfile(locl):
                 print('file exists - skipping')
             else:
-                grab1.download_file('http:'+link3, title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:])
-                print(title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:])
+                grab1.download_file('http:'+link3, locl)
+                print(locl)
 
     if 'i.redd.it' in link2:
         grab1.download_file(link2, title2.replace(' ', '_')+'_'+link2[17:].replace('/', '_'))
