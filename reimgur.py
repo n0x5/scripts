@@ -10,8 +10,9 @@
 # - Several fixes for edgecases of weird chars etc
 # - adds imgur unique ID to filename
 #
-# reimgur.py 'subreddit' start year-month-day end year-month-day e.g.
-# 'reimgur.py pics 2015-01-01 2015-01-10'
+# reimgur.py 'subreddit' start year-month-day-hour end year-month-day-hour e.g.
+# hour is 24 hour clock, 00-24
+# 'reimgur.py pics 2015-01-01-02 2015-01-10-14'
 #
 # can also change the 'hot' text in the url to 'new', 'controversial' and so on
 
@@ -27,7 +28,7 @@ from bs4 import BeautifulSoup
 import itertools
 
 def crdate(datestr):
-    return calendar.timegm(time.strptime(datestr, '%Y-%m-%d'))
+    return calendar.timegm(time.strptime(datestr, '%Y-%m-%d-%H'))
 
 parser = argparse.ArgumentParser()
 parser.add_argument('subreddit')
