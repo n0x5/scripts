@@ -1,20 +1,19 @@
 #!/usr/bin/env python
 
 # Retrieve Imgur+
+#
 # Download all images on a subreddit from imgur.com/i.redd.it/reddituploads
 #
 # BRAND NEW 26 NOVEMBER 2016
+#
 # - Names the files after reddit title of post
 # - Several fixes for edgecases of weird chars etc
+# - adds imgur unique ID to filename
 #
-# Now supports imgur albums and i.redd.it hosted images
-# 
 # reimgur.py 'subreddit' start year-month-day end year-month-day e.g.
 # 'reimgur.py pics 2015-01-01 2015-01-10'
 #
-# can change the &limit=30 part up to 1000 but im not sure thats a good idea -
-# might get banned 
-# can also change the 'new' text in the url to 'hot', 'controversial' and so on
+# can also change the 'hot' text in the url to 'new', 'controversial' and so on
 
 import re
 import time
