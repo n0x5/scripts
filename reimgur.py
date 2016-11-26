@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 # Retrieve Imgur+
-# Download all images on a subreddit from imgur.com
+# Download all images on a subreddit from imgur.com/i.redd.it/reddituploads
+#
 # BRAND NEW 26 NOVEMBER 2016
 # - Names the files after reddit title of post
 # - Several fixes for edgecases of weird chars etc
