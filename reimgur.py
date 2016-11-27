@@ -80,7 +80,7 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
         response2 = requests.get(link2, headers=headers)
         soup2 = BeautifulSoup(response2.text, "html.parser")
         time.sleep(1)
-        for linkalb2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
+        for linkalb2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w{7}(.jpg|.png)')):
             number += 1
             link3 = linkalb2['href']
             locl = title2+'_'+str(number)+'_'+link3[-11:].replace('/', '_')
@@ -90,7 +90,7 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
                 grab1.download_file('http:'+link3, locl)
                 print(locl)
         number = 0
-        for linkalb2 in soup2.findAll('img', src=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
+        for linkalb2 in soup2.findAll('img', src=re.compile('\/\/i.imgur.com\/\w{7}(.jpg|.png)')):
             number += 1
             link3 = linkalb2['src']
             locl = title2+'_'+str(number)+'_'+link3[-11:].replace('/', '_')
