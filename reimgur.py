@@ -71,7 +71,7 @@ print("searching", url)
 for contentz in cont.find_all('div', class_=" search-result search-result-link has-thumbnail no-linkflair ") or contentz:
     title2 = title(contentz).replace(' ', '_').replace('/', '_').replace('&', '_').replace('"', '_').replace('|', '-')
     link2 = single(contentz)
-
+    time.sleep(1)
     if '//imgur.com/' in link2 and '.jpg' not in link2:
         if '#' in link2:
             link2 = re.sub(r'#0', '', link2)
@@ -89,6 +89,7 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
             else:
                 grab1.download_file('http:'+link3, locl)
                 print(locl)
+        number = 0
         for linkalb2 in soup2.findAll('img', src=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
             number += 1
             link3 = linkalb2['src']
