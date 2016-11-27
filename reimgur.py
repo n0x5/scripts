@@ -25,7 +25,6 @@ from urllib.request import FancyURLopener
 import os
 import requests
 from bs4 import BeautifulSoup
-import itertools
 
 def crdate(datestr):
     return calendar.timegm(time.strptime(datestr, '%Y-%m-%d-%H'))
@@ -70,26 +69,18 @@ def single(contentz):
 print("searching", url)
 
 for contentz in cont.find_all('div', class_=" search-result search-result-link has-thumbnail no-linkflair ") or contentz:
-    print(title(contentz), single(contentz))
-    title2 = title(contentz)
+    title2 = title(contentz).replace(' ', '_').replace('/', '_').replace('&', '_')
     link2 = single(contentz)
-    if 'i.imgur.com' in link2:
-        locl = title2.replace(' ', '_')+'_'+link2[-11:]
-        if os.path.isfile(locl):
-            print('file exists - skipping')
-        else:
-            grab1.download_file(link2, locl)
-            print(locl)
 
-    if 'imgur.com/a' in link2 or 'https://imgur.com/' in link2:
+    if '//imgur.com/' in link2 and '.jpg' not in link2:
         number = 0
+        print('ALBUM', link2)
         response2 = requests.get(link2, headers=headers)
         soup2 = BeautifulSoup(response2.text, "html.parser")
         for linkalb2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
             number += 1
             link3 = linkalb2['href']
-            locl = title2.replace(' ', '_')+'_'+str(number)+'_'+link3[-11:]
-            print(locl)
+            locl = title2+'_'+str(number)+'_'+link3[-11:].replace('/', '_')
             if os.path.isfile(locl):
                 print('file exists - skipping')
             else:
@@ -97,9 +88,29 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
                 print(locl)
 
     if 'i.redd.it' in link2:
-        grab1.download_file(link2, title2.replace(' ', '_')+'_'+link2[17:].replace('/', '_'))
-        print(link2[17:])
+        locl = title2+'_'+link2[17:].replace('/', '_')
+        if os.path.isfile(locl):
+            print('file exists - skipping')
+        else:
+            grab1.download_file(link2, locl)
+            print(link2[17:])
 
+    if 'i.reddituploads.com' in link2:
+        locl = title2+'_redditup_'+link2[-17:].replace('/', '_')+'.jpg'
+        if os.path.isfile(locl):
+            print('file exists - skipping')
+        else:
+            grab1.download_file(link2, locl)
+        print(link2[-12:]+'.jpg')
+
+    if 'i.reddit.com' in link2 and '.jpg' in link2 or '.gif' in link2:
+        link2 = re.sub(r'[?]\d', '', link2)
+        locl = title2+'_'+link2[-11:].replace('/', '_')
+        if os.path.isfile(locl):
+            print('file exists - skipping')
+        else:
+            grab1.download_file(link2, locl)
+            print(locl)
     if 'i.reddituploads.com' in link2:
         grab1.download_file(link2, title2.replace(' ', '_')+'_redditup_'+link2[-17:].replace('/', '_')+'.jpg')
         print(link2[17:]+'.jpg')
