@@ -116,7 +116,7 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
             grab1.download_file(link2, locl)
         print(link2[-12:]+'.jpg')
 
-    if 'i.reddit.com' in link2 and '.jpg' in link2 or '.gif' in link2:
+    if 'i.imgur.com' in link2 and '.jpg' in link2 or '.gif' in link2:
         link2 = re.sub(r'[?]\d', '', link2)
         locl = title2+'_'+link2[-11:].replace('/', '_')
         if os.path.isfile(locl):
