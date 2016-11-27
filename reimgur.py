@@ -69,14 +69,17 @@ def single(contentz):
 print("searching", url)
 
 for contentz in cont.find_all('div', class_=" search-result search-result-link has-thumbnail no-linkflair ") or contentz:
-    title2 = title(contentz).replace(' ', '_').replace('/', '_').replace('&', '_')
+    title2 = title(contentz).replace(' ', '_').replace('/', '_').replace('&', '_').replace('"', '_').replace('|', '-')
     link2 = single(contentz)
 
     if '//imgur.com/' in link2 and '.jpg' not in link2:
+        if '#' in link2:
+            link2 = re.sub(r'#0', '', link2)
         number = 0
         print('ALBUM', link2)
         response2 = requests.get(link2, headers=headers)
         soup2 = BeautifulSoup(response2.text, "html.parser")
+        time.sleep(1)
         for linkalb2 in soup2.findAll('a', href=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
             number += 1
             link3 = linkalb2['href']
@@ -86,6 +89,16 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
             else:
                 grab1.download_file('http:'+link3, locl)
                 print(locl)
+        for linkalb2 in soup2.findAll('img', src=re.compile('\/\/i.imgur.com\/\w{7}(.jpg)')):
+            number += 1
+            link3 = linkalb2['src']
+            locl = title2+'_'+str(number)+'_'+link3[-11:].replace('/', '_')
+            if os.path.isfile(locl):
+                print('file exists - skipping')
+            else:
+                grab1.download_file('http:'+link3, locl)
+                print(locl)
+
 
     if 'i.redd.it' in link2:
         locl = title2+'_'+link2[17:].replace('/', '_')
