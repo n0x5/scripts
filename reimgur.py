@@ -111,6 +111,3 @@ for contentz in cont.find_all('div', class_=" search-result search-result-link h
         else:
             grab1.download_file(link2, locl)
             print(locl)
-    if 'i.reddituploads.com' in link2:
-        grab1.download_file(link2, title2.replace(' ', '_')+'_redditup_'+link2[-17:].replace('/', '_')+'.jpg')
-        print(link2[17:]+'.jpg')
