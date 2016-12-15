@@ -40,7 +40,7 @@ def grab_img(user):
     driver.implicitly_wait(5)
     driver.find_element_by_xpath("//a[text()[contains(.,'Load more')]]").click();
     driver.implicitly_wait(5)
-    for _ in itertools.repeat(None, 2):
+    for _ in itertools.repeat(None, 20):
         driver.implicitly_wait(3)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
