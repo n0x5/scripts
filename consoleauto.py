@@ -57,7 +57,7 @@ def dl(i, wsite):
             wsite.write(('<tr><td class="title">{}</td> <td class="systems">{}'
                          '</td><td class="rlsdate">{}</td></tr>\n') .format(title(row), systems(row), rlsdate(row)))
 
-for i in range(91, 237):
+for i in range(1, 237):
     dl(i, wsite)
 
     time.sleep(120)
