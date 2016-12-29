@@ -20,12 +20,12 @@ wsite.write('<tr><th style="text-align:left">Title</th><th style="text-ali'
 
 def dl(i, wsite):
     headers = {
-        'User-Agent': ('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
-                       '(KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
     }
-    
-    url = 'http://www.gamespot.com/new-games/?sort=date&game_filter_type%5Bplatform%5D=111&game_filter_type%5BminRating%5D=&game_filter_type%5BtimeFrame%5D=&game_filter_type%5BstartDate%5D=&game_filter_type%5BendDate%5D=&game_filter_type%5Btheme%5D=&game_filter_type%5Bregion%5D=1&___game_filter_type%5Bdevelopers%5D=&___game_filter_type%5Bpublishers%5D=&game_filter_type%5Bletter%5D=&page={}' .format(str(i))
 
+
+    url = 'http://www.gamespot.com/new-games/?sort=date&game_filter_type%5Bplatform%5D=111&game_filter_type%5BminRating%5D=&game_filter_type%5BtimeFrame%5D=&game_filter_type%5BstartDate%5D=&game_filter_type%5BendDate%5D=&game_filter_type%5Btheme%5D=&game_filter_type%5Bregion%5D=1&___game_filter_type%5Bdevelopers%5D=&___game_filter_type%5Bpublishers%5D=&game_filter_type%5Bletter%5D=&page={}' .format(str(i))
+    print(url)
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
     gameslist = soup.find('section', attrs={'class': 'editorial river'})
@@ -57,10 +57,10 @@ def dl(i, wsite):
             wsite.write(('<tr><td class="title">{}</td> <td class="systems">{}'
                          '</td><td class="rlsdate">{}</td></tr>\n') .format(title(row), systems(row), rlsdate(row)))
 
-for i in range(1, 237):
+for i in range(91, 237):
     dl(i, wsite)
 
-    time.sleep(10)
+    time.sleep(120)
 
 
 wsite.write("</table>\n</body>\n</html>")
