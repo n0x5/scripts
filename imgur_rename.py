@@ -22,8 +22,8 @@ def title(contentz):
 for subdir, dirs, files in os.walk(cwd):
     for fn in files:
         if fn.endswith(".jpg") or fn.endswith(".gif"):
-            if re.match(r'\w{7}.jpg$', fn) is not None:
-                fn2 = re.match(r'(\w{7}).jpg$', fn)
+            fn2 = re.match(r'(\w{7}).jpg$', fn)
+            if fn2 is not None:
                 url = 'https://imgur.com/'+fn2.group(1)
                 response = requests.get(url, headers=headers)
                 soup = BeautifulSoup(response.text, "html.parser")
