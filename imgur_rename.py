@@ -5,10 +5,12 @@ import re
 import time
 import os
 import shutil
+#import urllib.request
+#from urllib.request import FancyURLopener
 import requests
 from bs4 import BeautifulSoup
 
-cwd = r'/path//to/folder'
+cwd = r'/path/to/folder'
 
 headers = {
     'User-Agent': ('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
@@ -27,7 +29,8 @@ for subdir, dirs, files in os.walk(cwd):
                 url = 'https://imgur.com/'+fn2.group(1)
                 response = requests.get(url, headers=headers)
                 soup = BeautifulSoup(response.text, "html.parser")
+                filestrip = re.sub(r'[\;*?!<>|/:"]', '', str(title(soup)))
                 if title(soup) is not None:
                     print(fn, 'rename to ->', title(soup)+'_'+fn)
-                    shutil.move(os.path.join(cwd, fn), os.path.join(cwd, title(soup)+'_'+fn))
+                    shutil.move(os.path.join(cwd, fn), os.path.join(cwd, filestrip+'_'+fn))
                 time.sleep(2)
