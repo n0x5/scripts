@@ -1,4 +1,5 @@
 # scan a local folder for imgur files then rename to title from imgur page
+# if the title doesn't exist on imgur the file is renamed with a '_' in front
 
 import re
 import time
