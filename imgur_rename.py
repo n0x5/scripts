@@ -5,8 +5,6 @@ import re
 import time
 import os
 import shutil
-#import urllib.request
-#from urllib.request import FancyURLopener
 import requests
 from bs4 import BeautifulSoup
 
