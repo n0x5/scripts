@@ -28,7 +28,8 @@ for subdir, dirs, files in os.walk(cwd):
                 response = requests.get(url, headers=headers)
                 soup = BeautifulSoup(response.text, "html.parser")
                 filestrip = re.sub(r'[\;*?!<>|/:"]', '', str(title(soup)))
+                file2 = (filestrip[:100]) if len(filestrip) > 120 else filestrip
                 if title(soup) is not None:
                     print(fn, 'rename to ->', title(soup)+'_'+fn)
-                    shutil.move(os.path.join(cwd, fn), os.path.join(cwd, filestrip+'_'+fn))
+                    shutil.move(os.path.join(cwd, fn), os.path.join(cwd, file2+'_'+fn))
                 time.sleep(2)
