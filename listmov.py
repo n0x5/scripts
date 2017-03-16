@@ -62,9 +62,8 @@ for subdir, dirs, files in os.walk(cwd):
                 basenm2 = os.path.basename(os.path.join(subdir))
                 file6 = "[]".join(basenm2.split('-')[-1:])
                 file7 = "[]".join(basenm2.split('.')[-1:]).split('-')[0]
-                if ('cd1' not in file2.lower() and 'cd2' not in file2.lower()
-                        and 'sample' not in file2.lower() and 'vobsub'
-                        not in file2.lower() and 'subs' not in file2.lower()):
+                banned = ['cd1', 'cd2', 'sample', 'vobsub', 'subs', 'proof', 'prooffix']
+                if basenm2.lower().split(' ')[0] not in banned:
                     store(basenm2, file6, genrs(file2))
                     number += 1
             except:
