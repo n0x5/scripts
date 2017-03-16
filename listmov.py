@@ -17,12 +17,14 @@ number = 0
 
 fname = 'list_{}_{}.html' .format(os.path.basename(cwd), today)
 hfile = open(fname, 'a')
-hfile.write('<!DOCTYPE html><html><body><h2><a href="{}">{} List</a></h2><ta'
-            'ble class="sortable" style="width:100%"><script src="sorttable.'
-            'js"></script>' .format(fname, os.path.basename(cwd)))
-hfile.write('<tr><th style="text-align:left">Release</th><th style="text-ali'
-            'gn:left">Group</th><th style="text-align:left">Genre</th><th st'
-            'yle="text-align:left">Format</th></tr>\n')
+hfile.write(""" 
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2><a href="{}">{} List</a></h2>
+            <table class="sortable" style="width:100%"><script src="sorttable.js"></script>
+            <tr><th style="text-align:left">Release</th><th style="text-align:left">Group</th><th style="text-align:left">Genre</th><th style="text-align:left">Format</th></tr>\n"""
+.format(fname, os.path.basename(cwd)))
 
 def imdburl(fn):
     filn2 = open(fn, "r")
@@ -39,8 +41,8 @@ def imdburl(fn):
 def store(title, grp, genre):
     print('{} - {} - {} - {} - {}'
           .format(basenm2, file6, genrs(file2), file7, number), imdburl(file2))
-    hfile.write('<tr><td><a href="{}">{}</a></td>  <td>{}</td> <td>{}</td><t'
-                'd>{}</td></tr>\n'
+    hfile.write("""
+            <tr><td><a href="{}">{}</a></td><td>{}</td> <td>{}</td><td>{}</td></tr>\n"""
                 .format(imdburl(file2), basenm2, file6, genrs(file2), file7))
 
 def genrs(fn):
@@ -67,7 +69,10 @@ for subdir, dirs, files in os.walk(cwd):
                     number += 1
             except:
                 pass
-hfile.write('<div class="total" style="font-weight:bold;">Total number'
-            ' of items: {} </br></br></div>' .format(number))
-hfile.write('</table>\n</body>\n</html>')
+hfile.write("""
+        <div class="total" style="font-weight:bold;">Total number of items: {} </br></br></div>
+        </table>
+    </body>
+</html>""" .format(number))
+
 hfile.close()
