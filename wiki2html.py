@@ -37,7 +37,9 @@ for elem in root.iter():
         if ':' in links2:
             links2 = re.sub(r':', r'', links2)
         if '#' in links2:
-            links2 = re.sub(r'#\w+\S\w+', r'', links2)
+            links2 = re.sub(r'#[\w\s\|\_\:\-]+', r'', links2)
+        if '|' in links2:
+            links2 = re.sub(r'[\|][\w\s\|\_\:\-]+', r'', links2)
         hfile.write('<link rel="stylesheet" href="style.css" type="text/css" media="screen" />')
         hfile.write('<pre>')
         hfile.write(links2)
