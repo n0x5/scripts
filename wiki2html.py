@@ -4,28 +4,33 @@
 # where the title of the article is the name of the file
 # 
 # Some formatting is removed, internal wiki links converted to <a href, a <pre> tag is added, 
-# and a style.css file is linked to automatically that you can
-# customize 
+# and a style.css file is linked to automatically that you can customize 
 # 
 # there will be bugs but it works ok on lostpedia
 # also excluded a bunch of non-content sections like Template and User talk
+# if there is a "hfile not defined" exception error, remove all the items from
+# the items list and then readd one by one
 
 import xml.etree.ElementTree as ET
 import os
 import re
 
-tree = ET.parse('your.xml')
+xmlfile = 'your.xml'
+
+tree = ET.parse(xmlfile)
 root = tree.getroot()
-items = (['User talk', 'Template', 'File', 'User blog', 'User blog comment', 
-          'MediaWiki', 'Talk', 'Template talk', 'Forum'])
+items = (['User talk', 'File', 'User blog comment', 'User'])
 
 for elem in root.iter():
     if '/}title' in elem.tag and elem.text is not None and elem.text.split(':')[0] not in items:
         filestrip = re.sub(r'[\;*?!<>|/:"]', '', elem.text)
         fname = (os.path.join(filestrip+'.html'))
         title = re.sub('[/:"]', '', elem.text)
+        file3 = str(xmlfile).replace('.', '_')
+        if not os.path.exists(file3):
+            os.makedirs(file3)
         try:
-            hfile = open(fname, mode='w', encoding='utf8')
+            hfile = open(file3+'/'+fname, mode='w', encoding='utf8')
             print(fname)
             hfile.write('<h1>'+title+'</h1>')
         except Exception as e:
