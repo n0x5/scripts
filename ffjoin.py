@@ -26,3 +26,5 @@ hfile.close()
 ffcmd = 'ffmpeg -f concat -safe 0 -i {} -c copy output2.mp4' .format(fname)
 print(ffcmd)
 subprocess.call(ffcmd)
+
+os.remove('clipmerg1.txt')
