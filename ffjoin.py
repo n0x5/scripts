@@ -2,7 +2,6 @@
 # paths are relative to current working directory
 # ffjoin.py clip1.mp4 clip2.mp4 clip4.mp4
 
-
 import sys
 import os
 import subprocess
@@ -10,11 +9,11 @@ import argparse
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('files', nargs="+")
+parser.add_argument('files', nargs='+')
 
 args = parser.parse_args()
-
 print(args.files)
+
 fname = 'clipmerg1.txt'
 hfile = open(fname, 'w')
 
