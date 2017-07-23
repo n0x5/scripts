@@ -6,14 +6,11 @@ import sys
 import os
 import subprocess
 import argparse
-import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('files', nargs='+')
 
 args = parser.parse_args()
-print(args.files)
-
 fname = 'clipmerg1.txt'
 hfile = open(fname, 'w')
 
