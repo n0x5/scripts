@@ -94,11 +94,14 @@ for subdir, dirs, files in os.walk(cwd):
                 file7 = "[]".join(basenm2.split('.')[-1:]).split('-')[0]
                 banned = ['cd1', 'cd2', 'sample', 'vobsub', 'subs', 'proof', 'prooffix', 'syncfix']
                 url = imdburl(file2)
-                imdb_info = get_info(url)
+                if url is not None and 'imdb' in url:
+                    imdb_info = get_info(url)
+                else:
+                    pass
                 if basenm2.lower().split(' ')[0] not in banned:
                     store(basenm2, file6, genrs(file2), imdb_info)
                     number += 1
-                    time.sleep(30)
+                    time.sleep(60)
             except Exception as e:
                 print(e)
 
