@@ -15,14 +15,14 @@ from random import randint
 
 today = time.strftime("__%m_%Y_%H_%M_%S")
 
-cwd = r'/path/to/movies'
+cwd = r'/path/to/folder'
 number = 0
 
 conn = sqlite3.connect('movies.db')
 cur = conn.cursor()
 cur.execute('''CREATE TABLE movies 
-            (release text unique, grp text, genre text, format text, imdb text, title text, director text, mainactors text, infogenres text, inforest text, infosummary text, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
-
+            (release text unique, grp text, genre text, format text, imdb text, title text, director text, 
+            mainactors text, infogenres text, inforest text, infosummary text, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
 
 def imdburl(fn):
     filn2 = open(fn, "r")
@@ -37,8 +37,12 @@ def imdburl(fn):
                 return ""
 
 def store(release, grp, genre, title, director, mainactors, infogenres, inforest, infosummary):
-    print('{} - {} - {} - {} - {} - {} - {} - {} - {} - {} - {}' .format(basenm2, file6, genrs(file2), file7, imdburl(file2), str(imdb_info[0]), str(imdb_info[1]), str(imdb_info[2]).replace('\\n', ''), str(imdb_info[3]), str(imdb_info[4]), str(imdb_info[5].strip())))
-    cur.execute('INSERT INTO movies (release, grp, genre, format, imdb, title, director, mainactors, infogenres, inforest, infosummary) VALUES (?,?,?,?,?,?,?,?,?,?,?)', (basenm2, file6, genrs(file2), file7, imdburl(file2), str(imdb_info[0]), str(imdb_info[1]), str(imdb_info[2]).replace('\\n', ''), str(imdb_info[3]), str(imdb_info[4]), str(imdb_info[5].strip())))
+    print('{} - {} - {} - {} - {} - {} - {} - {} - {} - {} - {}' .format(basenm2, file6, genrs(file2), file7, imdburl(file2), 
+        str(imdb_info[0]), str(imdb_info[1]), str(imdb_info[2]).replace('\\n', ''), str(imdb_info[3]), 
+        str(imdb_info[4]), str(imdb_info[5].strip())))
+    cur.execute('INSERT INTO movies (release, grp, genre, format, imdb, title, director, mainactors, infogenres, inforest, infosummary) VALUES (?,?,?,?,?,?,?,?,?,?,?)', 
+                (basenm2, file6, genrs(file2), file7, imdburl(file2), str(imdb_info[0]), str(imdb_info[1]), str(imdb_info[2]).replace('\\n', ''), 
+                str(imdb_info[3]), str(imdb_info[4]), str(imdb_info[5].strip())))
     cur.connection.commit()
 
 def genrs(fn):
@@ -69,7 +73,6 @@ def get_info(url):
     actor_table = soup.find('table', attrs={'class': 'cast_list'})
     rest_actors = [rest_actors1.get_text() for rest_actors1 in actor_table.find_all('span', attrs={'itemprop': 'name'})]
 
-    
     for line2 in genre:
         info_genres.append(line2)
     for line in main_actors2:
@@ -77,7 +80,6 @@ def get_info(url):
     for line3 in rest_actors:
         info_rest.append(line3)
     return title.get_text(), director.get_text(), info_main, info_genres, info_rest, summary.get_text().strip()
-
 
 for subdir, dirs, files in os.walk(cwd):
     for fn in files:
@@ -101,6 +103,6 @@ for subdir, dirs, files in os.walk(cwd):
                     number += 1
                     r_int = randint(60, 130)
                     time.sleep(r_int)
-                    #time.sleep(60)
+                
             except Exception as e:
                 print(e)
