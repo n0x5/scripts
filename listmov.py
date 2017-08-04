@@ -97,6 +97,7 @@ for subdir, dirs, files in os.walk(cwd):
                     imdb_info = get_info(url)
                 else:
                     print('Rls already exists or no imdb link')
+                    imdb_info = 'None'
                     pass
                 if basenm2.lower().split(' ')[0] not in banned:
                     store(basenm2, file6, genrs(file2), imdb_info[0], imdb_info[1], imdb_info[2], imdb_info[3], imdb_info[4], imdb_info[5])
