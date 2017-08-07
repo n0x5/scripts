@@ -27,15 +27,12 @@ cur = conn.cursor()
 
 def imdburl(fn):
     filn2 = open(fn, "r")
-    for iurls in filn2:
-        if "http" in iurls.lower():
-            urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\\'
-                              '),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', iurls)
+    for line in filn2:
+        if "imdb" in line.lower():
+            urls = re.findall(r'\d{7}', line)
             urls23 = "[]".join(urls)
-            if "imdb" in urls23:
-                return urls23
-            else:
-                return ""
+    return 'https://www.imdb.com/title/tt'+urls23
+
 
 def store(release, grp, genre, title, director, mainactors, infogenres, inforest, infosummary):
     print('{} - {} - {} - {} - {} - {} - {} - {} - {} - {} - {}' .format(basenm2, file6, genrs(file2), file7, imdburl(file2), 
@@ -94,9 +91,9 @@ for subdir, dirs, files in os.walk(cwd):
                 file7 = "[]".join(basenm2.split('.')[-1:]).split('-')[0]
                 banned = ['cd1', 'cd2', 'sample', 'vobsub', 'subs', 'proof', 'prooffix', 'syncfix']
                 url = imdburl(file2)
-                if url is not None and 'imdb' in url:
+                print(url)
+                if url is not None: 
                     imdb_info = get_info(url)
-                
                 if basenm2.lower().split('.')[0] not in banned:
                     store(basenm2, file6, genrs(file2), imdb_info[0], imdb_info[1], imdb_info[2], imdb_info[3], imdb_info[4], imdb_info[5])
                     number += 1
