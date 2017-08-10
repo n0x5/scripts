@@ -18,7 +18,7 @@ today = time.strftime("__%m_%Y_%H_%M_%S")
 cwd = r'/path/to/movies'
 number = 0
 
-conn = sqlite3.connect('moviesim2.db')
+conn = sqlite3.connect('movies.db')
 cur = conn.cursor()
 #cur.execute('''CREATE TABLE movies 
 #            (release text unique, grp text, genre text, format text, imdb text, title text, director text, 
@@ -28,7 +28,7 @@ cur = conn.cursor()
 def imdburl(fn):
     filn2 = open(fn, "r")
     for line in filn2:
-        if "imdb" in line.lower():
+        if "imdb.com" in line.lower():
             urls = re.findall(r'\d{7}', line)
             urls23 = "[]".join(urls)
     return 'https://www.imdb.com/title/tt'+urls23
@@ -39,7 +39,7 @@ def store(release, grp, genre, title, director, mainactors, infogenres, inforest
         str(imdb_info[0]).strip(), str(imdb_info[1]).strip(), str(imdb_info[2]).replace('\\n', ''), str(imdb_info[3]), 
         str(imdb_info[4]), str(imdb_info[5]).strip()))
     cur.execute('INSERT INTO movies (release, grp, genre, format, imdb, title, director, mainactors, infogenres, inforest, infosummary) VALUES (?,?,?,?,?,?,?,?,?,?,?)', 
-                (basenm2, file6, genrs(file2), file7, imdburl(file2), str(imdb_info[0]).strip(), str(imdb_info[1]).strip(), str(imdb_info[2]).replace('\\n', '').strip(), 
+                (basenm2, file6, genrs(file2), file7, imdburl(file2), str(imdb_info[0]).strip(), str(imdb_info[1]).strip().replace(',', ''), str(imdb_info[2]).replace('\\n', '').strip(), 
                 str(imdb_info[3]).strip(), str(imdb_info[4]).strip(), str(imdb_info[5]).strip()))
     cur.connection.commit()
 
