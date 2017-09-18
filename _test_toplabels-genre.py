@@ -11,10 +11,7 @@ parser.add_argument('day')
 args = parser.parse_args()
 
 cwd = r'/MP3/{}/{}/' .format(args.year, args.day)
-
-
 dirnames = os.listdir(cwd)
-
 
 def genre1(fpath):
     fn = os.path.basename(path1)
