@@ -17,7 +17,7 @@ for subdir, dirs, files in os.walk(rootdir):
         i2 = os.path.join(subdir, fn)
         i = open(i2, 'r')
         soup = BeautifulSoup(i, "html.parser")
-        company2 = boxoffice = soup.find('title').get_text(strip=True)
+        company2 = soup.find('title').get_text(strip=True)
         company = company2.replace(' - IMDbPro', '')
         table1 = soup.find('div', attrs={'id': 'filmography'})
 
