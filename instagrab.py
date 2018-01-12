@@ -50,6 +50,7 @@ def grab_img(user):
             content6 = re.sub(r'\w{0,4}\.\d{0,4}\.\d{0,4}\.\d{0,5}\/', '', content7, flags=re.IGNORECASE)
             content4 = re.sub(r'https:\/\/\w{8}\S+\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
             content5 = re.sub(r'\?ig_cache_key=\w+(\S+)', '', content4, flags=re.IGNORECASE)
+            content10 = re.sub(r'\/vp\/\w+\/\w+', '', content6, flags=re.IGNORECASE)
             endpoint = os.path.join(os.path.dirname(__file__), user, content5)
             endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+content5)
             if not os.path.exists(user):
@@ -58,7 +59,10 @@ def grab_img(user):
                 print('file exists - skipping')
             else:
                 try:
-                    grab1.download_file(content6, endpoint1)
+                    #time.sleep(4)
+                    grab1.download_file(content10, endpoint1)
+                    print(content5)
+                  
                 except Exception as e:
                     print(str(e))
 
@@ -67,7 +71,3 @@ def grab_img(user):
 
 for user in tqdm(users):
     grab_img(user)
-
-
-
-
