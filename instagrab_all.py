@@ -35,8 +35,11 @@ def grab_img(user):
     driver.get(url)
     driver.implicitly_wait(5)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    driver.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[3]/div/section/div/a').click();
-    driver.implicitly_wait(2)
+    try:
+        driver.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[3]/div/section/div/a').click();
+        driver.implicitly_wait(2)
+    except:
+        pass
     driver.find_element_by_xpath("//a[text()[contains(.,'Load more')]]").click();
     driver.implicitly_wait(5)
     for _ in itertools.repeat(None, 100):
