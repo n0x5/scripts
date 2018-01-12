@@ -1,13 +1,4 @@
-# instagrabALL.py - download ALL images from instagram user
-#
-# might take a bit longer to complete if the user has very few
-# images and the itertool has to run through 60 iterations.
-# 60 is just to make sure to get ALL pages, but change according
-# to instagram user post history
-#
-# write the names of the user you want to download in 'users' list (user1, user2' etc)
-# supports unlimited amount of users
-# python instagrab.py
+# instagrabALL.py - download all images from instagram user
 
 import re
 from selenium import webdriver
@@ -17,9 +8,11 @@ import itertools
 import os
 import urllib.request
 from urllib.request import FancyURLopener
+from selenium.webdriver import Chrome, ChromeOptions
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
-users = (['user1', 'user2', 'user3'])
+users = (['user1', 'user2'])
 
 class GrabIt(urllib.request.FancyURLopener):
         version = ('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
@@ -34,13 +27,19 @@ class GrabIt(urllib.request.FancyURLopener):
 
 def grab_img(user):
     grab1 = GrabIt()
-    driver = webdriver.Firefox()
+    options = ChromeOptions()
+    options.add_argument('headless')
+    options.add_argument('disable-gpu')
+    driver = Chrome(chrome_options=options)
     url = 'https://www.instagram.com/'+user+'/'
     driver.get(url)
     driver.implicitly_wait(5)
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    driver.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[3]/div/section/div/a').click();
+    driver.implicitly_wait(2)
     driver.find_element_by_xpath("//a[text()[contains(.,'Load more')]]").click();
     driver.implicitly_wait(5)
-    for _ in itertools.repeat(None, 20):
+    for _ in itertools.repeat(None, 100):
         driver.implicitly_wait(3)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
@@ -56,16 +55,17 @@ def grab_img(user):
             content6 = re.sub(r'\w{0,4}\.\d{0,4}\.\d{0,4}\.\d{0,5}\/', '', content7, flags=re.IGNORECASE)
             content4 = re.sub(r'https:\/\/\w{8}\S+\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
             content5 = re.sub(r'\?ig_cache_key=\w+(\S+)', '', content4, flags=re.IGNORECASE)
+            content10 = re.sub(r'\/vp\/\w+\/\w+', '', content6, flags=re.IGNORECASE)
             endpoint = os.path.join(os.path.dirname(__file__), user, content5)
+            endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+content5)
             if not os.path.exists(user):
                 os.makedirs(user)
-            if os.path.isfile(endpoint):
+            if os.path.isfile(endpoint) or os.path.isfile(endpoint1):
                 print('file exists - skipping')
             else:
                 try:
-                    time.sleep(4)
-                    print(content6)
-                    grab1.download_file(content6, endpoint)
+                    grab1.download_file(content10, endpoint1)
+                    print(content5)
                 except Exception as e:
                     print(str(e))
 
@@ -73,5 +73,3 @@ def grab_img(user):
 
 for user in users:
     grab_img(user)
-
-
