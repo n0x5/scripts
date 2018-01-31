@@ -60,7 +60,8 @@ def dl(i, site):
     for table2 in result_table.find_all('div', class_="g") or table2:
         title3 = re.sub(r'[\;*?!<>|/:"]', '', title2(table2))
         number = randint(122223, 99500322)
-        grab1.download_file(cache2(table2), title3+'__'+str(number)+'.html')
+        grab1.download_file(cache2(table2)+'&strip=1&vwsrc=0', title3+'__'+str(number)+'.html')
+        #grab1.download_file(cache2(table2), title3+'__'+str(number)+'.html') ### regular non-text cache link
         print(title3, link2(table2), cache2(table2))
         rand_int = randint(4, 11)
         time.sleep(rand_int)
