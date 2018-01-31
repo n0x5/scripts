@@ -57,15 +57,11 @@ def dl(i, site):
             else:
                 return 'None'
 
-    number = 0
     for table2 in result_table.find_all('div', class_="g") or table2:
         title3 = re.sub(r'[\;*?!<>|/:"]', '', title2(table2))
-        number += 1
-        if not os.path.exists(title3+'.html') or not os.path.exists(title3+'.html'+str(number)):
-            grab1.download_file(cache2(table2), title3+'.html')
-        else:
-            print('file exists')
-            grab1.download_file(cache2(table2), title3+'.html'+str(number))
+        number = randint(122223, 99500322)
+        print('file exists')
+        grab1.download_file(cache2(table2), title3+'.html'+str(number))
         print(title3, link2(table2), cache2(table2))
         rand_int = randint(4, 11)
         time.sleep(rand_int)
