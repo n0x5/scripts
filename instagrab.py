@@ -5,19 +5,16 @@
 # python instagrab.py
 
 import re
-from selenium import webdriver
-from selenium.webdriver import Chrome, ChromeOptions
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-import time
-import sys
-import os
+import requests
+import json
 import urllib.request
 from urllib.request import FancyURLopener
+import os
+import time
 from tqdm import tqdm
 
 
 users = ['user1', 'user2', 'user3', 'user4', 'user5']
-
 
 class GrabIt(urllib.request.FancyURLopener):
         version = ('Mozilla/6.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
@@ -31,43 +28,30 @@ class GrabIt(urllib.request.FancyURLopener):
 
 def grab_img(user):
     grab1 = GrabIt()
-    options = ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('disable-gpu')
-    driver = Chrome(chrome_options=options)
-    url = 'https://www.instagram.com/'+user+'/'
-    driver
-    driver.get(url)
-    time.sleep(2)
-    elem = driver.find_elements_by_xpath('//*[@src]')
-    print(user)
+    headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
+        }
+    url = 'https://www.instagram.com/'+user+'/?__a=1'
+    response = requests.get(url, headers=headers)
+    data = json.loads(response.text)
+    files = data['graphql']['user']['edge_owner_to_timeline_media']['edges']
 
-    for ii in elem:
-        if 'https://scontent' in ii.get_attribute('src'):
-            content2 = ii.get_attribute('src')
-            content3 = re.sub(r's\w\w\wx\w\w\w\/', '', content2, flags=re.IGNORECASE)
-            content7 = re.sub(r'\w{3}\.\w{2}\/', '', content3, flags=re.IGNORECASE)
-            content6 = re.sub(r'\w{0,4}\.\d{0,4}\.\d{0,4}\.\d{0,5}\/', '', content7, flags=re.IGNORECASE)
-            content4 = re.sub(r'https:\/\/\w{8}\S+\w{4}-\w(.*)\/', '', content2, flags=re.IGNORECASE)
-            content5 = re.sub(r'\?ig_cache_key=\w+(\S+)', '', content4, flags=re.IGNORECASE)
-            content10 = re.sub(r'\/vp\/\w+\/\w+', '', content6, flags=re.IGNORECASE)
-            endpoint = os.path.join(os.path.dirname(__file__), user, content5)
-            endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+content5)
-            if not os.path.exists(user):
+    for item in files:
+        full_url = item['node']['display_url']
+        filenm = os.path.basename(full_url)
+        endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm)
+        time.sleep(1)
+        if not os.path.exists(user):
                 os.makedirs(user)
-            if os.path.isfile(endpoint) or os.path.isfile(endpoint1):
-                print('file exists - skipping')
-            else:
-                try:
-                    #time.sleep(4)
-                    grab1.download_file(content10, endpoint1)
-                    print(content5)
-                  
-                except Exception as e:
-                    print(str(e))
-
-    driver.quit()
-
+        if os.path.isfile(endpoint1):
+            print('file {} exists - skipping' .format(endpoint1))
+        else:
+            try:
+                grab1.download_file(full_url, endpoint1)
+                print(full_url)
+            except Exception as e:
+                print(str(e))
 
 for user in tqdm(users):
+    print(user)
     grab_img(user)
