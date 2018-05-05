@@ -2,6 +2,8 @@
 
 # Move to sorted genre folders based on id3 tags
 
+
+
 import shutil
 import os
 from mutagen.id3 import ID3
@@ -11,7 +13,7 @@ os.chdir(cwd)
 
 for subdir, dirs, files in os.walk(cwd):
     for fn in files:
-        if fn.startswith("01") or fn.startswith("101") or fn.startswith("a_") or fn.startswith("a-"):
+        if fn.startswith("01") or fn.startswith("101") or fn.startswith("a_") or fn.startswith("a-") or fn.startswith("a1"):
             try:
                 file2 = os.path.join(subdir, fn)
                 audio = ID3(file2)
