@@ -35,18 +35,13 @@ class GrabIt(urllib.request.FancyURLopener):
 def grab_img(user):
     grab1 = GrabIt()
     headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
-        }
-    options = ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('disable-gpu')
-    driver = Chrome(chrome_options=options)
+        'User-Agent': 'Mozilla/9.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/10300101 Firefox/50.0'
+    }
+    
     url = 'https://www.instagram.com/'+user+'/'
-    driver.get(url)
-    time.sleep(2)
-    html = driver.page_source
-    html = driver.page_source
-    soup = BeautifulSoup(html)
+    html = requests.get(url, headers=headers)
+    time.sleep(0.9)
+    soup = BeautifulSoup(html.text, "html.parser")
     print(user)
     table1 = soup.find('body')
     table = table1.find('script', type=re.compile('text/javascript'))
@@ -59,7 +54,7 @@ def grab_img(user):
             full_url = item3['node']['display_url']
             filenm = os.path.basename(full_url)
             endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm)
-            time.sleep(1)
+            time.sleep(2)
             if not os.path.exists(user):
                     os.makedirs(user)
             if os.path.isfile(endpoint1):
@@ -71,6 +66,17 @@ def grab_img(user):
                 except Exception as e:
                     print(str(e))
 
+
+#users = list(reversed(users))
+
 for user in tqdm(users):
+    r_int = randint(9, 20)
+    time.sleep(r_int)
     print(user)
-    grab_img(user)
+    try:
+        grab_img(user)
+    except:
+        print('no file')
+        pass
+
+
