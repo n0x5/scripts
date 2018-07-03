@@ -52,8 +52,9 @@ def grab_img(user):
         full_url2 = item['graphql']['user']['edge_owner_to_timeline_media']['edges']
         for item3 in full_url2:
             full_url = item3['node']['display_url']
-            filenm = os.path.basename(full_url)
-            endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm)
+            filenm2 = os.path.basename(full_url)
+            filenm = re.search(r'(\S+\.jpg)', filenm2)
+            endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm.group(1))
             time.sleep(2)
             if not os.path.exists(user):
                     os.makedirs(user)
@@ -67,7 +68,7 @@ def grab_img(user):
                     print(str(e))
 
 
-#users = list(reversed(users))
+users = list(reversed(users))
 
 for user in tqdm(users):
     r_int = randint(9, 20)
