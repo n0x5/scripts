@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# template to check similarity / edit distance between 2 files
+# template to check string similarity / edit distance between names of files in a folder
 
 import re
 import sys
