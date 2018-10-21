@@ -5,7 +5,7 @@
 import os
 
 
-rootdir = r'/path/to/folder'
+rootdir = r'/path/folder'
 erlist = []
 fname = os.path.join(rootdir, 'dupes.txt')
 
@@ -19,6 +19,6 @@ for dupes in erlist:
         if dir3 == dir4 and dupes != dupes2:
             print(dupes2, dupes)
             hfile = open(fname, 'a')
-            hfile.write('location 1:'+subdir+'     location 2:'+dupes2+'\n')
+            hfile.write('location 1:'+dupes+'     location 2:'+dupes2+'\n')
             hfile.flush()
             hfile.close()
