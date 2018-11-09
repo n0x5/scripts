@@ -37,8 +37,11 @@ for elem in root.iter():
             print(str(e))
 
     if '/}text' in elem.tag and elem.text is not None:
+        
         links = re.sub(r'(\[\[(\S+\s{0,5}\w+){0,3}\]\])', r'<a href="\1.html">\1</a>', elem.text)
         links2 =  re.sub(r'[][]', '', links)
+        if 'File:' in links:
+            links2 = re.sub(r'\[\[File:(.*?)\|.+\]\]', r'<img width="250px" src="images/\1" />', elem.text)
         if ':' in links2:
             links2 = re.sub(r':', r'', links2)
         if '#' in links2:
