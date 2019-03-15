@@ -1,9 +1,5 @@
 import os
-import re
 import pymysql
-import argparse
-import subprocess
-import time
 import zlib
 
 conn = pymysql.connect(host='', user='', passwd='', charset ='utf8')
@@ -11,7 +7,6 @@ cur = conn.cursor()
 cur.execute("USE sfv")
 
 cwd = r'/path/to/rls'
-erlist = []
 
 def sfvdb(subdir):
     rls = os.path.basename(subdir)
@@ -28,6 +23,7 @@ def sfvdb(subdir):
         return 'None'
 
 for subdir, dirs, files in os.walk(cwd):
+    subdir2 = os.path.basename(subdir)
     sfvdata = sfvdb(subdir.lower().replace('\cd1', '').replace('\cd2', ''))
     fname = os.path.join(cwd, 'errors.txt')
     for fn in files:
@@ -45,15 +41,13 @@ for subdir, dirs, files in os.walk(cwd):
                         try:
                             sf = open(sf1,'rb').read()
                         except:
-                            erlist.append(sf1)
                             print('not found', sf1)
                             pass
 
                         sf2 = format(zlib.crc32(sf), '08x')
                         if sfv1 != sf2:
-                            erlist.append(sf1)
                             hfile = open(fname, 'a')
-                            hfile.write(sf1+'\n')
+                            hfile.write(sf1+'    correct crc:       '+sfv1+'\n')
                             hfile.flush()
                             hfile.close()
                             print('wrong crc', sf1)
