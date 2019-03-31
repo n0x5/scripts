@@ -53,7 +53,6 @@ def grab_img(user):
         for item3 in full_url2:
             time.sleep(0.1)
             full_url = 'https://instagram.com/p/'+item3['node']['shortcode']
-            print(full_url)
             html2 = requests.get(full_url, headers=headers)
             soup2 = BeautifulSoup(html2.text, "html.parser")
             table2 = soup2.find('body')
@@ -63,7 +62,6 @@ def grab_img(user):
             files2 = data2['entry_data']['PostPage']
             for item2 in files2:
                 full_url_disp = item2['graphql']['shortcode_media']['display_url']
-                print(full_url_disp)
                 filenm2 = os.path.basename(full_url_disp)
                 filenm = re.search(r'(\S+\.jpg)', filenm2)
                 endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm.group(1))
@@ -75,6 +73,7 @@ def grab_img(user):
                 else:
                     try:
                         grab1.download_file(full_url_disp, endpoint1)
+                        print(full_url_disp)
                     except Exception as e:
                         print(str(e))
 
@@ -94,13 +93,13 @@ def grab_img(user):
                         else:
                             try:
                                 grab1.download_file(full_url_disp, endpoint1)
+                                print(full_url_disp)
                             except Exception as d:
                                 print(str(d))
                 except Exception as e:
-                    #continue
-                    print(str(e))
+                    pass
 
-#users = list(reversed(users))
+users = list(reversed(users))
 
 for user in tqdm(users):
     r_int = randint(9, 20)
@@ -110,5 +109,4 @@ for user in tqdm(users):
         grab_img(user)
     except Exception as e:
         print(str(e))
-
 
