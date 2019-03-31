@@ -14,13 +14,13 @@ import os
 import json
 import urllib.request
 from urllib.request import FancyURLopener
+from random import randint
 import requests
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 
 
 users = ['user1', 'user2', 'user3', 'user4', 'user5']
-
 
 class GrabIt(urllib.request.FancyURLopener):
         version = ('Mozilla/6.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
@@ -40,7 +40,7 @@ def grab_img(user):
     
     url = 'https://www.instagram.com/'+user+'/'
     html = requests.get(url, headers=headers)
-    time.sleep(0.9)
+    time.sleep(0.2)
     soup = BeautifulSoup(html.text, "html.parser")
     print(user)
     table1 = soup.find('body')
@@ -51,24 +51,56 @@ def grab_img(user):
     for item in files:
         full_url2 = item['graphql']['user']['edge_owner_to_timeline_media']['edges']
         for item3 in full_url2:
-            full_url = item3['node']['display_url']
-            filenm2 = os.path.basename(full_url)
-            filenm = re.search(r'(\S+\.jpg)', filenm2)
-            endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm.group(1))
-            time.sleep(2)
-            if not os.path.exists(user):
-                    os.makedirs(user)
-            if os.path.isfile(endpoint1):
-                print('file {} exists - skipping' .format(endpoint1))
-            else:
+            time.sleep(0.1)
+            full_url = 'https://instagram.com/p/'+item3['node']['shortcode']
+            print(full_url)
+            html2 = requests.get(full_url, headers=headers)
+            soup2 = BeautifulSoup(html2.text, "html.parser")
+            table2 = soup2.find('body')
+            table3 = table2.find('script', type=re.compile('text/javascript'))
+            json2 = table3.get_text().replace('window._sharedData = ', '')[:-1]
+            data2 = json.loads(json2)
+            files2 = data2['entry_data']['PostPage']
+            for item2 in files2:
+                full_url_disp = item2['graphql']['shortcode_media']['display_url']
+                print(full_url_disp)
+                filenm2 = os.path.basename(full_url_disp)
+                filenm = re.search(r'(\S+\.jpg)', filenm2)
+                endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm.group(1))
+                time.sleep(0.2)
+                if not os.path.exists(user):
+                        os.makedirs(user)
+                if os.path.isfile(endpoint1):
+                    print('file {} exists - skipping' .format(endpoint1))
+                else:
+                    try:
+                        grab1.download_file(full_url_disp, endpoint1)
+                    except Exception as e:
+                        print(str(e))
+
+            for item5 in files2:
                 try:
-                    grab1.download_file(full_url, endpoint1)
-                    print(full_url)
+                    full_url_edgecar = item5['graphql']['shortcode_media']['edge_sidecar_to_children']['edges']
+                    for item4 in full_url_edgecar:
+                        full_url_disp = item4['node']['display_url']
+                        filenm2 = os.path.basename(full_url_disp)
+                        filenm = re.search(r'(\S+\.jpg)', filenm2)
+                        endpoint1 = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm.group(1))
+                        time.sleep(0.2)
+                        if not os.path.exists(user):
+                                os.makedirs(user)
+                        if os.path.isfile(endpoint1):
+                            print('file {} exists - skipping' .format(endpoint1))
+                        else:
+                            try:
+                                grab1.download_file(full_url_disp, endpoint1)
+                            except Exception as d:
+                                print(str(d))
                 except Exception as e:
+                    #continue
                     print(str(e))
 
-
-users = list(reversed(users))
+#users = list(reversed(users))
 
 for user in tqdm(users):
     r_int = randint(9, 20)
@@ -76,8 +108,7 @@ for user in tqdm(users):
     print(user)
     try:
         grab_img(user)
-    except:
-        print('no file')
-        pass
+    except Exception as e:
+        print(str(e))
 
 
