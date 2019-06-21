@@ -17,7 +17,7 @@ for subdir, dirs, files in os.walk(cwd):
     f = 0
     for fn in files:
         if fn.endswith('.mp3'):
-            while f < 1 :
+            while f < 1:
                 try:
                     f += 1
                     file2 = os.path.join(subdir, fn)
