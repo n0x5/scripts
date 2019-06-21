@@ -9,7 +9,7 @@ from mutagen.id3 import ID3
 
 #cwd = os.getcwd()
 #os.chdir(cwd)
-cwd = r'/folder/path'
+cwd = r'H:\archive\mp3\mp3 2019'
 
 
 
@@ -30,7 +30,7 @@ for subdir, dirs, files in os.walk(cwd):
                     rootdir2 = os.path.join(cwd, sf)
                     path_dest = os.path.join(rootdir2, basenm2)
                     if sf in path2:
-                        print('exists', basenm2, sf)
+                        print('destination folder exists at', sf+'\\'+basenm2)
                         continue
                     if not sf in path2:
                         print(basenm2+' moved to->'+sf)
