@@ -31,7 +31,6 @@ class GrabIt(urllib.request.FancyURLopener):
                     self.urlretrieve(url, path)
                 except Exception as e:
                     print(str(e))
-
 def grab_img(user):
     grab1 = GrabIt()
     headers = {
@@ -42,6 +41,7 @@ def grab_img(user):
     html = requests.get(url, headers=headers)
     time.sleep(0.2)
     soup = BeautifulSoup(html.text, "html.parser")
+    
     print(user)
     table1 = soup.find('body')
     table = table1.find('script', type=re.compile('text/javascript'))
@@ -51,10 +51,20 @@ def grab_img(user):
     for item in files:
         full_url2 = item['graphql']['user']['edge_owner_to_timeline_media']['edges']
         for item3 in full_url2:
-            time.sleep(0.1)
+            time.sleep(0.4)
             full_url = 'https://instagram.com/p/'+item3['node']['shortcode']
+            print(full_url)
             html2 = requests.get(full_url, headers=headers)
             soup2 = BeautifulSoup(html2.text, "html.parser")
+            try:
+                video_url = soup2.find('meta', content=re.compile('.mp4'))
+                video_url2 = video_url['content']
+                filenm_vid = re.search(r'(\w+\.mp4)', video_url2)
+                endpoint_vid = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm_vid.group(1))
+                grab1.download_file(video_url2, endpoint_vid)
+                print('downloaded video ->', video_url2)
+            except Exception as e:
+                print(str(e))
             table2 = soup2.find('body')
             table3 = table2.find('script', type=re.compile('text/javascript'))
             json2 = table3.get_text().replace('window._sharedData = ', '')[:-1]
@@ -75,6 +85,7 @@ def grab_img(user):
                         grab1.download_file(full_url_disp, endpoint1)
                         print(full_url_disp)
                     except Exception as e:
+                        pass
                         print(str(e))
 
             for item5 in files2:
@@ -95,11 +106,15 @@ def grab_img(user):
                                 grab1.download_file(full_url_disp, endpoint1)
                                 print(full_url_disp)
                             except Exception as d:
+                                pass
                                 print(str(d))
                 except Exception as e:
+                    #continue
+                    print(str(e))
                     pass
+                    
 
-users = list(reversed(users))
+#users = list(reversed(users))
 
 for user in tqdm(users):
     r_int = randint(9, 20)
@@ -109,4 +124,7 @@ for user in tqdm(users):
         grab_img(user)
     except Exception as e:
         print(str(e))
+
+
+
 
