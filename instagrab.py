@@ -22,15 +22,6 @@ from bs4 import BeautifulSoup
 
 users = ['user1', 'user2', 'user3', 'user4', 'user5']
 
-class GrabIt(urllib.request.FancyURLopener):
-        version = ('Mozilla/6.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
-                ' (KHTML, like Gecko) Chrome/53.0.2526.111 Safari/547.36')
-        def download_file(self, url, path):
-                try:
-                    self.urlretrieve = GrabIt().retrieve
-                    self.urlretrieve(url, path)
-                except Exception as e:
-                    print(str(e))
 def grab_img(user):
     grab1 = GrabIt()
     headers = {
@@ -61,8 +52,11 @@ def grab_img(user):
                 video_url2 = video_url['content']
                 filenm_vid = re.search(r'(\w+\.mp4)', video_url2)
                 endpoint_vid = os.path.join(os.path.dirname(__file__), user, user+'_'+filenm_vid.group(1))
-                grab1.download_file(video_url2, endpoint_vid)
-                print('downloaded video ->', video_url2)
+                if os.path.isfile(endpoint_vid):
+                    print('video {} exists - skipping' .format(endpoint_vid))
+                else:
+                    grab1.download_file(video_url2, endpoint_vid)
+                    print('downloaded video ->', video_url2)
             except Exception as e:
                 print(str(e))
             table2 = soup2.find('body')
@@ -109,12 +103,11 @@ def grab_img(user):
                                 pass
                                 print(str(d))
                 except Exception as e:
-                    #continue
                     print(str(e))
                     pass
                     
 
-#users = list(reversed(users))
+users = list(reversed(users))
 
 for user in tqdm(users):
     r_int = randint(9, 20)
@@ -124,7 +117,4 @@ for user in tqdm(users):
         grab_img(user)
     except Exception as e:
         print(str(e))
-
-
-
 
