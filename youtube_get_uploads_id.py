@@ -5,7 +5,6 @@
 import json
 import urllib.request
 import requests
-import subprocess
 import os
 import re
 import argparse
@@ -18,15 +17,15 @@ args = parser.parse_args()
 url1 = 'https://www.googleapis.com/youtube/v3/'
 
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/49.0'
-    }
 
 api_key = ''
 
+
+list_of_videos = []
+
 def get_id_by_username_search(user_name_search):
     url = url1+'search?part=id%2Csnippet&maxResults=1&q={}&type=channel&key={}' .format(user_name_search, api_key)
-    response = requests.get(url, headers=headers)
+    response = requests.get(url)
     data = json.loads(response.text)
     for item in data['items']:
         channel_id = item['snippet']['channelId']
@@ -35,7 +34,7 @@ def get_id_by_username_search(user_name_search):
 
 def get_id_by_channel_id(user_name):
     url = url1+'channels?part=snippet%2CcontentDetails%2Cstatistics&forUsername={}&key={}' .format(user_name, api_key)
-    response = requests.get(url, headers=headers)
+    response = requests.get(url)
     data = json.loads(response.text)
     for item in data['items']:
         channel_id = item['id']
@@ -46,15 +45,21 @@ def get_id_by_channel_id(user_name):
 def get_info_id(user_id):
     def get_url(url2):
         print(url2)
-        response = requests.get(url2, headers=headers)
+        response = requests.get(url2)
         data = json.loads(response.text)
         for item in data['items']:
+            #print(item)
             channel_id = item['id']
             name = item['snippet']['title']
             description = item['snippet']['description']
             p_id = item['contentDetails']['relatedPlaylists']['uploads']
             viewcount = item['statistics']['viewCount']
-            subcount = item['statistics']['subscriberCount']
+            try:
+                subcount = item['statistics']['subscriberCount']
+            except:
+                subcount = 'Hidden'
+            date_established = item['snippet']['publishedAt']
+            videocount = item['statistics']['videoCount']
             try:
                 customurl = item['snippet']['customUrl']
             except:
@@ -65,11 +70,15 @@ def get_info_id(user_id):
             print('Channel ID:', chanid+channel_id)
             print('Name:', name)
             print('Custom url:', customurl)
-            print('Description:', description)
+            print('Created:', date_established.replace('T', ' ').replace('Z', ' '))
+            try:
+                print('Description:', description)
+            except:
+                print('Description:', description.encode("utf-8"))
             print('-----------------')
             print('Uploads playlist ID:', p_id)
             print('-----------------')
-            print('Statistics: View Count: {}, Subscriber count: {}' .format(viewcount, subcount))
+            print('Statistics: View Count: {}, Subscriber count: {}, Video count: {}' .format(viewcount, subcount, videocount))
             print('============')
             print('')
             url_id = url1+'channels?part=snippet%2CcontentDetails%2Cstatistics&id={}&key={}' .format(p_id, api_key)
@@ -109,4 +118,5 @@ if '/user/' in args.channel and '/channel/' not in args.channel and '/c/' not in
         get_id_by_channel_id(nameid)
     except KeyError:
         get_id_by_username_search(nameid)
+
 
