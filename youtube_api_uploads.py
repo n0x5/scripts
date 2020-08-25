@@ -12,8 +12,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('channel')
 args = parser.parse_args()
 
-print(os.name)
-
 
 streams_directory = r'G:\yt_live'
 
@@ -21,7 +19,7 @@ streams_directory = r'G:\yt_live'
 
 uploads_playlistid = args.channel
 
-download_root = r'G:\downloadfolder'
+download_root = r'C:\video'
 
 
 api_key = ''
@@ -41,7 +39,10 @@ def get_url(url2):
         channel_name = item['snippet']['channelTitle']
         if search_word.lower() in title.lower():
             list_of_videos.append(yt_id)
-            print(yt_id, title.encode("utf-8"))
+            try:
+                print(yt_id, title)
+            except:
+                print(yt_id, title.encode("utf-8"))
     if 'nextPageToken' in data:
         print('getting page', data['nextPageToken'])
         url2 = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=25&pageToken={}&playlistId={}&key={}' .format(data['nextPageToken'], uploads_playlistid, api_key)
@@ -74,7 +75,7 @@ for subdir, dirs, files in os.walk(download_root):
 
 for fn3 in list_of_local:
     for fn4 in list_of_videos:
-        if fn4 in fn3 and not fn3.endswith('.part'):
+        if fn4 in fn3 and not fn3.endswith('.part') and not fn3.endswith('.ytdl') and not fn3.endswith('.webp') and not fn3.endswith('.jpg'):
             list_of_videos.remove(fn4)
 
 print('new videos/videos you dont have')
@@ -86,7 +87,7 @@ print('======')
 for item3 in list_of_videos:
     video_final = 'https://www.youtube.com/watch?v={}' .format(item3)
     if os.name == 'nt':
-        proc = subprocess.Popen(['youtube-dl', '--match-filter', '!is_live', '{}' .format(video_final)], cwd=download_directory, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        proc = subprocess.Popen(['youtube-dl', '--write-all-thumbnails', '--match-filter', '!is_live', '{}' .format(video_final)], cwd=download_directory, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
         proc = subprocess.Popen(['youtube-dl --match-filter !is_live {}' .format(video_final)], cwd=download_directory, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
@@ -102,9 +103,12 @@ for item3 in list_of_videos:
             print(item3, 'video is a live stream, capturing separately')
             file_format = r'%(title)s-%(id)s.%(ext)s'
             final_cmd = 'start cmd /k youtube-dl -o "{}" {}' .format(streams_directory+'\\'+file_format, video_final)
+            final_cmd2 = "gnome-terminal -e 'youtube-dl -o {} {}'" .format(streams_directory+'\\'+file_format, video_final)
             if os.name == 'nt':
                 os.system(final_cmd)
-        if 'error' in str(errors).lower():
+            else:
+                os.system(final_cmd2)
+        if 'error' in str(errors).lower() and not 'premiere' in str(errors).lower():
             with open(os.path.join(download_root, 'errors.txt'), 'a') as error_file:
                 print('unable to download:', video_final, 'logged to errors.txt')
                 error_file.write(video_final+'\n')
@@ -116,4 +120,3 @@ for item3 in list_of_videos:
 
 
 print('all videos downloaded / no new videos')
-
