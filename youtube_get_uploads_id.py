@@ -74,7 +74,7 @@ def get_info_id(user_id):
             try:
                 print('Description:', description)
             except:
-                print('Description:', description.encode("utf-8"))
+                print('Description:', description.encode('ISO-8859-1'))
             print('-----------------')
             print('Uploads playlist ID:', p_id)
             print('-----------------')
@@ -82,6 +82,21 @@ def get_info_id(user_id):
             print('============')
             print('')
             url_id = url1+'channels?part=snippet%2CcontentDetails%2Cstatistics&id={}&key={}' .format(p_id, api_key)
+            with open('log.txt', 'a') as log_file:
+                log_file.write('============\n')
+                log_file.write('Channel ID: {}\n' .format(chanid+channel_id)) 
+                log_file.write('Name: {}\n' .format(name)) 
+                log_file.write('Custom url: {}\n' .format(customurl)) 
+                log_file.write('Created: {}\n' .format(date_established.replace('T', ' ').replace('Z', ' '))) 
+                try:
+                    log_file.write('Description: {}\n' .format(description)) 
+                except:
+                    log_file.write('Description: {}\n' .format(description.encode("utf-8"))) 
+                log_file.write('-----------------\n')
+                log_file.write('Uploads playlist ID: {}\n' .format(p_id)) 
+                log_file.write('-----------------\n')
+                log_file.write('Statistics: View Count: {}, Subscriber count: {}, Video count: {}\n' .format(viewcount, subcount, videocount))
+                log_file.write('============\n\n')
         else:
             pass
 
@@ -118,5 +133,6 @@ if '/user/' in args.channel and '/channel/' not in args.channel and '/c/' not in
         get_id_by_channel_id(nameid)
     except KeyError:
         get_id_by_username_search(nameid)
+
 
 
