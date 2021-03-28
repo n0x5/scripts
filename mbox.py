@@ -5,7 +5,7 @@ import sqlite3
 import time
 import datetime
 
-conn = sqlite3.connect('emails.db')
+conn = sqlite3.connect('emails3.db')
 cur = conn.cursor()
 
 cur.execute('''CREATE TABLE if not exists emails
@@ -16,7 +16,10 @@ for message in mailbox.mbox('All mail Including Spam and Trash.mbox'):
         subject = message['subject']
         sender = message['from']
         date = message['date']
-        u_stamp = datetime.datetime.strptime(message['date'], '%a, %d %b %Y %H:%M:%S %z')
+        try:
+            u_stamp = datetime.datetime.strptime(message['date'], '%a, %d %b %Y %H:%M:%S %z')
+        except:
+            u_stamp = 'Null'
         if message.is_multipart():
             content = ''.join(part.get_payload(decode=True) for part in message.get_payload())
         else:
