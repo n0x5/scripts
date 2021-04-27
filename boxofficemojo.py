@@ -47,3 +47,4 @@ for table in table3:
         
     except Exception as e:
         print(e)
+        pass
