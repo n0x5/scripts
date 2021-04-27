@@ -12,12 +12,12 @@ args = parser.parse_args()
 
 conn = sqlite3.connect('boxofficemojo.db')
 cur = conn.cursor()
-cur.execute('''CREATE TABLE boxoffice 
-            (title text, worldwide text, domestic text, domesticper text, overseas text, overseasper text, studio text, 
-             year text, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
+cur.execute('''CREATE TABLE if not exists boxoffice
+            (title text, theaters int, gross text, distributor text, release_date text, 
+             year int, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
 
 
-url = r'http://www.boxofficemojo.com/yearly/chart/?view2=worldwide&yr={}&p=.htm' .format(args.year)
+url = r'https://www.boxofficemojo.com/year/{}/?grossesOption=calendarGrosses&sort=releaseDate' .format(args.year)
 
 headers = {
 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
@@ -26,22 +26,22 @@ headers = {
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 
-info3 = soup.find_all('tr')
+table2 = soup.find('div', attrs={'class': 'a-section imdb-scroll-table-inner'})
 
-for item in info3:
+table3 = table2.find_all('tr')
+
+for table in table3:
+    title = table.find('td', attrs={'class': 'a-text-left mojo-field-type-release mojo-cell-wide'})
+    theaters = table.find('td', attrs={'class': 'a-text-right mojo-field-type-positive_integer'})
+    gross = table.find('td', attrs={'class': 'a-text-right mojo-field-type-money mojo-estimatable'})
+    release_date = table.find('td', attrs={'class': 'a-text-left mojo-field-type-date mojo-sort-column a-nowrap'})
+    distributor = table.find('td', attrs={'class': 'a-text-left mojo-field-type-studio'})
+
     try:
-        tdtab = item.find_all('td')
-        title = tdtab[1].get_text()
-        studio = tdtab[2].get_text()
-        worldwide = tdtab[3].get_text()
-        domestic = tdtab[4].get_text()
-        domesticper = tdtab[5].get_text()
-        overseas = tdtab[6].get_text()
-        overseasper = tdtab[7].get_text()
-        print(title, worldwide, domestic, domesticper, overseas, overseasper, studio, args.year)
-        cur.execute('INSERT INTO boxoffice (title, worldwide, domestic, domesticper, overseas, overseasper, studio, year) VALUES (?,?,?,?,?,?,?,?)', 
-                (title, worldwide, domestic, domesticper, overseas, overseasper, studio, args.year))
+        stuff = title.get_text(), int(args.year), int(theaters.get_text().replace(',', '')), gross.get_text(), release_date.get_text(), distributor.get_text().replace('\n\n', '')
+        print(stuff)
+        cur.execute('INSERT INTO boxoffice (title, year, theaters, gross, distributor, release_date) VALUES (?,?,?,?,?,?)', (stuff))
         cur.connection.commit()
+        
     except:
         pass
-
