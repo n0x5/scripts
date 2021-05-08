@@ -46,11 +46,11 @@ for table in table3:
     try:
         theaters_final = int(theaters[0].get_text().replace(',', ''))
     except:
-        theaters_final = '-'
+        theaters_final = 0
     try:
         theatersopen_final = int(theatersopen[1].get_text().replace(',', ''))
     except:
-        theatersopen_final = '-'
+        theatersopen_final = 0
     try:
         gross_final = gross.get_text()
     except:
