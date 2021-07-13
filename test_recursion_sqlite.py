@@ -1,7 +1,6 @@
 import sqlite3
 import os
 
-search = r'black'
 
 connection = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'movies44.db'))
 cursor = connection.cursor()
