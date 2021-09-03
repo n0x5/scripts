@@ -8,26 +8,35 @@ import os
 import time
 import calendar
 import datetime
+from tqdm import tqdm
+import argparse
 
-conn = sqlite3.connect('bookmarks.db')
+parser = argparse.ArgumentParser()
+parser.add_argument('bfile')
+args = parser.parse_args()
+
+conn = sqlite3.connect('bookmarks2.db')
 cur = conn.cursor()
 cur.execute('''CREATE TABLE if not exists bookmarks 
             (link text unique, timeaddedunix text, timeaddedread text, desctitle text, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
 
-bmarks = r'bookmarks_8_12_20.html'
 
+bmarks = os.path.join(os.path.dirname(__file__), args.bfile)
 i = open(bmarks, 'r', encoding='utf8')
 soup = BeautifulSoup(i, "html.parser")
 
 links = soup.find_all('a')
 
-for link in links:
-    link_final = link['href']
+for link in tqdm(links):
+    link_final2 = link['href']
+    if 'instagram.com' in link_final2:
+        link_final = re.sub(r'\?hl\=\w{2}', '', link_final2)
+    else:
+        link_final = link_final2
     t_added = link['add_date']
     t_read_i = int(link['add_date'])
     t_readable = datetime.datetime.utcfromtimestamp(t_read_i).strftime('%Y-%m-%d')
     t_desc = link.get_text()
-    print(t_desc)
     try:
         cur.execute('INSERT INTO bookmarks (link, timeaddedunix, timeaddedread, desctitle) VALUES (?,?,?,?)', (link_final, t_added, str(t_readable), t_desc))
         cur.connection.commit()
