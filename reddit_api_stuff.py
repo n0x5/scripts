@@ -4,13 +4,13 @@ import json
 import time
 from datetime import datetime
 
-#####################
+
 ### YOUR API CREDENTIALS ###
 secret_token = ''
 personal_use_script = ''
 username = ''
 password = ''
-user_agent = 'nuB0t/0.0.3 by /u/{}' .format(username)
+user_agent = 'nuB0t/0.0.2 by /u/{}' .format(username)
 ####################
 
 
@@ -20,10 +20,9 @@ headers = {'User-Agent': user_agent}
 
 token_file = open('token.txt', 'r', encoding='utf8')
 TOKEN = token_file.read()
-
+token_file.close()
 
 headers = {**headers, **{'Authorization': 'bearer {}' .format(TOKEN)}}
-
 res2 = requests.get('https://oauth.reddit.com/api/v1/me', headers=headers)
 
 if res2.status_code == 401:
@@ -38,14 +37,12 @@ if res2.status_code == 401:
 
 
 def get_url(url, payload):
-
     res = requests.get(url, headers=headers, params=payload)
     data = json.loads(res.text)
     for item in data['data']['children']:
         print('################ ENTRY ####################')
         for item2 in item['data']:
             print(item2, ':', item['data'][item2])
-
 
     if data['data']['after']:
         after = data['data']['after']
