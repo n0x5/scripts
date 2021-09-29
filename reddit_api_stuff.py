@@ -18,9 +18,16 @@ auth = requests.auth.HTTPBasicAuth(personal_use_script, secret_token)
 data = {'grant_type': 'password', 'username': username, 'password': password}
 headers = {'User-Agent': user_agent}
 
-token_file = open('token.txt', 'r', encoding='utf8')
-token = token_file.read()
-token_file.close()
+if os.path.isfile('token.txt'):
+    token_file = open('token.txt', 'r', encoding='utf8')
+    token = token_file.read()
+    token_file.close()
+else:
+    token = 'blah'
+    token_file = open('token.txt', 'w', encoding='utf8')
+    token_file.write(token)
+    token_file.flush()
+    token_file.close()
 
 headers = {**headers, **{'Authorization': 'bearer {}' .format(token)}}
 res2 = requests.get('https://oauth.reddit.com/api/v1/me', headers=headers)
