@@ -15,7 +15,7 @@ from random import randint
 import json
 import traceback
 
-cwd = r'F:\archive\FLAC\Tool'
+cwd = r'F:\archive\FLAC\Air'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'}
 
@@ -32,7 +32,7 @@ for subdir, dirs, files in os.walk(cwd):
                     artist = audio['artist']
                     artist_f = artist[0].replace(' ', '+')
                     album_f = album[0].replace(' ', '+')
-                    bing_query = 'https://www.bing.com/search?q={}+{}+discogs+master&search=&form=QBLH' .format(artist_f, album_f)
+                    bing_query = 'https://www.bing.com/search?q={}+{}+site:discogs.com+master&search=&form=QBLH' .format(artist_f, album_f)
                     response = requests.get(bing_query, headers=headers)
                     soup = BeautifulSoup(response.text, 'html.parser')
                     lists2 = soup.find_all('a', href=re.compile(r'discogs.com\/master'))
