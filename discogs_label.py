@@ -58,7 +58,7 @@ for subdir, dirs, files in os.walk(cwd):
                         sfver.write('Year: '+year+'\n')
                         sfver.write('Cat No.: '+catno+'\n')
 
-                    print(subdir, label, catno, country, year)
+                    print(subdir, label, format, catno, country, year)
                     time.sleep(10)
                 except Exception as e:
                     print(e)
