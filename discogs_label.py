@@ -48,11 +48,17 @@ for subdir, dirs, files in os.walk(cwd):
                             format = item.find('span', attrs={'class': 'format'}).text.strip()
                             title = item.find('td', attrs={'class': 'title'}).text.strip()
                             label = item.find('a', href=re.compile(r'discogs.com\/label')).text.strip()
+                            catno = item.find('td', attrs={'class': 'catno has_header'}).text.strip()
+                            country = item.find('td', attrs={'class': 'country has_header'}).text.strip()
+                            year = item.find('td', attrs={'class': 'year has_header'}).text.strip()
                     with open(os.path.join(subdir, '{}.label' .format(label)), 'w') as sfver:
-                        sfver.write(label+'\n')
-                        sfver.write(format+'\n')
+                        sfver.write('Label: '+label+'\n')
+                        sfver.write('Format: '+format+'\n')
+                        sfver.write('Country: '+country+'\n')
+                        sfver.write('Year: '+year+'\n')
+                        sfver.write('Cat No.: '+catno+'\n')
 
-                    print(subdir, label)
+                    print(subdir, label, catno, country, year)
                     time.sleep(10)
                 except Exception as e:
                     print(e)
