@@ -9,7 +9,7 @@ import sqlite3
 
 conn = sqlite3.connect('reddit_saved.db')
 cur = conn.cursor()
-cur.execute('CREATE TABLE IF NOT EXISTS reddit_saved (nulva text, dated datetime DEFAULT CURRENT_TIMESTAMP)')
+cur.execute('CREATE TABLE IF NOT EXISTS reddit_saved (id text unique, dated datetime DEFAULT CURRENT_TIMESTAMP)')
 
 ### YOUR API CREDENTIALS ###
 secret_token = ''
@@ -57,22 +57,30 @@ def get_url(url, payload):
         tables = []
         entries = []
         for item2 in item['data']:
-            sql = 'ALTER TABLE reddit_saved ADD {} text' .format(item2)
             tables.append(str(item2))
             entries.append(str(item['data'][item2]).replace('"', '""'))
+            if item2 == 'id':
+                pass
+            else:
+                sql = 'ALTER TABLE reddit_saved ADD {} text' .format(item2)
             try:
                 cur.execute(sql)
                 cur.connection.commit()
-            except:
-                print('duplicate column')
+            except Exception:
+                pass
+                #print('duplicate column')
+
         table2 = ', '.join(tables)
         entries3 = tuple(entries)
         nr = '?,' * len(entries3)
         nr2 = str(nr)[:-1]
         sql2 = 'insert into reddit_saved ({}) VALUES ({})' .format(table2, nr2)
-        cur.execute(sql2, (entries3))
-        cur.connection.commit()
-        print(sql2)
+        try:
+            cur.execute(sql2, (entries3))
+            cur.connection.commit()
+        except Exception:
+            print('Duplicate detected - skipping')
+        print(entries3)
 
 
     if data['data']['after']:
