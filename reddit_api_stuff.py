@@ -58,7 +58,7 @@ def get_url(url, payload):
         entries = []
         for item2 in item['data']:
             tables.append(str(item2))
-            entries.append(str(item['data'][item2]).replace('"', '""'))
+            entries.append(str(item['data'][item2]))
             if item2 == 'id':
                 pass
             else:
