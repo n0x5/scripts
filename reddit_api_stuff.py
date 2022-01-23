@@ -1,16 +1,22 @@
+# add reddit saved posts to sqlite3 database
+
 import requests
 import os
 import json
 import time
 from datetime import datetime
+import sqlite3
 
+conn = sqlite3.connect('reddit_saved.db')
+cur = conn.cursor()
+cur.execute('CREATE TABLE IF NOT EXISTS reddit_saved (nulva text, dated datetime DEFAULT CURRENT_TIMESTAMP)')
 
 ### YOUR API CREDENTIALS ###
 secret_token = ''
 personal_use_script = ''
 username = ''
 password = ''
-user_agent = 'nuB0t/0.0.2 by /u/{}' .format(username)
+user_agent = 'B0t/0.0.2 by /u/{}' .format(username)
 ####################
 
 
@@ -48,15 +54,33 @@ def get_url(url, payload):
     data = json.loads(res.text)
     for item in data['data']['children']:
         print('################ ENTRY ####################')
+        tables = []
+        entries = []
         for item2 in item['data']:
-            print(item2, ':', item['data'][item2])
+            sql = 'ALTER TABLE reddit_saved ADD {} text' .format(item2)
+            tables.append(str(item2))
+            entries.append(str(item['data'][item2]).replace('"', '""'))
+            try:
+                cur.execute(sql)
+                cur.connection.commit()
+            except:
+                print('duplicate column')
+        table2 = ', '.join(tables)
+        entries3 = tuple(entries)
+        nr = '?,' * len(entries3)
+        nr2 = str(nr)[:-1]
+        sql2 = 'insert into reddit_saved ({}) VALUES ({})' .format(table2, nr2)
+        cur.execute(sql2, (entries3))
+        cur.connection.commit()
+        print(sql2)
+
 
     if data['data']['after']:
         after = data['data']['after']
         payload = {'after': after, 'count': '50'}
         print(payload)
         get_url(url, payload)
-        time.sleep(1)
+        time.sleep(2)
 
 url = 'https://oauth.reddit.com/user/{}/saved' .format(username)
 payload = {'count': '50'}
