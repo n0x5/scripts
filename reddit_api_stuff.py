@@ -86,9 +86,10 @@ def get_url(url, payload):
     if data['data']['after']:
         after = data['data']['after']
         payload = {'after': after, 'count': '50'}
+        time.sleep(2)
         print(payload)
         get_url(url, payload)
-        time.sleep(2)
+    
 
 url = 'https://oauth.reddit.com/user/{}/saved' .format(username)
 payload = {'count': '50'}
