@@ -7,15 +7,17 @@ import os
 import re
 import sqlite3
 
-xmlfile = 'stargate_pages_current.xml'
+xmlfile = 'darkangel_pages_current.xml'
 
 tree = ET.parse(xmlfile)
 root = tree.getroot()
 
 db_name = xmlfile.replace('_pages_current.xml', '.db')
+db_name2 = db_name.replace('.db', '')
 conn = sqlite3.connect(db_name)
 cur = conn.cursor()
-cur.execute('CREATE TABLE IF NOT EXISTS stargate (title text, content text, dated datetime DEFAULT CURRENT_TIMESTAMP)')
+sql3 = r'CREATE TABLE IF NOT EXISTS {} (title text, content text, dated datetime DEFAULT CURRENT_TIMESTAMP)' .format(db_name2)
+cur.execute(sql3)
 
 items = ([''])
 
@@ -52,6 +54,6 @@ for elem in root.iter():
         if '|' in links2:
             links2 = re.sub(r'[\|][\w\s\|\_\:\-]+', r'', links2)
         stuff = title, links2
-        cur.execute('insert into stargate (title, content) VALUES (?,?)', (stuff))
+        cur.execute('insert into {} (title, content) VALUES (?,?)' .format(db_name2), (stuff))
         cur.connection.commit()
         print(stuff)
