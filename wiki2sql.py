@@ -6,8 +6,9 @@ import xml.etree.ElementTree as ET
 import os
 import re
 import sqlite3
+from tqdm import tqdm
 
-xmlfile = 'darkangel_pages_current.xml'
+xmlfile = 'residentevil_pages_current.xml'
 
 tree = ET.parse(xmlfile)
 root = tree.getroot()
@@ -22,11 +23,11 @@ cur.execute(sql3)
 items = ([''])
 
 
-for elem in root.iter():
+for elem in tqdm(root.iter()):
     try:
         stuff1 = elem.text.split(':')[0]
     except Exception as e:
-        items = (['File:', 'User talk:', 'User blog:', 'User:'])
+        items = ([''])
         stuff1 = elem.text
 
     if '/}title' in elem.tag and elem.text is not None and stuff1 not in items:
@@ -37,7 +38,8 @@ for elem in root.iter():
         if not os.path.exists(file3):
             os.makedirs(file3)
         try:
-            print(fname)
+            pass
+            #print(fname)
         except Exception as e:
             print(str(e))
 
@@ -46,7 +48,7 @@ for elem in root.iter():
         links = re.sub(r'\[\[(.+?)\]\]', r'<a href="\1.html">\1</a>', elem.text)
         links2 =  re.sub(r'[][]', '', links)
         if 'File:' in links:
-            links2 = re.sub(r'\[\[File:(.*?)\|.+\]\]', r'<img width="250px" src="images/\1" />', elem.text)
+            links2 = re.sub(r'\[\[File:(.*?)\|.+\]\]', r'<img width="250px" src="images/\1" />', elem.text.replace('_', ' '))
         if ':' in links2:
             links2 = re.sub(r':', r'', links2)
         if '#' in links2:
@@ -56,4 +58,4 @@ for elem in root.iter():
         stuff = title, links2
         cur.execute('insert into {} (title, content) VALUES (?,?)' .format(db_name2), (stuff))
         cur.connection.commit()
-        print(stuff)
+        #print(stuff)
