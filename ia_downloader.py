@@ -14,7 +14,7 @@ headers = {
 search = internetarchive.search_items(query='collection:g4video-web')
 
 for item in search.iter_as_items():
-    title = item.metadata.get('title').replace(':', '').replace('?', '').replace('/', '')
+    title = item.metadata.get('title').replace(':', '').replace('?', '').replace('/', '').replace('"', '')
     try:
         try:
             date = item.metadata.get('date')
