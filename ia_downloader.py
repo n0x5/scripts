@@ -35,7 +35,7 @@ get_items(s_url)
 
 print(video_list)
 
-with open('skiplist.txt', 'w') as fp:
+with open('skiplist.txt', 'a') as fp:
     pass
 
 for item3 in reversed(video_list):
