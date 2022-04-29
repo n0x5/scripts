@@ -51,7 +51,7 @@ for item3 in reversed(video_list):
         try:
             date = meta['date']
         except Exception:
-            pass
+            date = ''
         try:
             final_name = title+'_'+date+'.mp4'
         except Exception:
