@@ -68,7 +68,6 @@ def get_url(url, payload):
                 cur.connection.commit()
             except Exception:
                 pass
-                #print('duplicate column')
 
         table2 = ', '.join(tables)
         entries3 = tuple(entries)
@@ -78,9 +77,9 @@ def get_url(url, payload):
         try:
             cur.execute(sql2, (entries3))
             cur.connection.commit()
+            print(entries3)
         except Exception:
             print('Duplicate detected - skipping')
-        print(entries3)
 
 
     if data['data']['after']:
@@ -89,7 +88,6 @@ def get_url(url, payload):
         time.sleep(2)
         print(payload)
         get_url(url, payload)
-    
 
 url = 'https://oauth.reddit.com/user/{}/saved' .format(username)
 payload = {'count': '50'}
