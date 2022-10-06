@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # recursive sfv check
 
 import sys
@@ -7,7 +5,6 @@ import os
 import zlib
 
 rootdir = r'/path/to/folder'
-erlist = []
 
 for subdir, dirs, files in os.walk(rootdir):
     for fn in files:
@@ -28,15 +25,10 @@ for subdir, dirs, files in os.walk(rootdir):
                         pass
                     sf2 = format(zlib.crc32(sf), '08x')
                     if sfv1 != sf2:
-                        erlist.append(sf1)
+                        with open(os.path.join(rootdir, 'errors.txt'), 'a') as sfver:
+                            sfver.write(sf1+'\n')
                         print('incorrect crc in {}' .format(sf1))
                     else:
                         print('crc ok {} {} {}' .format(sfv1, sf2, sf1))
                 else:
                     pass
-
-with open(os.path.join(rootdir, 'errors.txt'), 'w') as sfver:
-    for line in erlist:
-        print(line)
-        sfver.write(line+'\n')
-
