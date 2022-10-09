@@ -7,7 +7,7 @@ import sqlite3
 import os
 import time
 import calendar
-import datetime
+import time
 from tqdm import tqdm
 import argparse
 
@@ -35,7 +35,7 @@ for link in tqdm(links):
         link_final = link_final2
     t_added = link['add_date']
     t_read_i = int(link['add_date'])
-    t_readable = datetime.datetime.utcfromtimestamp(t_read_i).strftime('%Y-%m-%d')
+    t_readable = time.strftime('%Y-%m-%d', time.gmtime(t_read_i))
     t_desc = link.get_text()
     try:
         cur.execute('INSERT INTO bookmarks (link, timeaddedunix, timeaddedread, desctitle) VALUES (?,?,?,?)', (link_final, t_added, str(t_readable), t_desc))
