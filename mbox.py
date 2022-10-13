@@ -9,18 +9,19 @@ import datetime
 import tqdm
 
 
-conn = sqlite3.connect('alt_tv_buffy.db')
+conn = sqlite3.connect('alt_tv_darkangel.db')
 cur = conn.cursor()
 
 cur.execute('''CREATE TABLE if not exists emails
-            (sender text, subject text, date_stamp text, u_stamp text, message text, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
+            (sender text, subject text, date_stamp text, u_stamp text, message text, thread text, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
 
 lst = []
-for message in tqdm.tqdm(mailbox.mbox('alt.tv.buffy-v-slayer.mbox', factory=BytesParser(policy=default).parse)):
+for message in tqdm.tqdm(mailbox.mbox('alt.tv.dark-angel.mbox', factory=BytesParser(policy=default).parse)):
     try:
         subject = message['subject']
         sender = message['from']
         date = message['date']
+        thread_id = message['X-Google-Thread'].split(',')[1]
         try:
             u_stamp = datetime.datetime.strptime(message['date'], '%a, %d %b %Y %H:%M:%S %z')
         except:
@@ -38,16 +39,16 @@ for message in tqdm.tqdm(mailbox.mbox('alt.tv.buffy-v-slayer.mbox', factory=Byte
                 content = message.get_payload(decode=False)
             except Exception:
                 content = ''
-        stuff = str(sender), str(subject), str(date), str(u_stamp), content
+        stuff = str(sender), str(subject), str(date), str(u_stamp), content, thread_id
         lst.append(stuff)
         if len(lst) == 2000:
-            cur.executemany('insert into emails (sender, subject, date_stamp, u_stamp, message) VALUES (?,?,?,?,?)', (lst))
+            cur.executemany('insert into emails (sender, subject, date_stamp, u_stamp, message, thread text) VALUES (?,?,?,?,?,?)', (lst))
             cur.connection.commit()
             lst = []
     except Exception as e:
         print(e)
 
-cur.executemany('insert into emails (sender, subject, date_stamp, u_stamp, message) VALUES (?,?,?,?,?)', (lst))
+cur.executemany('insert into emails (sender, subject, date_stamp, u_stamp, message, thread) VALUES (?,?,?,?,?,?)', (lst))
 cur.connection.commit()
 
 cur.close()
