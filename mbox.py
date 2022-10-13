@@ -9,19 +9,22 @@ import datetime
 import tqdm
 
 
-conn = sqlite3.connect('alt_tv_darkangel.db')
+conn = sqlite3.connect('alt_tv_startrek_voyager.db')
 cur = conn.cursor()
 
 cur.execute('''CREATE TABLE if not exists emails
-            (sender text, subject text, date_stamp text, u_stamp text, message text, thread text, dated datetime DEFAULT CURRENT_TIMESTAMP)''')
+            (sender text, subject text, date_stamp text, u_stamp text, message text, thread text)''')
 
 lst = []
-for message in tqdm.tqdm(mailbox.mbox('alt.tv.dark-angel.mbox', factory=BytesParser(policy=default).parse)):
+for message in tqdm.tqdm(mailbox.mbox('alt.tv.star-trek.voyager.mbox', factory=BytesParser(policy=default).parse)):
     try:
         subject = message['subject']
         sender = message['from']
         date = message['date']
-        thread_id = message['X-Google-Thread'].split(',')[1]
+        try:
+            thread_id = message['X-Google-Thread'].split(',')[1]
+        except Exception:
+            thread_id = 'Null'
         try:
             u_stamp = datetime.datetime.strptime(message['date'], '%a, %d %b %Y %H:%M:%S %z')
         except:
