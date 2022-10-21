@@ -20,7 +20,7 @@ cur.execute('''CREATE TABLE if not exists warc
             (id text, title text, body text)''')
 
 lst = []
-with open('www.adventuregamers.com-inf-20160714-202304-20z7c-00001.warc.gz', 'rb') as stream:
+with open('www.adventuregamers.com-inf-20160714-202304-20z7c-00005.warc.gz', 'rb') as stream:
     for record in tqdm(ArchiveIterator(stream)):
         try:
             if record.rec_type == 'response' and 'text/html' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
@@ -38,6 +38,7 @@ with open('www.adventuregamers.com-inf-20160714-202304-20z7c-00001.warc.gz', 'rb
                     if len(lst) == 500:
                         cur.executemany('insert into warc (id, title, body) VALUES (?,?,?)', (lst))
                         cur.connection.commit()
+                        lst = []
                 except Exception as e:
                     pass
             if record.rec_type == 'response' and 'image/' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
