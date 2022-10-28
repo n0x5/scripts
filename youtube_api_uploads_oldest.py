@@ -13,7 +13,10 @@ parser.add_argument('channel')
 args = parser.parse_args()
 
 
+
+
 uploads_playlistid = args.channel
+
 
 
 api_key = ''
@@ -60,7 +63,7 @@ print(channel_name)
 
 
 for item in reversed(list_of_videos):
-    with open('{}.html' .format(item[6]), 'a', encoding='utf8') as fp:
+    with open('{}.html' .format(channel_name), 'a', encoding='utf8') as fp:
         fp.write('<div class="video"><img src="{}" /><a href="https://www.youtube.com/watch?v={}">{}</a> - {} - {} </div>' .format(item[4], item[0], item[1], item[2], item[3]))
-print('Wrote html file')
+print('======')
 
