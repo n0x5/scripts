@@ -8,7 +8,7 @@ import requests
 import json
 import base64
 
-with open('Weihnachtsgeschichte_1.jpg', 'rb') as img_file:
+with open('fd7f033235d811e393ca.jpg', 'rb') as img_file:
     string = base64.b64encode(img_file.read())
 
 body_post = json.dumps({
@@ -18,7 +18,6 @@ body_post = json.dumps({
         "features": [
             { "type": "LABEL_DETECTION" },
             { "type": "SAFE_SEARCH_DETECTION" },
-            { "type": "IMAGE_PROPERTIES" },
             { "type": "WEB_DETECTION" }
         ]
     }
@@ -56,8 +55,10 @@ def vision(jdata):
     labels2 = [[item['description'], item['score']] for item in labels]
     web = data['responses'][0]['webDetection']
     web_labels = web['bestGuessLabels'][0]['label']
-    web_urls = [item2['url'] for item2 in web['visuallySimilarImages']]
-    results = labels2, web_labels, web_urls
+    web_similar = [item2['url'] for item2 in web['visuallySimilarImages']]
+    web_full = [item2['url'] for item2 in web['fullMatchingImages']]
+    web_pages = [[item2['url'], item2['pageTitle']] for item2 in web['pagesWithMatchingImages']]
+    results = labels2, web_labels, web_similar, web_pages
     return results
 
 result = vision(body_post)
