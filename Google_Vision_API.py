@@ -27,7 +27,14 @@ def single_image(img):
             ]
         }]
     })
-    vision(body_post, img)
+    full_path = os.path.splitext(img)
+    file3 = os.path.basename(img)
+    file2 = os.path.splitext(file3)
+    endpoint = full_path[0]+'.json'
+    if not os.path.exists(endpoint):
+        vision(body_post, img)
+    else:
+        print('json file {} already exists!' .format(endpoint))
 
 def vision(jdata, img):
     scopes = ['https://www.googleapis.com/auth/cloud-vision']
