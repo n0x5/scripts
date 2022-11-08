@@ -7,24 +7,29 @@ import os
 import requests
 import json
 import base64
+import argparse
 
-with open('fd7f033235d811e393ca.jpg', 'rb') as img_file:
-    string = base64.b64encode(img_file.read())
+parser = argparse.ArgumentParser()
+parser.add_argument('single')
+args = parser.parse_args()
 
-body_post = json.dumps({
-  "requests": [
-    {
-      "image": { "content": string.decode('utf-8')},
-        "features": [
-            { "type": "LABEL_DETECTION" },
-            { "type": "SAFE_SEARCH_DETECTION" },
-            { "type": "WEB_DETECTION" }
-        ]
-    }
-  ]
-})
+def single_image(img):
+    with open(img, 'rb') as img_file:
+        string = base64.b64encode(img_file.read())
 
-def vision(jdata):
+    body_post = json.dumps({
+        "requests": [{
+            "image": { "content": string.decode('utf-8') },
+            "features": [
+                { "type": "LABEL_DETECTION" },
+                { "type": "SAFE_SEARCH_DETECTION" },
+                { "type": "WEB_DETECTION" }
+            ]
+        }]
+    })
+    vision(body_post, img)
+
+def vision(jdata, img):
     scopes = ['https://www.googleapis.com/auth/cloud-vision']
     creds = None
 
@@ -40,26 +45,17 @@ def vision(jdata):
         with open('vision_token.json', 'w') as token:
             token.write(creds.to_json())
 
-
     service = build('vision', 'v1', credentials=creds)
     token = service._http.credentials.token
     headers = {'Authorization': 'Bearer {}' .format(token)}
     url_post =  'https://vision.googleapis.com/v1/images:annotate'
-    first_post = requests.post(url_post, headers=headers, data=body_post)
+    first_post = requests.post(url_post, headers=headers, data=jdata)
     print(first_post.text)
-    data = json.loads(first_post.text)
-    adult = data['responses'][0]['safeSearchAnnotation']['adult']
-    violence = data['responses'][0]['safeSearchAnnotation']['violence']
-    racy = data['responses'][0]['safeSearchAnnotation']['racy']
-    labels = data['responses'][0]['labelAnnotations']
-    labels2 = [[item['description'], item['score']] for item in labels]
-    web = data['responses'][0]['webDetection']
-    web_labels = web['bestGuessLabels'][0]['label']
-    web_similar = [item2['url'] for item2 in web['visuallySimilarImages']]
-    web_full = [item2['url'] for item2 in web['fullMatchingImages']]
-    web_pages = [[item2['url'], item2['pageTitle']] for item2 in web['pagesWithMatchingImages']]
-    results = labels2, web_labels, web_similar, web_pages
-    return results
+    full_path = os.path.splitext(img)
+    file3 = os.path.basename(img)
+    file2 = os.path.splitext(file3)
+    endpoint = full_path[0]+'.json'
+    with open(endpoint, 'w') as token:
+        token.write(first_post.text)
 
-result = vision(body_post)
-print(result)
+single_image(args.single)
