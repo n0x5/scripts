@@ -1,3 +1,4 @@
+# Upload image to Google Vision for image recognition
 # Scan a folder recursively or give path to single file and write .json info in same folder
 # Need Desktop App oauth2 credentials.json file in same folder
 # pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
@@ -18,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--file', type=str, required=False)
 parser.add_argument('--folder', type=str, required=False)
 args = parser.parse_args()
-
+count = ['1']
 
 def scan_folder(folder):
     for subdir, dirs, files in os.walk(folder):
@@ -48,6 +49,7 @@ def single_image(img):
     endpoint = full_path[0]+'.json'
     if not os.path.exists(endpoint):
         vision(body_post, img)
+        count.append(img)
     else:
         print('json file {} already exists!' .format(endpoint))
 
@@ -73,12 +75,14 @@ def vision(jdata, img):
     url_post =  'https://vision.googleapis.com/v1/images:annotate'
     first_post = requests.post(url_post, headers=headers, data=jdata)
     print(first_post.text)
+    print('{} API requests so far' .format(len(count)))
     full_path = os.path.splitext(img)
     file3 = os.path.basename(img)
     file2 = os.path.splitext(file3)
     endpoint = full_path[0]+'.json'
-    with open(endpoint, 'w') as token:
+    with open(endpoint, 'w', encoding='utf-8') as token:
         token.write(first_post.text)
+
 
 if args.file != None:
     single_image(args.file)
