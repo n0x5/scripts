@@ -8,10 +8,22 @@ import requests
 import json
 import base64
 import argparse
+import mimetypes
+
 
 parser = argparse.ArgumentParser()
-parser.add_argument('single')
+parser.add_argument('--file', type=str, required=False)
+parser.add_argument('--folder', type=str, required=False)
 args = parser.parse_args()
+
+
+def scan_folder(folder):
+    for subdir, dirs, files in os.walk(folder):
+        for fn in files:
+            fullpath = os.path.join(subdir, fn)
+            mime2 = mimetypes.guess_type(fullpath)
+            if 'image' in mime2[0]:
+                single_image(fullpath)
 
 def single_image(img):
     with open(img, 'rb') as img_file:
@@ -65,4 +77,13 @@ def vision(jdata, img):
     with open(endpoint, 'w') as token:
         token.write(first_post.text)
 
-single_image(args.single)
+if args.file != None:
+    single_image(args.file)
+
+if args.folder != None:
+    scan_folder(args.folder)
+
+if args.folder == None and args.file == None:
+    print('Scan a folder recursively with --folder')
+    print('Or a single file with --file')
+
