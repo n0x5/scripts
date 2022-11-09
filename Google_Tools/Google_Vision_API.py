@@ -10,6 +10,10 @@
 # --folder : Recursive scan of a folder
 # --write-tags : Will overwrite metadata in image file (need exiftool.exe on windows/exiftool on linux) (keeps date modified if possible)
 # --no-json : Currently not enabled
+#
+# Example command:
+# python .\Google_Vision_API.py --folder "F:\dev\Google_APIs\New folder (13)" --write-tags
+
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -153,13 +157,17 @@ def parse_meta(data, path):
         except:
             labels_fin = labels_final
     if args.write_tags == 1:
+        labels_fin_xp = labels_fin.encode('cp437')
         with exiftool.ExifToolHelper(executable=exepath) as et:
             try:
                 et.execute("-EXIF:UserComment={}" .format(labels_fin), path)
             except Exception as e:
                 pass
             try:
-                et.execute("-EXIF:XPSubject={}" .format(labels_fin.encode('cp437')), path)
+                if os.name == 'nt':
+                    os.system('exiftool.exe -EXIF:XPSubject={} "{}"' .format(labels_fin_xp, path))
+                else:
+                    os.system('./exiftool -EXIF:XPSubject={} "{}"' .format(labels_fin_xp, path))
             except Exception as e:
                 pass
             try:
@@ -171,14 +179,18 @@ def parse_meta(data, path):
             except Exception as e:
                 pass
             try:
-                et.execute("-EXIF:XPComment={}" .format(labels_fin.encode('cp437')), path)
+                if os.name == 'nt':
+                    os.system('exiftool.exe -EXIF:XPComment={} "{}"' .format(labels_fin_xp, path))
+                else:
+                    os.system('./exiftool -EXIF:XPComment={} "{}"' .format(labels_fin_xp, path))
             except Exception as e:
                 pass
 
 
         os.utime(path, times=dates)
         print('Wrote metadata (\"{}...\") to {}' .format(labels_fin[0:20], path))
-        os.remove(path+'_original')
+        if os.path.exists(path+'_original'):
+            os.remove(path+'_original')
 
     else:
         print('Wrote json only (\"{}...\") to {}' .format(labels_fin[0:20], path))
