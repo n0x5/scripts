@@ -156,28 +156,29 @@ def parse_meta(data, path):
         with exiftool.ExifToolHelper(executable=exepath) as et:
             try:
                 et.execute("-EXIF:UserComment={}" .format(labels_fin), path)
-            except:
+            except Exception as e:
+                pass
+            try:
+                et.execute("-EXIF:XPSubject={}" .format(labels_fin.encode('cp437')), path)
+            except Exception as e:
                 pass
             try:
                 et.execute("-XMP:Subject={}" .format(labels_fin), path)
-            except:
+            except Exception as e:
                 pass
             try:
                 et.execute("-XMP:LastKeywordXMP={}" .format(labels_fin), path)
-            except:
+            except Exception as e:
                 pass
             try:
-                et.execute("-EXIF:XPSubject={}" .format(labels_fin), path)
-            except:
-                pass
-            try:
-                et.execute("-EXIF:XPComment={}" .format(labels_fin), path)
-            except:
+                et.execute("-EXIF:XPComment={}" .format(labels_fin.encode('cp437')), path)
+            except Exception as e:
                 pass
 
 
         os.utime(path, times=dates)
         print('Wrote metadata (\"{}...\") to {}' .format(labels_fin[0:20], path))
+        os.remove(path+'_original')
 
     else:
         print('Wrote json only (\"{}...\") to {}' .format(labels_fin[0:20], path))
