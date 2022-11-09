@@ -18,7 +18,7 @@ Supports RAW files as well as .jpg/gif/png/etc
 
 ### Setup guide for python:
 If you don't want to use the executable and you don't have Python you have to go to www.python.org, download the latest version, then run the following command:
-#### pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib requests rawpy
+#### pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib requests rawpy pillow
     
 After this you should follow the earlier guide to setup Google OAuth.
 
