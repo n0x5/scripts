@@ -1,1 +1,2 @@
 *.pm linguist-vendored=true
+*.pl linguist-vendored=true
