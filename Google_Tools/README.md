@@ -1,12 +1,12 @@
 ### Upload image/folder recursively to Google Vision AI for image recognition
-## 1000 requests / month for free
+#### 1000 requests / month for free
 Scans a folder recursively or give path to single file and write .json info in same folder
 If a json file exists already it will not make a request to the API.
 Supports RAW files as well as .jpg/gif/png/etc
 #### I recommend using the .exe file if you are on windows, nothing needed to install
 
 ### Setup guide
-0) Click "Code" -> "Downoad Zip" in the top right of the reposity, unzip files to a folder (keep exiftool there).
+0) Download the zip https://github.com/n0x5/scripts/archive/refs/heads/master.zip, unzip files to a folder (keep exiftool there).
 1) Go to https://cloud.google.com/vision and enable the api (need billing/credit card)
 2) Go to https://console.developers.google.com/
 2) Click 'Credentials' in left side menu
