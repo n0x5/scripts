@@ -157,35 +157,42 @@ def parse_meta(data, path):
         except:
             labels_fin = labels_final
     if args.write_tags == 1:
-        labels_fin_xp = labels_fin.encode('cp437')
         with exiftool.ExifToolHelper(executable=exepath) as et:
             try:
-                et.execute("-EXIF:UserComment={}" .format(labels_fin), path)
+                if os.name == 'nt':
+                    os.system('exiftool.exe -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
+                else:
+                    os.system('./exiftool -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
             except Exception as e:
                 pass
             try:
                 if os.name == 'nt':
-                    os.system('exiftool.exe -EXIF:XPSubject={} "{}"' .format(labels_fin_xp, path))
+                    os.system('exiftool.exe -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
                 else:
-                    os.system('./exiftool -EXIF:XPSubject={} "{}"' .format(labels_fin_xp, path))
-            except Exception as e:
-                pass
-            try:
-                et.execute("-XMP:Subject={}" .format(labels_fin), path)
-            except Exception as e:
-                pass
-            try:
-                et.execute("-XMP:LastKeywordXMP={}" .format(labels_fin), path)
+                    os.system('./exiftool -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
             except Exception as e:
                 pass
             try:
                 if os.name == 'nt':
-                    os.system('exiftool.exe -EXIF:XPComment={} "{}"' .format(labels_fin_xp, path))
+                    os.system('exiftool.exe -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
                 else:
-                    os.system('./exiftool -EXIF:XPComment={} "{}"' .format(labels_fin_xp, path))
+                    os.system('./exiftool -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
             except Exception as e:
                 pass
-
+            try:
+                if os.name == 'nt':
+                    os.system('exiftool.exe -XMP:Subject="{}" "{}"' .format(labels_fin, path))
+                else:
+                    os.system('./exiftool -XMP:Subject="{}" "{}"' .format(labels_fin, path))
+            except Exception as e:
+                pass
+            try:
+                if os.name == 'nt':
+                    os.system('exiftool.exe -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
+                else:
+                    os.system('./exiftool -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
+            except Exception as e:
+                pass
 
         os.utime(path, times=dates)
         print('Wrote metadata (\"{}...\") to {}' .format(labels_fin[0:20], path))
