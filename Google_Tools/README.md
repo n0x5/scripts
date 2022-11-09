@@ -23,9 +23,12 @@ If you don't want to use the executable and you don't have Python you have to go
 After this you should follow the earlier guide to setup Google OAuth.
 
 Command line options:
---file : Path to single file scan
---folder : Recursive scan of a folder
---write-tags : Will overwrite metadata in image file (need exiftool.exe on windows/exiftool on linux) (keeps date modified if possible)
+
+#### --file : Path to single file scan
+
+#### --folder : Recursive scan of a folder
+
+#### --write-tags : Will overwrite metadata in image file (need exiftool.exe on windows/exiftool on linux) (keeps date modified if possible)
 
 Example command:
 #### python .\Google_Vision_API.py --folder "F:\dev\Google_APIs\New folder (13)" --write-tags
