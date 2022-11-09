@@ -1,4 +1,5 @@
 # Upload image to Google Vision for image recognition
+# Supports RAW files as well as .jpg/gif/png/etc
 # Scan a folder recursively or give path to single file and write .json info in same folder
 # Need Desktop App oauth2 credentials.json file in same folder
 # pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib requests rawpy
@@ -51,8 +52,7 @@ def scan_folder(folder):
                 mime2 = mimetypes.guess_type(fullpath)
                 if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None:
                     single_image(fullpath)
-                if 'image' in mime2[0] and 'jpeg' not in mime2[0] and 'png' not in mime2[0] and 'tiff' not in mime2[0]:
-                    print(mime2)
+                if 'image' in mime2[0] and 'jpeg' not in mime2[0] and 'png' not in mime2[0] and 'tiff' not in mime2[0] and 'gif' not in mime2[0]:
                     single_image_raw(fullpath)
             except TypeError:
                 pass
@@ -194,7 +194,8 @@ def parse_meta(data, path):
             labels_fin = web_labels+labels_final
         except:
             labels_fin = labels_final
-    if args.write_tags == 1:
+    mime2 = mimetypes.guess_type(path)
+    if args.write_tags == 1 and 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]):
         try:
             if os.name == 'nt':
                 os.system('exiftool.exe -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
