@@ -1,7 +1,7 @@
 # Upload image to Google Vision for image recognition
 # Scan a folder recursively or give path to single file and write .json info in same folder
 # Need Desktop App oauth2 credentials.json file in same folder
-# pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib requests
+# pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib requests rawpy
 #
 #
 # Command line options:
@@ -25,7 +25,9 @@ import json
 import base64
 import argparse
 import mimetypes
-
+import rawpy
+from PIL import Image
+from io import BytesIO
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--file', type=str, required=False)
@@ -49,8 +51,43 @@ def scan_folder(folder):
                 mime2 = mimetypes.guess_type(fullpath)
                 if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None:
                     single_image(fullpath)
+                if 'image' in mime2[0] and 'jpeg' not in mime2[0] and 'png' not in mime2[0] and 'tiff' not in mime2[0]:
+                    print(mime2)
+                    single_image_raw(fullpath)
             except TypeError:
                 pass
+
+def single_image_raw(img):
+    try:
+        raw = rawpy.imread(img)
+        string1 = raw.postprocess()
+        string = Image.fromarray(string1.astype('uint8'), 'RGB')
+        buffered = BytesIO()
+        string.save(buffered, format="JPEG")
+        img_str = base64.b64encode(buffered.getvalue())
+        body_post = json.dumps({
+            "requests": [{
+                "image": { "content": img_str.decode('utf-8') },
+                "features": [
+                    { "type": "LABEL_DETECTION" },
+                    { "type": "SAFE_SEARCH_DETECTION" },
+                    { "type": "WEB_DETECTION" }
+                ]
+            }]
+        })
+        full_path = os.path.splitext(img)
+        file3 = os.path.basename(img)
+        file2 = os.path.splitext(file3)
+        endpoint = full_path[0]+'.json'
+        if not os.path.exists(endpoint):
+            vision(body_post, img)
+            count.append(img)
+        else:
+            with open(endpoint, 'r', encoding='utf-8') as jfile:
+                j_str = jfile.read()
+                parse_meta(j_str, img)
+    except Exception as e:
+        print(e)
 
 def single_image(img):
     with open(img, 'rb') as img_file:
@@ -100,13 +137,14 @@ def vision(jdata, img):
     url_post =  'https://vision.googleapis.com/v1/images:annotate'
     first_post = requests.post(url_post, headers=headers, data=jdata)
     print('{} API requests so far' .format(len(count)))
-    parse_meta(first_post.text, img)
     full_path = os.path.splitext(img)
     file3 = os.path.basename(img)
     file2 = os.path.splitext(file3)
     endpoint = full_path[0]+'.json'
     with open(endpoint, 'w', encoding='utf-8') as token:
         token.write(first_post.text)
+
+    parse_meta(first_post.text, img)
 
 def parse_meta(data, path):
     data = json.loads(data)
@@ -199,7 +237,7 @@ def parse_meta(data, path):
             os.remove(path+'_original')
 
     else:
-        print('Wrote json only (\"{}...\") to {}' .format(labels_fin[0:20], path))
+        print('Wrote json only ("{}...") to {}' .format(labels_fin[0:20], path))
 
 if not os.path.exists('credentials.json'):
     print('Need a Desktop App credentials.json OAuth file from https://console.developers.google.com/')
