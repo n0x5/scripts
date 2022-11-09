@@ -1,7 +1,7 @@
 # Upload image to Google Vision for image recognition
 # Scan a folder recursively or give path to single file and write .json info in same folder
 # Need Desktop App oauth2 credentials.json file in same folder
-# pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib requests PyExifTool
+# pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib requests
 #
 #
 # Command line options:
@@ -25,7 +25,7 @@ import json
 import base64
 import argparse
 import mimetypes
-import exiftool
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--file', type=str, required=False)
@@ -157,42 +157,41 @@ def parse_meta(data, path):
         except:
             labels_fin = labels_final
     if args.write_tags == 1:
-        with exiftool.ExifToolHelper(executable=exepath) as et:
-            try:
-                if os.name == 'nt':
-                    os.system('exiftool.exe -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
-                else:
-                    os.system('./exiftool -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
-            except Exception as e:
-                pass
-            try:
-                if os.name == 'nt':
-                    os.system('exiftool.exe -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
-                else:
-                    os.system('./exiftool -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
-            except Exception as e:
-                pass
-            try:
-                if os.name == 'nt':
-                    os.system('exiftool.exe -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
-                else:
-                    os.system('./exiftool -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
-            except Exception as e:
-                pass
-            try:
-                if os.name == 'nt':
-                    os.system('exiftool.exe -XMP:Subject="{}" "{}"' .format(labels_fin, path))
-                else:
-                    os.system('./exiftool -XMP:Subject="{}" "{}"' .format(labels_fin, path))
-            except Exception as e:
-                pass
-            try:
-                if os.name == 'nt':
-                    os.system('exiftool.exe -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
-                else:
-                    os.system('./exiftool -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
-            except Exception as e:
-                pass
+        try:
+            if os.name == 'nt':
+                os.system('exiftool.exe -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
+            else:
+                os.system('./exiftool -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
+        except Exception as e:
+            pass
+        try:
+            if os.name == 'nt':
+                os.system('exiftool.exe -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
+            else:
+                os.system('./exiftool -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
+        except Exception as e:
+            pass
+        try:
+            if os.name == 'nt':
+                os.system('exiftool.exe -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
+            else:
+                os.system('./exiftool -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
+        except Exception as e:
+            pass
+        try:
+            if os.name == 'nt':
+                os.system('exiftool.exe -XMP:Subject="{}" "{}"' .format(labels_fin, path))
+            else:
+                os.system('./exiftool -XMP:Subject="{}" "{}"' .format(labels_fin, path))
+        except Exception as e:
+            pass
+        try:
+            if os.name == 'nt':
+                os.system('exiftool.exe -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
+            else:
+                os.system('./exiftool -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
+        except Exception as e:
+            pass
 
         os.utime(path, times=dates)
         print('Wrote metadata (\"{}...\") to {}' .format(labels_fin[0:20], path))
@@ -201,6 +200,9 @@ def parse_meta(data, path):
 
     else:
         print('Wrote json only (\"{}...\") to {}' .format(labels_fin[0:20], path))
+
+if not os.path.exists('credentials.json'):
+    print('Need a Desktop App credentials.json OAuth file from https://console.developers.google.com/')
 
 if args.file != None:
     single_image(args.file)
