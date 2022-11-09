@@ -1,2 +1,3 @@
 *.pm linguist-vendored=true
 *.pl linguist-vendored=true
+*.pod linguist-vendored=true
