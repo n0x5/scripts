@@ -5,6 +5,10 @@ If a json file exists already it will not make a request to the API.
 Supports RAW files as well as .jpg/gif/png/etc
 #### I recommend using the .exe file if you are on windows, nothing needed to install
 
+#### NEW V4: Object Recognition saved to image:
+Just for fun it now saves a new image with objects recognized:
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/object_recognition.jpg)
+
 ### Setup guide
 0) Download the zip https://github.com/n0x5/scripts/releases/download/google_vision_v3/Vision_API_V3.zip unzip files to a folder (keep exiftool there).
 2) Go to https://cloud.google.com/vision and enable the api (need billing/credit card)
