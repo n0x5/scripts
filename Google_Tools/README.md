@@ -1,6 +1,5 @@
 ### Upload image/folder recursively to Google Vision AI for image recognition
-#### Supports RAW files with XMP creation.
-
+#### 1000 requests / month for free
 Scans a folder recursively or give path to single file and write .json info in same folder
 If a json file exists already it will not make a request to the API.
 Supports RAW files as well as .jpg/gif/png/etc
@@ -35,4 +34,4 @@ Example command:
 #### python .\Google_Vision_API.py --folder "F:\dev\Google_APIs\New folder (13)" --write-tags
 
 #### Screenshot:
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/raw2.jpg)
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/raw2.png)
