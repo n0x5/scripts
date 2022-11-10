@@ -27,7 +27,7 @@ import base64
 import argparse
 import mimetypes
 import rawpy
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 
 parser = argparse.ArgumentParser()
@@ -39,6 +39,7 @@ parser.add_argument('--no-json', action='store_const', const=1)
 args = parser.parse_args()
 count = ['1']
 lst = []
+lst_o2 = []
 
 def remove_non_ascii(string):
     return ''.join(char for char in string if ord(char) < 128)
@@ -235,6 +236,42 @@ def parse_meta(data, path):
         print('Created XMP at {}' .format(endpoint))
         if os.path.exists(endpoint+'_original'):
             os.remove(endpoint+'_original')
+    try:
+        objects = data['responses'][0]['localizedObjectAnnotations']
+        lst_obj = []
+        for item in objects:
+            lst_obj.append([item['name'], item['boundingPoly']['normalizedVertices']])
+
+        detect_objects(lst_obj, path)
+    except Exception:
+        print('no objects detected')
+        pass
+
+def detect_objects(objects, path):
+    pillow_img = Image.open(path)
+    w, h = pillow_img.size
+    for item in objects:
+        obj_name = item[0]
+        vertices = item[1]
+        position = (vertices[0]['x'] * w, vertices[0]['y'] * h)
+
+        shape1 = [(vertices[0]['x'] * w, vertices[0]['y'] * h), ((vertices[3]['x'] * w, vertices[3]['y'] * h))]
+        shape2 = [(vertices[2]['x'] * w, vertices[2]['y'] * h), ((vertices[1]['x'] * w, vertices[1]['y'] * h))]
+        shape3 = [(vertices[0]['x'] * w, vertices[0]['y'] * h), ((vertices[1]['x'] * w, vertices[1]['y'] * h))]
+        shape4 = [(vertices[2]['x'] * w, vertices[2]['y'] * h), ((vertices[3]['x'] * w, vertices[3]['y'] * h))]
+
+        img1 = ImageDraw.Draw(pillow_img)  
+        img1.line(shape1, fill ='red', width = 0)
+        img1.line(shape2, fill ='red', width = 0)
+        img1.line(shape3, fill ='red', width = 0)
+        img1.line(shape4, fill ='red', width = 0)
+        draw = ImageDraw.Draw(pillow_img)
+        font = ImageFont.truetype('ARIAL.TTF', 30)
+        draw.text(position, obj_name, font=font, fill='red')
+    full_path = os.path.splitext(path)
+    endpoint = full_path[0]+'_objects'+'.jpg'
+    if not os.path.exists(endpoint):
+        pillow_img.save(endpoint, format='JPEG', subsampling=0, quality=85)
 
 if not os.path.exists('credentials.json'):
     print('Need a Desktop App credentials.json OAuth file from https://console.developers.google.com/')
