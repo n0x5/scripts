@@ -194,24 +194,25 @@ def parse_meta(data, path):
         except:
             labels_fin = labels_final
     mime2 = mimetypes.guess_type(path)
+    labels_dupe = ', '.join(set(labels_fin.split(', ')))
     if args.write_tags == 1 and 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]):
         command = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" "{}"' \
-                 .format(labels_fin, labels_final, web_labels, web_labels+', '+labels_final, labels_final, path)
+                 .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, path)
         try:
             if os.name == 'nt':
                 os.system(command)
             else:
-                os.system('./exiftool -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
+                os.system('./exiftool -EXIF:UserComment="{}" "{}"' .format(command, path))
         except Exception as e:
             pass
 
         os.utime(path, times=dates)
-        print('Wrote metadata (\"{}...\") to {}' .format(labels_fin[0:20], path))
+        print('Wrote metadata (\"{}...\") to {}' .format(labels_dupe[0:20], path))
         if os.path.exists(path+'_original'):
             os.remove(path+'_original')
 
     else:
-        print('Wrote json only ("{}...") to {}' .format(labels_fin[0:20], path))
+        print('Wrote json only ("{}...") to {}' .format(labels_dupe[0:20], path))
         full_path = os.path.splitext(path)
         file3 = os.path.basename(path)
         file2 = os.path.splitext(file3)
