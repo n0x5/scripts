@@ -196,28 +196,36 @@ def parse_meta(data, path):
     mime2 = mimetypes.guess_type(path)
     labels_dupe = ', '.join(set(labels_fin.split(', ')))
     if args.write_tags == 1 and 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]):
-        command = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" "{}"' \
-                 .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, path)
+        if os.name == 'nt':
+            command = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" "{}"' \
+                    .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, path)
+        else:
+            command_unix = '{} -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" "{}"' \
+                    .format(os.path.join(os.path.dirname( __file__ ), 'exiftool'), labels_dupe, labels_final, web_labels, labels_dupe, labels_final, path)
         try:
             if os.name == 'nt':
                 os.system(command)
             else:
-                os.system('./exiftool -EXIF:UserComment="{}" "{}"' .format(command, path))
+                os.system(command_unix)
         except Exception as e:
             pass
 
         os.utime(path, times=dates)
-        print('Wrote metadata (\"{}...\") to {}' .format(labels_dupe[0:20], path))
+        print('Wrote metadata (\"{}...\") to {}' .format(labels_final[0:20], path))
         if os.path.exists(path+'_original'):
             os.remove(path+'_original')
 
     else:
-        print('Wrote json only ("{}...") to {}' .format(labels_dupe[0:20], path))
+        print('Wrote json only ("{}...") to {}' .format(labels_final[0:20], path))
         full_path = os.path.splitext(path)
         file3 = os.path.basename(path)
         file2 = os.path.splitext(file3)
         endpoint = full_path[0]+'.xmp'
-        os.system('exiftool.exe -tagsfromfile {} {}' .format(path, endpoint))
+        if os.name == 'nt':
+            os.system('exiftool.exe -tagsfromfile {} {}' .format(path, endpoint))
+        else:
+            cmd1 = os.path.join(os.path.dirname( __file__ ), 'exiftool -tagsfromfile {} {}' .format(path, endpoint))
+            os.system(cmd1)
         print('Created XMP at {}' .format(endpoint))
         if os.path.exists(endpoint+'_original'):
             os.remove(endpoint+'_original')
