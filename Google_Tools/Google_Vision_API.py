@@ -2,7 +2,7 @@
 # Supports RAW files as well as .jpg/gif/png/etc
 # Scan a folder recursively or give path to single file and write .json info in same folder
 # Need Desktop App oauth2 credentials.json file in same folder
-# pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib requests rawpy
+# pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib requests rawpy pillow
 #
 #
 # Command line options:
@@ -50,7 +50,7 @@ def scan_folder(folder):
             fullpath = os.path.join(subdir, fn)
             try:
                 mime2 = mimetypes.guess_type(fullpath)
-                if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None:
+                if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None or fn.endswith('jpg'):
                     single_image(fullpath)
                 if 'image' in mime2[0] and 'jpeg' not in mime2[0] and 'png' not in mime2[0] and 'tiff' not in mime2[0] and 'gif' not in mime2[0]:
                     single_image_raw(fullpath)
@@ -63,7 +63,7 @@ def single_image_raw(img):
         string1 = raw.postprocess()
         string = Image.fromarray(string1.astype('uint8'), 'RGB')
         buffered = BytesIO()
-        string.save(buffered, format="JPEG")
+        string.save(buffered, format='JPEG')
         img_str = base64.b64encode(buffered.getvalue())
         body_post = json.dumps({
             "requests": [{
@@ -188,7 +188,7 @@ def parse_meta(data, path):
     labels_final = ', '.join(labels_text)
     web_labels_final = ', '.join(lst)
     try:
-        labels_fin = web_labels+' '+labels_final+web_labels_final
+        labels_fin = web_labels+', '+labels_final+web_labels_final
     except:
         try:
             labels_fin = web_labels+labels_final
@@ -205,9 +205,9 @@ def parse_meta(data, path):
             pass
         try:
             if os.name == 'nt':
-                os.system('exiftool.exe -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
+                os.system('exiftool.exe -EXIF:XPSubject="{}" "{}"' .format(labels_final, path))
             else:
-                os.system('./exiftool -EXIF:XPSubject="{}" "{}"' .format(labels_fin, path))
+                os.system('./exiftool -EXIF:XPSubject="{}" "{}"' .format(labels_final, path))
         except Exception as e:
             pass
         try:
@@ -219,16 +219,16 @@ def parse_meta(data, path):
             pass
         try:
             if os.name == 'nt':
-                os.system('exiftool.exe -XMP:Subject="{}" "{}"' .format(labels_fin, path))
+                os.system('exiftool.exe -XMP:Subject="{}" "{}"' .format(labels_final, path))
             else:
-                os.system('./exiftool -XMP:Subject="{}" "{}"' .format(labels_fin, path))
+                os.system('./exiftool -XMP:Subject="{}" "{}"' .format(labels_final, path))
         except Exception as e:
             pass
         try:
             if os.name == 'nt':
-                os.system('exiftool.exe -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
+                os.system('exiftool.exe -XMP:LastKeywordXMP="{}" "{}"' .format(web_labels, path))
             else:
-                os.system('./exiftool -XMP:LastKeywordXMP="{}" "{}"' .format(labels_fin, path))
+                os.system('./exiftool -XMP:LastKeywordXMP="{}" "{}"' .format(web_labels, path))
         except Exception as e:
             pass
 
