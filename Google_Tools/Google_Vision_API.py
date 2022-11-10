@@ -82,7 +82,7 @@ def single_image_raw(img):
         file3 = os.path.basename(img)
         file2 = os.path.splitext(file3)
         endpoint = full_path[0]+'.json'
-        if not os.path.exists(endpoint):
+        if not os.path.exists(endpoint) and '_objects.jpg' not in img:
             vision(body_post, img)
             count.append(img)
         else:
@@ -113,13 +113,16 @@ def single_image(img):
     file3 = os.path.basename(img)
     file2 = os.path.splitext(file3)
     endpoint = full_path[0]+'.json'
-    if not os.path.exists(endpoint):
+    if not os.path.exists(endpoint) and '_objects.jpg' not in img:
         vision(body_post, img)
         count.append(img)
     else:
-        with open(endpoint, 'r', encoding='utf-8') as jfile:
-            j_str = jfile.read()
-            parse_meta(j_str, img)
+        try:
+            with open(endpoint, 'r', encoding='utf-8') as jfile:
+                j_str = jfile.read()
+                parse_meta(j_str, img)
+        except FileNotFoundError:
+            pass
 
 def vision(jdata, img):
     scopes = ['https://www.googleapis.com/auth/cloud-vision']
@@ -261,17 +264,18 @@ def detect_objects(objects, path):
         shape4 = [(vertices[2]['x'] * w, vertices[2]['y'] * h), ((vertices[3]['x'] * w, vertices[3]['y'] * h))]
 
         img1 = ImageDraw.Draw(pillow_img)  
-        img1.line(shape1, fill ='red', width = 0)
-        img1.line(shape2, fill ='red', width = 0)
-        img1.line(shape3, fill ='red', width = 0)
-        img1.line(shape4, fill ='red', width = 0)
+        img1.line(shape1, fill='red', width = 0)
+        img1.line(shape2, fill='red', width = 0)
+        img1.line(shape3, fill='red', width = 0)
+        img1.line(shape4, fill='red', width = 0)
         draw = ImageDraw.Draw(pillow_img)
         font = ImageFont.truetype('ARIAL.TTF', 30)
         draw.text(position, obj_name, font=font, fill='red')
+
     full_path = os.path.splitext(path)
-    endpoint = full_path[0]+'_objects'+'.jpg'
-    if not os.path.exists(endpoint):
-        pillow_img.save(endpoint, format='JPEG', subsampling=0, quality=85)
+    endpoint_obj = full_path[0]+'_objects'+'.jpg'
+    if '_objects.jpg' not in path:
+        pillow_img.save(endpoint_obj, format='JPEG', subsampling=0, quality=85)
 
 if not os.path.exists('credentials.json'):
     print('Need a Desktop App credentials.json OAuth file from https://console.developers.google.com/')
