@@ -6,7 +6,7 @@ Supports RAW files as well as .jpg/gif/png/etc
 #### I recommend using the .exe file if you are on windows, nothing needed to install
 
 ### Setup guide
-0) Download the zip https://github.com/n0x5/scripts/archive/refs/heads/master.zip or the executable https://github.com/n0x5/scripts/releases/download/google_vision_v3/Vision_API_V3.exe, unzip files to a folder (keep exiftool there).
+0) Download the zip https://github.com/n0x5/scripts/releases/download/google_vision_v3/Vision_API_V3.zip unzip files to a folder (keep exiftool there).
 2) Go to https://cloud.google.com/vision and enable the api (need billing/credit card)
 3) Go to https://console.developers.google.com/
 4) Click 'Credentials' in left side menu
