@@ -39,10 +39,9 @@ parser.add_argument('--no-json', action='store_const', const=1)
 args = parser.parse_args()
 count = ['1']
 lst = []
-if os.name == 'nt':
-    exepath = os.path.join(os.path.dirname(__file__), 'exiftool.exe')
-else:
-    exepath = os.path.join(os.path.dirname(__file__), 'exiftool')
+
+def remove_non_ascii(string):
+    return ''.join(char for char in string if ord(char) < 128)
 
 def scan_folder(folder):
     for subdir, dirs, files in os.walk(folder):
@@ -141,7 +140,7 @@ def vision(jdata, img):
     file3 = os.path.basename(img)
     file2 = os.path.splitext(file3)
     endpoint = full_path[0]+'.json'
-    with open(endpoint, 'w', encoding='utf-8') as token:
+    with open(endpoint, 'w', encoding='utf-8', errors='backslashreplace') as token:
         token.write(first_post.text)
 
     parse_meta(first_post.text, img)
@@ -155,7 +154,7 @@ def parse_meta(data, path):
     labels2 = [[item['description'], item['score']] for item in labels]
     labels_text = [item['description'] for item in labels]
     web = data['responses'][0]['webDetection']
-    web_labels = web['bestGuessLabels'][0]['label']
+    web_labels = web['bestGuessLabels'][0]['label'].title()
     try:
         web_similar = [item2['url'] for item2 in web['visuallySimilarImages']]
     except:
@@ -186,7 +185,7 @@ def parse_meta(data, path):
     date_a = os.path.getatime(path)
     dates = date_a, date_mod
     labels_final = ', '.join(labels_text)
-    web_labels_final = ', '.join(lst)
+    web_labels_final = remove_non_ascii(', '.join(lst))
     try:
         labels_fin = web_labels+', '+labels_final+web_labels_final
     except:
@@ -196,39 +195,13 @@ def parse_meta(data, path):
             labels_fin = labels_final
     mime2 = mimetypes.guess_type(path)
     if args.write_tags == 1 and 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]):
+        command = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" "{}"' \
+                 .format(labels_fin, labels_final, web_labels, web_labels+', '+labels_final, labels_final, path)
         try:
             if os.name == 'nt':
-                os.system('exiftool.exe -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
+                os.system(command)
             else:
                 os.system('./exiftool -EXIF:UserComment="{}" "{}"' .format(labels_fin, path))
-        except Exception as e:
-            pass
-        try:
-            if os.name == 'nt':
-                os.system('exiftool.exe -EXIF:XPSubject="{}" "{}"' .format(labels_final, path))
-            else:
-                os.system('./exiftool -EXIF:XPSubject="{}" "{}"' .format(labels_final, path))
-        except Exception as e:
-            pass
-        try:
-            if os.name == 'nt':
-                os.system('exiftool.exe -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
-            else:
-                os.system('./exiftool -EXIF:XPTitle="{}" "{}"' .format(web_labels, path))
-        except Exception as e:
-            pass
-        try:
-            if os.name == 'nt':
-                os.system('exiftool.exe -XMP:Subject="{}" "{}"' .format(labels_final, path))
-            else:
-                os.system('./exiftool -XMP:Subject="{}" "{}"' .format(labels_final, path))
-        except Exception as e:
-            pass
-        try:
-            if os.name == 'nt':
-                os.system('exiftool.exe -XMP:LastKeywordXMP="{}" "{}"' .format(web_labels, path))
-            else:
-                os.system('./exiftool -XMP:LastKeywordXMP="{}" "{}"' .format(web_labels, path))
         except Exception as e:
             pass
 
