@@ -34,4 +34,4 @@ Example command:
 #### python .\Google_Vision_API.py --folder "F:\dev\Google_APIs\New folder (13)" --write-tags
 
 #### Screenshot:
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/raw2.png)
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/raw3.png)
