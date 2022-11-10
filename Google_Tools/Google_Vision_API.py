@@ -70,7 +70,10 @@ def single_image_raw(img):
                 "features": [
                     { "type": "LABEL_DETECTION" },
                     { "type": "SAFE_SEARCH_DETECTION" },
-                    { "type": "WEB_DETECTION" }
+                    { "type": "WEB_DETECTION" },
+                    { "type": "FACE_DETECTION" },
+                    { "type": "LANDMARK_DETECTION" },
+                    { "type": "OBJECT_LOCALIZATION" }
                 ]
             }]
         })
@@ -98,7 +101,10 @@ def single_image(img):
             "features": [
                 { "type": "LABEL_DETECTION" },
                 { "type": "SAFE_SEARCH_DETECTION" },
-                { "type": "WEB_DETECTION" }
+                { "type": "WEB_DETECTION" },
+                { "type": "FACE_DETECTION" },
+                { "type": "LANDMARK_DETECTION" },
+                { "type": "OBJECT_LOCALIZATION" }
             ]
         }]
     })
