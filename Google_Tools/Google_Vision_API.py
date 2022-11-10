@@ -212,6 +212,14 @@ def parse_meta(data, path):
 
     else:
         print('Wrote json only ("{}...") to {}' .format(labels_fin[0:20], path))
+        full_path = os.path.splitext(path)
+        file3 = os.path.basename(path)
+        file2 = os.path.splitext(file3)
+        endpoint = full_path[0]+'.xmp'
+        os.system('exiftool.exe -tagsfromfile {} {}' .format(path, endpoint))
+        print('Created XMP at {}' .format(endpoint))
+        if os.path.exists(endpoint+'_original'):
+            os.remove(endpoint+'_original')
 
 if not os.path.exists('credentials.json'):
     print('Need a Desktop App credentials.json OAuth file from https://console.developers.google.com/')
