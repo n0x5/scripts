@@ -3,6 +3,10 @@
 Scans a folder recursively or give path to single file and write .json info in same folder
 If a json file exists already it will not make a request to the API.
 Supports RAW files as well as .jpg/gif/png/etc
+
+#### Screenshot:
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/raw3.png)
+
 #### I recommend using the .exe file if you are on windows, nothing needed to install
 
 #### NEW V4: Object Recognition saved to image:
@@ -10,7 +14,7 @@ Just for fun it now saves a new image with objects recognized:
 ![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/object_recognition.jpg)
 
 ### Setup guide
-0) Download the zip https://github.com/n0x5/scripts/releases/download/google_vision_v3/Vision_API_V3.zip unzip files to a folder (keep exiftool there).
+0) Download the zip https://github.com/n0x5/scripts/releases/download/google_vision_v4/Vision_API_V4.zip unzip files to a folder (keep exiftool there).
 2) Go to https://cloud.google.com/vision and enable the api (need billing/credit card)
 3) Go to https://console.developers.google.com/
 4) Click 'Credentials' in left side menu
@@ -37,5 +41,3 @@ Command line options:
 Example command:
 #### python .\Google_Vision_API.py --folder "F:\dev\Google_APIs\New folder (13)" --write-tags
 
-#### Screenshot:
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/raw3.png)
