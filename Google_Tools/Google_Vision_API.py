@@ -81,8 +81,8 @@ def scan_folder(folder):
             fullpath = os.path.join(subdir, fn)
             try:
                 mime2 = mimetypes.guess_type(fullpath)
-                #if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None or fn.endswith('jpg'):
-                if fn.endswith('jpg') or fn.endswith('jpeg') or fn.endswith('jpg') or fn.endswith('tif') or fn.endswith('png'):
+                if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None or fn.endswith('jpg'):
+                #if fn.endswith('jpg') or fn.endswith('jpeg') or fn.endswith('jpg') or fn.endswith('tif') or fn.endswith('png'):
                     single_image(fullpath)
                 if 'image' in mime2[0] and 'jpeg' not in mime2[0] and 'png' not in mime2[0] and 'tiff' not in mime2[0] and 'gif' not in mime2[0]:
                     single_image_raw(fullpath)
@@ -244,16 +244,17 @@ def parse_meta(data, path):
     endpoint_jpeg = full_path[0]+'_TEMP'
     mime2 = mimetypes.guess_type(path)
     labels_dupe = ', '.join(set(labels_fin.split(', ')))
-    if os.path.exists(endpoint_jpeg):
-        command_raw = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
-            .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, labels_dupe, endpoint_jpeg)
-        os.system(command_raw)
-        
-
+    try:
+        if os.path.exists(endpoint_jpeg) and os.name == 'nt':
+            command_raw2 = 'exiftool.exe -Sep ", " -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
+                .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, labels_dupe, endpoint_jpeg)
+            os.system(command_raw2)
+    except Exception:
+        pass
 
     if args.write_tags == 1 and 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]):
         if os.name == 'nt':
-            command = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
+            command = 'exiftool.exe -Sep ", " -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
                     .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, labels_dupe, path)
         else:
             command_unix = '{} -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
@@ -299,9 +300,9 @@ def parse_meta(data, path):
             os.system(cmd1)
         print('Created XMP at {}' .format(endpoint))
         os.remove(endpoint_jpeg)
-        os.remove(endpoint_jpeg+'_original')
         if os.path.exists(endpoint+'_original'):
             os.remove(endpoint+'_original')
+
     try:
         objects = data['responses'][0]['localizedObjectAnnotations']
         lst_obj = []
