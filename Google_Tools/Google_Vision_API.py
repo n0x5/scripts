@@ -37,6 +37,37 @@ parser.add_argument('--score', action='store_const', const=0)
 parser.add_argument('--write-tags', action='store_const', const=1)
 parser.add_argument('--no-json', action='store_const', const=1)
 args = parser.parse_args()
+os.system('')
+color = {
+    'HEADER': '\033[95m',
+    'ENDCOLOR': '\033[0m',
+    'BOLD': '\033[1m',
+    'UNDERLINE': '\033[4m',
+    'INVERSE': '\033[7m',
+    'GRAY_BRIGHT': '\033[90m',
+    'BLUE_BRIGHT': '\033[94m',
+    'GREEN_BRIGHT': '\033[92m',
+    'RED_BRIGHT': '\033[91m',
+    'YELLOW_BRIGHT': '\033[93m',
+    'MAGENTA_BRIGHT': '\033[95m',
+    'CYAN_BRIGHT': '\033[96m',
+    'WHITE_BRIGHT': '\033[97m',
+    'RED_DIM': '\033[31m',
+    'GREEN_DIM': '\033[32m',
+    'YELLOW_DIM': '\033[33m',
+    'BLUE_DIM': '\033[34m',
+    'MAGENTA_DIM': '\033[35m',
+    'CYAN_DIM': '\033[36m',
+    'WHITE_DIM': '\033[37m',
+    'BLACKBG_BRIGHT': '\033[100m',
+    'REDBG_BRIGHT': '\033[101m',
+    'GREENBG_BRIGHT': '\033[102m',
+    'YELLOWBG_BRIGHT': '\033[103m',
+    'BLUEBG_BRIGHT': '\033[104m',
+    'MAGBG_BRIGHT': '\033[105m',
+    'CYANBG_BRIGHT': '\033[106m',
+    'WHITEBG_BRIGHT': '\033[107m',
+}
 count = ['1']
 lst = []
 lst_o2 = []
@@ -50,7 +81,8 @@ def scan_folder(folder):
             fullpath = os.path.join(subdir, fn)
             try:
                 mime2 = mimetypes.guess_type(fullpath)
-                if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None or fn.endswith('jpg'):
+                #if 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]) and mime2[0] is not None or fn.endswith('jpg'):
+                if fn.endswith('jpg') or fn.endswith('jpeg') or fn.endswith('jpg') or fn.endswith('tif') or fn.endswith('png'):
                     single_image(fullpath)
                 if 'image' in mime2[0] and 'jpeg' not in mime2[0] and 'png' not in mime2[0] and 'tiff' not in mime2[0] and 'gif' not in mime2[0]:
                     single_image_raw(fullpath)
@@ -82,6 +114,8 @@ def single_image_raw(img):
         file3 = os.path.basename(img)
         file2 = os.path.splitext(file3)
         endpoint = full_path[0]+'.json'
+        endpoint_jpg = full_path[0]+'_TEMP'
+        string.save(endpoint_jpg, format='JPEG')
         if not os.path.exists(endpoint) and '_objects.jpg' not in img:
             vision(body_post, img)
             count.append(img)
@@ -145,7 +179,7 @@ def vision(jdata, img):
     headers = {'Authorization': 'Bearer {}' .format(token)}
     url_post =  'https://vision.googleapis.com/v1/images:annotate'
     first_post = requests.post(url_post, headers=headers, data=jdata)
-    print('{} API requests so far' .format(len(count)))
+    print(r'{} API requests so far' .format(len(count)))
     full_path = os.path.splitext(img)
     file3 = os.path.basename(img)
     file2 = os.path.splitext(file3)
@@ -203,15 +237,28 @@ def parse_meta(data, path):
             labels_fin = web_labels+labels_final
         except:
             labels_fin = labels_final
+
+    full_path = os.path.splitext(path)
+    file3 = os.path.basename(path)
+    file2 = os.path.splitext(file3)
+    endpoint_jpeg = full_path[0]+'_TEMP'
     mime2 = mimetypes.guess_type(path)
     labels_dupe = ', '.join(set(labels_fin.split(', ')))
+    if os.path.exists(endpoint_jpeg):
+        command_raw = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
+            .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, labels_dupe, endpoint_jpeg)
+        os.system(command_raw)
+        
+
+
     if args.write_tags == 1 and 'image' in mime2[0] and ('jpeg' in mime2[0] or 'png' in mime2[0] or 'tiff' in mime2[0]):
         if os.name == 'nt':
-            command = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" "{}"' \
-                    .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, path)
+            command = 'exiftool.exe -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
+                    .format(labels_dupe, labels_final, web_labels, labels_dupe, labels_final, labels_dupe, path)
         else:
-            command_unix = '{} -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" "{}"' \
-                    .format(os.path.join(os.path.dirname( __file__ ), 'exiftool'), labels_dupe, labels_final, web_labels, labels_dupe, labels_final, path)
+            command_unix = '{} -EXIF:UserComment="{}" -EXIF:XPSubject="{}" -EXIF:XPTitle="{}" -XMP:Subject="{}" -XMP:LastKeywordXMP="{}" -XMP:Label="{}" "{}"' \
+                    .format(os.path.join(os.path.dirname( __file__ ), 'exiftool'), labels_dupe, labels_final, web_labels, labels_dupe, labels_final, labels_dupe, path)
+
         try:
             if os.name == 'nt':
                 os.system(command)
@@ -221,22 +268,38 @@ def parse_meta(data, path):
             pass
 
         os.utime(path, times=dates)
-        print('Wrote metadata (\"{}...\") to {}' .format(labels_final[0:20], path))
+        print('Wrote metadata {}(\"{}...\"){} to {}' .format(color['GRAY_BRIGHT'], labels_final[0:20], color['ENDCOLOR'], path))
         if os.path.exists(path+'_original'):
             os.remove(path+'_original')
 
-    else:
-        print('Wrote json only ("{}...") to {}' .format(labels_final[0:20], path))
         full_path = os.path.splitext(path)
         file3 = os.path.basename(path)
         file2 = os.path.splitext(file3)
         endpoint = full_path[0]+'.xmp'
         if os.name == 'nt':
-            os.system('exiftool.exe -tagsfromfile {} {}' .format(path, endpoint))
+            os.system('exiftool.exe -tagsfromfile "{}" "{}"' .format(path, endpoint))
         else:
             cmd1 = os.path.join(os.path.dirname( __file__ ), 'exiftool -tagsfromfile {} {}' .format(path, endpoint))
             os.system(cmd1)
         print('Created XMP at {}' .format(endpoint))
+        if os.path.exists(endpoint+'_original'):
+            os.remove(endpoint+'_original')
+
+    else:
+        print('Wrote json only (\"{}{}{}...\") to {}{}{}' .format(color['GREEN_DIM'], labels_final[0:20], color['ENDCOLOR'], color['WHITE_DIM'], path, color['ENDCOLOR']))
+        full_path = os.path.splitext(path)
+        file3 = os.path.basename(path)
+        file2 = os.path.splitext(file3)
+        endpoint = full_path[0]+'.xmp'
+        
+        if os.name == 'nt' and os.path.exists(endpoint_jpeg):
+            os.system('exiftool.exe -tagsfromfile {} {}' .format(endpoint_jpeg, endpoint))
+        else:
+            cmd1 = os.path.join(os.path.dirname( __file__ ), 'exiftool -tagsfromfile "{}" "{}"' .format(endpoint_jpeg, endpoint))
+            os.system(cmd1)
+        print('Created XMP at {}' .format(endpoint))
+        os.remove(endpoint_jpeg)
+        os.remove(endpoint_jpeg+'_original')
         if os.path.exists(endpoint+'_original'):
             os.remove(endpoint+'_original')
     try:
@@ -289,4 +352,6 @@ if args.folder != None:
 if args.folder == None and args.file == None:
     print('Scan a folder recursively with --folder')
     print('Or a single file with --file')
+
+
 
