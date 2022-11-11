@@ -41,3 +41,6 @@ Command line options:
 Example command:
 #### python .\Google_Vision_API.py --folder "F:\dev\Google_APIs\New folder (13)" --write-tags
 
+
+#### How the tags look in lightroom:
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/rawtags.png)
