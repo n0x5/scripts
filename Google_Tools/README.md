@@ -43,4 +43,4 @@ Example command:
 
 
 #### How the tags look in lightroom:
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/rawtags.png)
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/rawtags2.png)
