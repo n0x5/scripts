@@ -1,9 +1,9 @@
 # Download a whole website from internet web archive
 # Example command:
-# python webarchive.py en.wikipedia.org --download
+# python webarchive.py encarta.msn.com --download
 #
 # Show only number of results: 
-# python webarchive.py en.wikipedia.org --pages
+# python webarchive.py encarta.msn.com --pages
 #
 
 
@@ -36,7 +36,7 @@ def show_pages():
 
 def download_pages():
     rcount = requests.get(url_pages, headers=headers)
-    dl_folder = args.url
+    dl_folder = args.url.replace('/', '_')
     if not os.path.exists(dl_folder):
         os.makedirs(dl_folder)
     for item in range(int(rcount.text.strip())):
@@ -48,12 +48,12 @@ def download_pages():
         for item_url in data:
             if 'urlkey' not in item_url:
                 dl_url = 'https://web.archive.org/web/'+item_url[0]+'if_/'+item_url[2]
-                with open('{}_urls.txt' .format(args.url), 'a', encoding='utf-8') as fn2:
+                with open('{}_urls.txt' .format(dl_folder), 'a', encoding='utf-8') as fn2:
                     fn2.write(dl_url+'\n')
                 url_file = item_url[3].split(')/')
 
                 if url_file is not None:
-                    endpoint = os.path.join(dl_folder, url_file[1].replace('"', '').replace('\\', '').replace('\\\\', ''))
+                    endpoint = os.path.join(os.path.dirname( __file__ ), dl_folder.replace('/', '_'), url_file[1].replace('"', '').replace('\\', '').replace('/', ''))
                     print(dl_url)
                     if not os.path.exists(endpoint):
                         try:
@@ -62,6 +62,7 @@ def download_pages():
                                 fn.write(r_dl.text)
                                 time.sleep(1)
                         except Exception as e:
+                            print(e)
                             print('skipping', dl_url)
 
 if args.pages == 1:
