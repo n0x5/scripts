@@ -13,45 +13,50 @@ import sqlite3
 if not os.path.exists('images'):
     os.makedirs('images')
 
-conn = sqlite3.connect('adventure_warc.db')
+conn = sqlite3.connect('xbox360_warc.db')
 cur = conn.cursor()
 
 cur.execute('''CREATE TABLE if not exists warc
             (id text, title text, body text)''')
 
 lst = []
-with open('www.adventuregamers.com-inf-20160714-202304-20z7c-00005.warc.gz', 'rb') as stream:
-    for record in tqdm(ArchiveIterator(stream)):
-        try:
-            if record.rec_type == 'response' and 'text/html' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
-                try:
-                    body = record.raw_stream.read().decode('UTF-8')
-                    try:
-                        title1 = re.search(r'<title>(.+?)<\/title>', body)
-                        title = title1.group(1)
-                        id_article = record.rec_headers['WARC-Target-URI'].split('/')[-1]
-                    except Exception:
-                        id_article = record.rec_headers['WARC-Target-URI'].split('/')[-1]
-                        title = ''
-                    stuff = id_article, title, body
-                    lst.append(stuff)
-                    if len(lst) == 500:
-                        cur.executemany('insert into warc (id, title, body) VALUES (?,?,?)', (lst))
-                        cur.connection.commit()
-                        lst = []
-                except Exception as e:
-                    pass
-            if record.rec_type == 'response' and 'image/' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
-                try:
-                    fn = record.rec_headers['WARC-Target-URI'].split('/')[-1]
-                    with open(os.path.join('images', '{}' .format(fn)), 'wb') as binary_file:
-                        binary_file.write(record.raw_stream.read())
-                except Exception as e:
-                    pass
-        except Exception as e:
-            pass
 
-cur.executemany('insert into warc (id, title, body) VALUES (?,?,?)', (lst))
-cur.connection.commit()
+for subdir, dirs, files in os.walk(r'F:\dev\xbox360gamespy\war'):
+    for fn in files:
+        fpath = os.path.join(subdir, fn)
+        with open(fpath, 'rb') as stream:
+            for record in tqdm(ArchiveIterator(stream)):
+                try:
+                    if record.rec_type == 'response' and 'text/html' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
+                        try:
+                            body = record.raw_stream.read().decode('UTF-8')
+                            try:
+                                title1 = re.search(r'<title>(.+?)<\/title>', body)
+                                title = title1.group(1)
+                                id_article = record.rec_headers['WARC-Target-URI']
+                            except Exception:
+                                id_article = record.rec_headers['WARC-Target-URI']
+                                title = ''
+                            stuff = id_article, title, body
+                            if '' in title:
+                                lst.append(stuff)
+                            if len(lst) == 500:
+                                cur.executemany('insert into warc (id, title, body) VALUES (?,?,?)', (lst))
+                                cur.connection.commit()
+                                lst = []
+                        except Exception as e:
+                            pass
+                    if record.rec_type == 'response' and 'image/' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
+                        try:
+                            fn = record.rec_headers['WARC-Target-URI'].split('/')[-1]
+                            with open(os.path.join('images', '{}' .format(fn)), 'wb') as binary_file:
+                                binary_file.write(record.raw_stream.read())
+                        except Exception as e:
+                            pass
+                except Exception as e:
+                    pass
+
+        cur.executemany('insert into warc (id, title, body) VALUES (?,?,?)', (lst))
+        cur.connection.commit()
 
 
