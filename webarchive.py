@@ -6,7 +6,7 @@
 # python webarchive.py next-episode.net/movies --download
 #
 # Show only number of results: 
-# python webarchive.py encarta.msn.com --pages
+# python webarchive.py next-episode.net --pages
 #
 
 
@@ -76,3 +76,4 @@ if args.download == 1 and 'http' not in args.url:
 
 if 'http' in args.url:
     print("Don't put http:// or https:// in url. https://en.wikipedia.org should be en.wikipedia.org")
+
