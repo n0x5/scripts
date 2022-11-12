@@ -1,6 +1,9 @@
 # Download a whole website from internet web archive
 # Example command:
-# python webarchive.py encarta.msn.com --download
+# python webarchive.py next-episode.net --download
+#
+# Also supports subfolders:
+# python webarchive.py next-episode.net/movies --download
 #
 # Show only number of results: 
 # python webarchive.py encarta.msn.com --pages
@@ -70,6 +73,6 @@ if args.pages == 1:
 
 if args.download == 1 and 'http' not in args.url:
     download_pages()
-else:
-    print("Don't put http:// or https:// in url. https://en.wikipedia.org should be en.wikipedia.org")
 
+if 'http' in args.url:
+    print("Don't put http:// or https:// in url. https://en.wikipedia.org should be en.wikipedia.org")
