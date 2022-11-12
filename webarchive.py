@@ -58,11 +58,20 @@ def download_pages():
                 if url_file is not None:
                     endpoint = os.path.join(os.path.dirname( __file__ ), dl_folder.replace('/', '_'), url_file[1].replace('"', '').replace('\\', '').replace('/', ''))
                     print(dl_url)
-                    if not os.path.exists(endpoint):
+                    if not os.path.exists(endpoint) and 'text/html' in item_url[1]:
                         try:
                             r_dl = requests.get(dl_url, headers=headers)
                             with open(endpoint, 'w', encoding='utf-8') as fn:
                                 fn.write(r_dl.text)
+                                time.sleep(1)
+                        except Exception as e:
+                            print(e)
+                            print('skipping', dl_url)
+                    if not os.path.exists(endpoint) and 'image' in item_url[1]:
+                        try:
+                            r_dl = requests.get(dl_url, headers=headers)
+                            with open(endpoint, 'wb') as fn:
+                                fn.write(r_dl.content)
                                 time.sleep(1)
                         except Exception as e:
                             print(e)
