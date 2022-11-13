@@ -5,3 +5,7 @@
 *.pm_ linguist-language=Perl
 *.pl_ linguist-language=Perl
 *.pod_ linguist-language=Perl
+
+*.pm linguist-language=Perl
+*.pl linguist-language=Perl
+*.pod linguist-language=Perl
