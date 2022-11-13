@@ -24,7 +24,7 @@ Just for fun it now saves a new image with objects recognized:
 8) The .json file downloads in browser, so just rename it to "credentials.json" and place it in the unzipped folder with Vision_API_V2.py/exe and then run it with --file to a single file to initiate.
 9) The browser will open to a Google page to authorize the app to access the account, click accept etc. Finished.
 
-### Setup guide for python:
+### Setup guide for python3:
 If you don't want to use the executable and you don't have Python you have to go to www.python.org, download the latest version, then run the following command:
 #### pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib requests rawpy pillow
     
