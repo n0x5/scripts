@@ -1,3 +1,7 @@
 *.pm linguist-vendored=true
 *.pl linguist-vendored=true
 *.pod linguist-vendored=true
+
+*.pm_ linguist-language=Perl
+*.pl_ linguist-language=Perl
+*.pod_ linguist-language=Perl
