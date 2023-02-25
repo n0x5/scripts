@@ -1,8 +1,9 @@
 ##
 ## Download fandom.com wiki to sqlite
 ##
-## Command python fandom_api_to_sqlite.py <wiki name> (sub domain portion of fandom.com)
-## Example for https://matrix.fandom.com: python fandom_api_to_sqlite.py matrix
+## Command python fandom_api_to_sqlite.py <wiki name> (sub domain portion of fandom.com) (--OPTIONS)
+## You need to specify each option to download, omitting an option skips that download (like --download-pages)
+## Example for https://matrix.fandom.com: python fandom_api_to_sqlite.py matrix --download-images --download-pages --download-categories
 ##
 
 import sqlite3
@@ -19,6 +20,8 @@ import re
 parser = argparse.ArgumentParser()
 parser.add_argument('wiki')
 parser.add_argument('--download-images', action='store_const', const=1)
+parser.add_argument('--download-pages', action='store_const', const=1)
+parser.add_argument('--download-categories', action='store_const', const=1)
 args = parser.parse_args()
 
 
@@ -95,12 +98,15 @@ def get_rels(url):
             url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apcontinue={}' .format(wiki_name, apcont)
         get_rels(url)
 
-url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50' .format(wiki_name)
 
-get_rels(url)
+if args.download_pages == 1:
+    url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50' .format(wiki_name)
+    get_rels(url)
 
-url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apnamespace=14' .format(wiki_name)
-get_rels(url)
+
+if args.download_categories == 1:
+    url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apnamespace=14' .format(wiki_name)
+    get_rels(url)
 
 
 ############## IMAGES  ############
@@ -137,3 +143,4 @@ if args.download_images == 1:
     os.makedirs('{}_images' .format(wiki_name), exist_ok=True)
     url_img = 'https://{}.fandom.com/api.php?action=query&list=allimages&format=json&export=wikitext&ailimit=500' .format(wiki_name)
     dl_images(url_img)
+
