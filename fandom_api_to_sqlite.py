@@ -18,7 +18,9 @@ import re
 
 parser = argparse.ArgumentParser()
 parser.add_argument('wiki')
+parser.add_argument('--download-images', action='store_const', const=1)
 args = parser.parse_args()
+
 
 wiki_name = args.wiki
 delay = 1
@@ -100,3 +102,33 @@ get_rels(url)
 url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apnamespace=14' .format(wiki_name)
 get_rels(url)
 
+
+############## IMAGES  ############
+
+def dl_images(url_img):
+    print(url_img)
+    response = requests.get(url_img, headers=headers)
+    data = json.loads(response.text)
+    pages = data['query']['allimages']
+    for item in pages:
+        name = item['name']
+        title = item['title']
+        url = item['url']
+        endpoint = os.path.join('{}_images' .format(wiki_name), name)
+        r = requests.get(url, headers=headers)
+        try:
+            with open(endpoint, 'wb') as cover_jpg:
+                cover_jpg.write(r.content)
+        except Exception as e:
+            print(e)
+        stuff = name, title
+        cur.execute('insert or ignore into {}_images (name, title) VALUES (?,?)' .format(wiki_name), (stuff))
+        cur.connection.commit()
+        time.sleep(delay)
+
+if args.download_images == 1:
+    cur.execute('''CREATE TABLE if not exists {}_images
+        (name text, title text)''' .format(wiki_name))
+    os.makedirs('{}_images' .format(wiki_name), exist_ok=True)
+    url_img = 'https://history.fandom.com/api.php?action=query&list=allimages&format=json&export=wikitext&ailimit=500'
+    dl_images(url_img)
