@@ -106,7 +106,6 @@ get_rels(url)
 ############## IMAGES  ############
 
 def dl_images(url_img):
-    print(url_img)
     response = requests.get(url_img, headers=headers)
     data = json.loads(response.text)
     pages = data['query']['allimages']
@@ -114,21 +113,27 @@ def dl_images(url_img):
         name = item['name']
         title = item['title']
         url = item['url']
+        print(name)
         endpoint = os.path.join('{}_images' .format(wiki_name), name)
-        r = requests.get(url, headers=headers)
-        try:
-            with open(endpoint, 'wb') as cover_jpg:
-                cover_jpg.write(r.content)
-        except Exception as e:
-            print(e)
-        stuff = name, title
-        cur.execute('insert or ignore into {}_images (name, title) VALUES (?,?)' .format(wiki_name), (stuff))
-        cur.connection.commit()
-        time.sleep(delay)
+        if not os.path.exists(endpoint):
+            r = requests.get(url, headers=headers)
+            try:
+                with open(endpoint, 'wb') as cover_jpg:
+                    cover_jpg.write(r.content)
+            except Exception as e:
+                print(e)
+            stuff = name, title
+            cur.execute('insert or ignore into {}_images (name, title) VALUES (?,?)' .format(wiki_name), (stuff))
+            cur.connection.commit()
+            time.sleep(delay)
+    if 'continue' in data:
+        aicont = data['continue']['aicontinue']
+        url_img = 'https://{}.fandom.com/api.php?action=query&list=allimages&format=json&export=wikitext&ailimit=500&aicontinue={}' .format(wiki_name, aicont)
+        dl_images(url_img)
 
 if args.download_images == 1:
     cur.execute('''CREATE TABLE if not exists {}_images
         (name text, title text)''' .format(wiki_name))
     os.makedirs('{}_images' .format(wiki_name), exist_ok=True)
-    url_img = 'https://history.fandom.com/api.php?action=query&list=allimages&format=json&export=wikitext&ailimit=500'
+    url_img = 'https://{}.fandom.com/api.php?action=query&list=allimages&format=json&export=wikitext&ailimit=500' .format(wiki_name)
     dl_images(url_img)
