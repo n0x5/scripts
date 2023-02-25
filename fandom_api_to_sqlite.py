@@ -21,7 +21,7 @@ parser.add_argument('wiki')
 args = parser.parse_args()
 
 wiki_name = args.wiki
-delay = 0
+delay = 1
 
 sql_db = os.path.join(os.path.dirname( __file__ ), '{}.db' .format(wiki_name))
 conn = sqlite3.connect(sql_db)
@@ -89,12 +89,9 @@ def get_rels(url):
         apcont = data['continue']['apcontinue']
         if 'apnamespace=14' in str(url):
             url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apcontinue={}&apnamespace=14' .format(wiki_name, apcont)
-        if 'apnamespace=10' in str(url):
-            url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apcontinue={}&apnamespace=10' .format(wiki_name, apcont)
         else:
             url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apcontinue={}' .format(wiki_name, apcont)
         get_rels(url)
-        time.sleep(delay)
 
 url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50' .format(wiki_name)
 
@@ -103,5 +100,3 @@ get_rels(url)
 url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apnamespace=14' .format(wiki_name)
 get_rels(url)
 
-url = 'https://{}.fandom.com/api.php?action=query&list=allpages&format=json&export=wikitext&aplimit=50&apnamespace=10' .format(wiki_name)
-get_rels(url)
