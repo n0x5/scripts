@@ -31,7 +31,7 @@ delay = 1
 sql_db = os.path.join(os.path.dirname( __file__ ), '{}.db' .format(wiki_name))
 conn = sqlite3.connect(sql_db)
 cur = conn.cursor()
-cur.execute('''CREATE TABLE if not exists {}
+cur.execute('''CREATE TABLE if not exists `{}`
         (title text unique, content text)''' .format(wiki_name))
 
 headers = {
@@ -70,7 +70,7 @@ def get_rels(url):
                 stuff = title, content
                 lst.append(stuff)
                 if len(lst) == 50:
-                    cur.executemany('insert or ignore into {} (title, content) VALUES (?,?)' .format(wiki_name), (lst))
+                    cur.executemany('insert or ignore into `{}` (title, content) VALUES (?,?)' .format(wiki_name), (lst))
                     cur.connection.commit()
                     lst = []
 
@@ -85,7 +85,7 @@ def get_rels(url):
 
     del context
 
-    cur.executemany('insert or ignore into {} (title, content) VALUES (?,?)' .format(wiki_name), (lst))
+    cur.executemany('insert or ignore into `{}` (title, content) VALUES (?,?)' .format(wiki_name), (lst))
     cur.connection.commit()
 
     time.sleep(delay)
@@ -131,7 +131,7 @@ def dl_images(url_img):
             except Exception as e:
                 print(e)
             stuff = name, title, timestamp
-            cur.execute('insert or ignore into {}_images (name, title, timestamp) VALUES (?,?,?)' .format(wiki_name), (stuff))
+            cur.execute('insert or ignore into `{}_images` (name, title, timestamp) VALUES (?,?,?)' .format(wiki_name), (stuff))
             cur.connection.commit()
             time.sleep(delay)
     if 'continue' in data:
@@ -145,4 +145,3 @@ if args.download_images == 1:
     os.makedirs('{}_images' .format(wiki_name), exist_ok=True)
     url_img = 'https://{}.fandom.com/api.php?action=query&list=allimages&format=json&export=wikitext&ailimit=500' .format(wiki_name)
     dl_images(url_img)
-
