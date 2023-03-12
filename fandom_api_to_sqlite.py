@@ -15,6 +15,8 @@ import time
 from lxml import etree
 from io import BytesIO
 import re
+import sys
+sys.setrecursionlimit(1500000)
 
 
 parser = argparse.ArgumentParser()
@@ -140,7 +142,7 @@ def dl_images(url_img):
         dl_images(url_img)
 
 if args.download_images == 1:
-    cur.execute('''CREATE TABLE if not exists {}_images
+    cur.execute('''CREATE TABLE if not exists `{}_images`
         (name text, title text, timestamp text)''' .format(wiki_name))
     os.makedirs('{}_images' .format(wiki_name), exist_ok=True)
     url_img = 'https://{}.fandom.com/api.php?action=query&list=allimages&format=json&export=wikitext&ailimit=500' .format(wiki_name)
