@@ -18,6 +18,8 @@ headers = {
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
+title = soup.find('a', attrs={'class': 'subnav_heading'}).text
+os.makedirs(title)
 rel1 = soup.find('div', attrs={'class': 'media_index_thumb_list'})
 lists = rel1.find_all('img', src=re.compile(r'm.media-amazon.com'))
 for item in lists:
@@ -28,5 +30,7 @@ for item in lists:
         final_url = re.sub(r'@(.+?).jpg', '@._V1.jpg', dl_url2)
         r = requests.get(final_url, headers=headers)
     fn = os.path.basename(final_url)
-    with open(fn, 'wb') as cover_jpg:
+    endpoint = os.path.join(title, fn)
+    with open(endpoint, 'wb') as cover_jpg:
         cover_jpg.write(r.content)
+
