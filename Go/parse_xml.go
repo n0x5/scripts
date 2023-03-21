@@ -16,9 +16,10 @@ type Release struct {
     Style     []string    `xml:"styles>style"`
     Genre     []string    `xml:"genres>genre"`
     Label     Label    `xml:"labels>label"`
-    Track     []string    `xml:"tracklist>track>title"`
+    Track     []Track    `xml:"tracklist>track"`
     RelTitle    string   `xml:"title"`
     MasterID    int   `xml:"master_id"`
+    ID    int   `xml:"id"`
     Country    string   `xml:"country"`
     Released    string   `xml:"released"`
     Artist      string   `xml:"artists>artist>name"`
@@ -28,6 +29,12 @@ type Label struct {
     Name    string  `xml:"name,attr"`
     Catno    string  `xml:"catno,attr"`
     ID    int  `xml:"id,attr"`
+}
+
+type Track struct {
+    Position    string  `xml:"position"`
+    Title    string  `xml:"title"`
+    Duration    string  `xml:"duration"`
 }
 
 func main() {
@@ -51,8 +58,8 @@ func main() {
             if err := d.DecodeElement(&b, &t); err != nil {
                 fmt.Println(err)
             }
-            fmt.Printf("%s - %d - %s - %s - %s - %v - %v - %d - %s - %s\n", b.Released, b.MasterID, b.RelTitle, b.Country, b.Artist, 
-                        strings.Join(b.Genre, ", "), strings.Join(b.Style, ", "), b.Label.ID, b.Label.Name, b.Label.Catno)
+            fmt.Printf("%s - %d - %d - %s - %s - %s - %v - %v - %d - %s - %s - %v\n", b.Released, b.MasterID, b.ID, b.RelTitle, b.Country, b.Artist, 
+                        strings.Join(b.Genre, ", "), strings.Join(b.Style, ", "), b.Label.ID, b.Label.Name, b.Label.Catno, b.Track)
         }
     }
 }
