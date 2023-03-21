@@ -15,7 +15,7 @@ type Release struct {
     XMLName xml.Name `xml:"release"`
     Style     []string    `xml:"styles>style"`
     Genre     []string    `xml:"genres>genre"`
-    Label     []Label    `xml:"labels>label"`
+    Label     Label    `xml:"labels>label"`
     Track     []string    `xml:"tracklist>track>title"`
     RelTitle    string   `xml:"title"`
     MasterID    int   `xml:"master_id"`
@@ -29,7 +29,6 @@ type Label struct {
     Catno    string  `xml:"catno,attr"`
     ID    int  `xml:"id,attr"`
 }
-
 
 func main() {
     xmlFile, err := os.Open("discogs_20230301_releases.xml")
@@ -52,7 +51,8 @@ func main() {
             if err := d.DecodeElement(&b, &t); err != nil {
                 fmt.Println(err)
             }
-            fmt.Printf("%s - %d - %s - %s - %s - %v - %v - %v\n", b.Released, b.MasterID, b.RelTitle, b.Country, b.Artist, strings.Join(b.Genre, ", "), strings.Join(b.Style, ", "), b.Label)
+            fmt.Printf("%s - %d - %s - %s - %s - %v - %v - %d - %s - %s\n", b.Released, b.MasterID, b.RelTitle, b.Country, b.Artist, 
+                        strings.Join(b.Genre, ", "), strings.Join(b.Style, ", "), b.Label.ID, b.Label.Name, b.Label.Catno)
         }
     }
 }
