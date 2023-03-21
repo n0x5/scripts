@@ -28,7 +28,7 @@ cur.execute('''CREATE TABLE if not exists warc
 
 lst = []
 
-for subdir, dirs, files in os.walk(r'F:\dev\warcscript\{}' .format(site1)):
+for subdir, dirs, files in os.walk(r'{}\{}' .format(os.path.dirname(__file__), site1)):
     for fn in files:
         fpath = os.path.join(subdir, fn)
         with open(fpath, 'rb') as stream:
