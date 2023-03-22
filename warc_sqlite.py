@@ -57,7 +57,7 @@ for subdir, dirs, files in os.walk(r'{}' .format(site1)):
                         if record.rec_type == 'response' and 'image/' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
                             try:
                                 fn = record.rec_headers['WARC-Target-URI'].split('/')[-1]
-                                with open(os.path.join('{}_images' .format(site1), '{}' .format(fn)), 'wb') as binary_file:
+                                with open(os.path.join('{}_images' .format(os.path.basename(site1)), '{}' .format(fn)), 'wb') as binary_file:
                                     binary_file.write(record.raw_stream.read())
                             except Exception as e:
                                 pass
