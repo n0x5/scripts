@@ -20,10 +20,18 @@ parser.add_argument('--html', action='store_const', const=1)
 args = parser.parse_args()
 
 site1 = args.folder
+folder1 = os.path.basename(site1)
+
+folder_html = os.path.join(site1, '{}_html' .format(folder1))
+folder_images = os.path.join(folder_html, '{}_images' .format(folder1))
 
 
-if not os.path.exists('{}_images' .format(site1)):
-    os.makedirs('{}_images' .format(site1))
+if not os.path.exists(folder_html):
+    os.makedirs(folder_html)
+
+if not os.path.exists(folder_images):
+    os.makedirs(folder_images)
+
 
 conn = sqlite3.connect('{}_warc.db' .format(site1))
 cur = conn.cursor()
@@ -44,11 +52,10 @@ for subdir, dirs, files in os.walk(r'{}' .format(site1)):
                             try:
                                 body = record.raw_stream.read().decode('UTF-8')
                                 if args.html == 1:
-                                    if not os.path.exists('{}_html' .format(site1)):
-                                        os.makedirs('{}_html' .format(site1))
+                                    body2 = re.sub(r'<img src=".+?(\w+?\....)"', r'<img src=\1', body)
                                     fn = record.rec_headers['WARC-Target-URI'].split('/')[-1]
-                                    with open(os.path.join('{}_html' .format(os.path.basename(site1)), '{}' .format(fn)), 'wb') as binary_file1:
-                                        binary_file1.write(body)
+                                    with open(os.path.join(folder_html, '{}' .format(fn)), 'w') as binary_file1:
+                                        binary_file1.write(body2)
                                 try:
                                     title1 = re.search(r'<title>(.+?)<\/title>', body, re.IGNORECASE)
                                     title = title1.group(1)
@@ -68,7 +75,7 @@ for subdir, dirs, files in os.walk(r'{}' .format(site1)):
                         if record.rec_type == 'response' and 'image/' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
                             try:
                                 fn = record.rec_headers['WARC-Target-URI'].split('/')[-1]
-                                with open(os.path.join('{}_images' .format(os.path.basename(site1)), '{}' .format(fn)), 'wb') as binary_file:
+                                with open(os.path.join(folder_images, '{}' .format(fn)), 'wb') as binary_file:
                                     binary_file.write(record.raw_stream.read())
                             except Exception as e:
                                 pass
