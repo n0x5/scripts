@@ -1,6 +1,10 @@
 # pip install warcio
 # warc to sqlite converter
 # puts html documents in sqlite and writes images to disk in "images" folder
+# --html writes html files to disk as well
+#
+# Example: python .\warc_sqlite2.py F:\dev\warcscript\sacredtexts --html
+#
 
 from warcio.archiveiterator import ArchiveIterator
 import time
@@ -12,6 +16,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('folder')
+parser.add_argument('--html', action='store_const', const=1)
 args = parser.parse_args()
 
 site1 = args.folder
@@ -38,6 +43,12 @@ for subdir, dirs, files in os.walk(r'{}' .format(site1)):
                         if record.rec_type == 'response' and 'text/html' in record.http_headers['Content-Type'] and '200 OK' in str(record.http_headers):
                             try:
                                 body = record.raw_stream.read().decode('UTF-8')
+                                if args.html == 1:
+                                    if not os.path.exists('{}_html' .format(site1)):
+                                        os.makedirs('{}_html' .format(site1))
+                                    fn = record.rec_headers['WARC-Target-URI'].split('/')[-1]
+                                    with open(os.path.join('{}_html' .format(os.path.basename(site1)), '{}' .format(fn)), 'wb') as binary_file1:
+                                        binary_file1.write(body)
                                 try:
                                     title1 = re.search(r'<title>(.+?)<\/title>', body, re.IGNORECASE)
                                     title = title1.group(1)
