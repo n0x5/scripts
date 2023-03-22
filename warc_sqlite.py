@@ -11,12 +11,12 @@ import sqlite3
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('site')
+parser.add_argument('folder')
 args = parser.parse_args()
 
-site1 = args.site
+site1 = args.folder
 
-# 'content_stream', 'content_type', 'digest_checker', 'format', 'http_headers', 'length', 'payload_length', 'raw_stream', 'rec_headers', 'rec_type']
+
 if not os.path.exists('{}_images' .format(site1)):
     os.makedirs('{}_images' .format(site1))
 
@@ -28,7 +28,7 @@ cur.execute('''CREATE TABLE if not exists warc
 
 lst = []
 
-for subdir, dirs, files in os.walk(r'{}\{}' .format(os.path.dirname(__file__), site1)):
+for subdir, dirs, files in os.walk(r'{}' .format(site1)):
     for fn in files:
         fpath = os.path.join(subdir, fn)
         with open(fpath, 'rb') as stream:
