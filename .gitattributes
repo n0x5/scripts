@@ -1,2 +1,2 @@
-Google_Tools/lib/** linguist-vendored
-Google_Tools/exiftool linguist-vendored
+Google/lib/** linguist-vendored
+Google/exiftool linguist-vendored
