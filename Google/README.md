@@ -5,13 +5,13 @@ If a json file exists already it will not make a request to the API.
 Supports RAW files as well as .jpg/gif/png/etc
 
 #### Screenshot:
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/raw3.png)
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google/raw3.png)
 
 #### I recommend using the .exe file if you are on windows, nothing needed to install
 
 #### NEW V4: Object Recognition saved to image:
 Just for fun it now saves a new image with objects recognized:
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/object_recognition.jpg)
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google/object_recognition.jpg)
 
 ### Setup guide
 0) Download the zip https://github.com/n0x5/scripts/releases/download/google_vision_v4/Vision_API_V4.zip unzip files to a folder (keep exiftool there).
@@ -43,4 +43,4 @@ Example command:
 
 
 #### How the tags look in lightroom:
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google_Tools/rawtags2.png)
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/Google/rawtags2.png)
