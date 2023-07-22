@@ -61,3 +61,16 @@ with open(os.path.join(upload, 'index.html'), 'w') as file:
 </body>
 </html>
 ''' .format(html_file, final))
+
+css_file = '''.image {
+width: 150px;
+float: left;
+height: 309px;
+margin: 9px;
+background-color: #ffdbdb;
+word-break: break-word;
+padding: 13px;
+}'''
+
+with open(os.path.join(upload, 'style.css'), 'w') as file2:
+    file2.write(css_file)
