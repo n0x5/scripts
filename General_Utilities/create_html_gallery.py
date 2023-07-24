@@ -24,7 +24,8 @@ for subdir, dirs, files in os.walk(upload):
             if not os.path.exists(thmb_file):
                 try:
                     width = 150
-                    im = Image.open(full_file)
+                    im1 = Image.open(full_file)
+                    im = im1.convert('RGB')
                     widthper = (width/float(im.size[0]))
                     heightsize = int((float(im.size[1])*float(widthper)))
                     size = width, heightsize
@@ -47,9 +48,10 @@ html_file = '''
 <title>{} gallery</title>
 </head>
 <body>
+<a href="/">Home</a>
 <div id="content">
 <h1>{} ({} images)</h1>
-''' .format(os.path.basename(upload), os.path.basename(upload), len(lst))
+''' .format(os.path.basename(upload).replace('_', ' '), os.path.basename(upload).replace('_', ' '), len(lst))
 
 final = '\n'.join(lst)
 print(final)
@@ -57,7 +59,7 @@ with open(os.path.join(upload, 'index.html'), 'w') as file:
     file.write('''
 {}\n
 {}
-</content>
+</div>
 </body>
 </html>
 ''' .format(html_file, final))
@@ -65,11 +67,25 @@ with open(os.path.join(upload, 'index.html'), 'w') as file:
 css_file = '''.image {
 width: 150px;
 float: left;
-height: 309px;
 margin: 9px;
 background-color: #ffdbdb;
 word-break: break-word;
 padding: 13px;
+}
+
+#content {
+width: 900px;
+margin: auto;
+}
+
+pre {
+width: 900px;
+overflow-x: auto;
+white-space: pre-wrap;
+white-space: -moz-pre-wrap;
+white-space: -pre-wrap;
+white-space: -o-pre-wrap;
+word-wrap: break-word;
 }'''
 
 with open(os.path.join(upload, 'style.css'), 'w') as file2:
