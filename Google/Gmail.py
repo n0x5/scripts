@@ -88,7 +88,10 @@ def parse(nextpage=None):
                     print(stuff2)
 
             except Exception as e:
-                print(e)
+                stuff = item['id'], '', '', '', '', '', '', '', '', '', data3
+                cur.execute('insert or ignore into gmail (id_msg, labelids, threadid, snippet, recipient, from_sender, subject, date_sent, body, internaldate, json_data) VALUES (?,?,?,?,?,?,?,?,?,?,?)', (stuff))
+                cur.connection.commit()
+                print('Unparsed message', item['id'])
                 pass
 
         nextpage = data['nextPageToken']
