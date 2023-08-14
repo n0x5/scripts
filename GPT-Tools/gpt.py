@@ -18,9 +18,8 @@ import requests
 import json
 import time
 import base64
-from tqdm import tqdm
 import sqlite3
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 import io
 import argparse
 import subprocess
