@@ -22,8 +22,8 @@ args = parser.parse_args()
 site1 = args.folder
 folder1 = os.path.basename(site1)
 
-folder_html = os.path.join(site1, '{}_html' .format(folder1))
-folder_images = os.path.join(folder_html, '{}_images' .format(folder1))
+folder_html = os.path.join( __file__, site1, '{}_html' .format(folder1))
+folder_images = os.path.join( __file__, folder_html, '{}_images' .format(folder1))
 
 
 if not os.path.exists(folder_html):
@@ -33,11 +33,11 @@ if not os.path.exists(folder_images):
     os.makedirs(folder_images)
 
 
-conn = sqlite3.connect('{}_warc.db' .format(site1))
+conn = sqlite3.connect('{}_warc.db' .format(folder_html))
 cur = conn.cursor()
 
 cur.execute('''CREATE TABLE if not exists warc
-            (id text unique, title text, body text)''')
+            (id text unique, title text, body text unique)''')
 
 lst = []
 
@@ -52,8 +52,17 @@ for subdir, dirs, files in os.walk(r'{}' .format(site1)):
                             try:
                                 body = record.raw_stream.read().decode('UTF-8')
                                 if args.html == 1:
-                                    body2 = re.sub(r'<img src=".+?(\w+?\....)"', r'<img src=\1', body)
+                                    body2 = re.sub(r'<img src=".+?(\w+?\....)"', r'<img src=\1' , body)
+                                    body2 = body2.replace('<img src=', '<img src={}_images/' .format(folder1))
+                                    
+                                    try:
+                                        fn = re.search(r'<title>(.+?)<\/title>', body, re.IGNORECASE)
+                                        fn = title1.group(1)+'.html'
+                                        fn = fn.replace(':', '').replace('&amp;', 'And').replace('?', '').replace('#', '').replace(';', '').replace('&8217', '').replace(' ', '_')
+                                    except:
+                                        fn = 'No_title'
                                     fn = record.rec_headers['WARC-Target-URI'].split('/')[-1]
+                                    print(fn)
                                     with open(os.path.join(folder_html, '{}' .format(fn)), 'w') as binary_file1:
                                         binary_file1.write(body2)
                                 try:
@@ -64,7 +73,7 @@ for subdir, dirs, files in os.walk(r'{}' .format(site1)):
                                     id_article = record.rec_headers['WARC-Target-URI']
                                     title = ''
                                 stuff = id_article, title, body
-                                if '' in title:
+                                if '' in title: # and '/PRODS/' in str(id):
                                     lst.append(stuff)
                                 if len(lst) == 50:
                                     cur.executemany('insert or ignore into warc (id, title, body) VALUES (?,?,?)', (lst))
