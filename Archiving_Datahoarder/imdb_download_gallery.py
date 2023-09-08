@@ -1,36 +1,49 @@
-# download gallery from imdb
-# example command: python imdb_download_gallery.py https://www.imdb.com/title/tt0478970/mediaindex/
-
-import requests
 import os
-import argparse
-from bs4 import BeautifulSoup
+import requests
 import re
+from bs4 import BeautifulSoup
+import time
+import sqlite3
+from random import randint
+import json
+import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('url')
 args = parser.parse_args()
-url = args.url
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
+def get_info(url):
+    headers = {
+    'User-Agent':  'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
     }
 
-response = requests.get(url, headers=headers)
-soup = BeautifulSoup(response.text, "html.parser")
-title = soup.find('a', attrs={'class': 'subnav_heading'}).text
-os.makedirs(title)
-rel1 = soup.find('div', attrs={'class': 'media_index_thumb_list'})
-lists = rel1.find_all('img', src=re.compile(r'm.media-amazon.com'))
-for item in lists:
-    dl_url2 = item['src']
-    final_url = re.sub(r'@(.+?).jpg', '@@._V1.jpg', dl_url2)
-    r = requests.get(final_url, headers=headers)
-    if len(r.content) == 9:
-        final_url = re.sub(r'@(.+?).jpg', '@._V1.jpg', dl_url2)
-        r = requests.get(final_url, headers=headers)
-    fn = os.path.basename(final_url)
-    endpoint = os.path.join(title, fn)
-    with open(endpoint, 'wb') as cover_jpg:
-        cover_jpg.write(r.content)
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    title = soup.find('title')
+    table = soup.find('script', type=re.compile(r'ld\+json'))
+
+    try:
+        data = json.loads(table.string)
+    except:
+        data = json.loads(table.get_text())
+
+    json_data = json.dumps(data)
+    for item in data['image']:
+        print(item)
+        file_url = item['url']
+        filename = os.path.basename(file_url)
+        if not os.path.exists(filename):
+            r = requests.get(file_url, headers=headers)
+            with open(filename, 'wb') as cover_jpg:
+                cover_jpg.write(r.content)
+
+        file_url = item['contentUrl']
+        filename = os.path.basename(file_url)
+        if not os.path.exists(filename):
+            print('contenturl not exist')
+            r = requests.get(file_url, headers=headers)
+            with open(filename, 'wb') as cover_jpg:
+                cover_jpg.write(r.content)
+
+info = get_info(args.url)
 
