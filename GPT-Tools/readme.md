@@ -7,3 +7,7 @@
 #### Image generation from prompt or prompt in file:
 * python gpt.py --img --name otter3 --prompt "Majestic eagle icon in military cyber style"
 * python gpt.py --img --name otter3 --file prompt.txt
+
+## Video summary screenshot:
+
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/GPT-Tools/test.png "Title")
