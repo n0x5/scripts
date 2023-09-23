@@ -1,4 +1,5 @@
 # Summarize videos from youtube and other sites downloaded with yt-dlp
+# Works with foreign language audio to varying success
 # create a config.txt file following the template in the github repo and fill in API key
 # Command:
 # 
