@@ -71,7 +71,7 @@ def gen_stuff(file3, timestamp):
 
     url = 'https://api.openai.com/v1/chat/completions'
     res = requests.post(url, headers=headers, data=payload)
-    print(res.text)
+    #print(res.text)
     json_data = json.loads(res.content)
     response = json_data['choices'][0]['message']['content']
     print(timestamp+' '+response)
