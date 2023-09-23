@@ -123,5 +123,5 @@ for subdir, dirs, files in os.walk(cwd_final):
             else:
                 timestamp = shift_subtitles((0, int(time_interval), 00,000), timestamp)
             gen_stuff(final_path, timestamp)
-            print(timestamp, final_path)
+            #print(timestamp, final_path)
 
