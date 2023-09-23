@@ -1,6 +1,7 @@
 # Summarize videos with timestamps from youtube and other sites downloaded with yt-dlp
 # Works with foreign languages to varying degrees
 # create a config.txt file following the template in the github repo and fill in API key
+# set time_interval to desired time increments to parse video
 # Command:
 # 
 # python summary_video.py https://www.youtube.com/watch?v=WqkXif816-8
@@ -15,6 +16,8 @@ import re
 import datetime
 import json
 import time
+
+time_interval = '05'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('url')
@@ -107,7 +110,7 @@ for subdir, dirs, files in os.walk(cwd_final):
     for fn in files:
         if  'm4a' in fn or '.mp4' in fn and 'output0' not in fn:
             os.chdir(subdir)
-            cmd_spl = r'ffmpeg -i "{}" -c copy -map 0 -segment_time 00:10:00 -f segment output%03d.mp4' .format(os.path.join(subdir, fn))
+            cmd_spl = r'ffmpeg -i "{}" -c copy -map 0 -segment_time 00:{}:00 -f segment output%03d.mp4' .format(os.path.join(subdir, fn), time_interval)
             os.system(cmd_spl)
 
 
@@ -118,7 +121,7 @@ for subdir, dirs, files in os.walk(cwd_final):
             if 'output000' in fn:
                 timestamp = '00:00:00,000'
             else:
-                timestamp = shift_subtitles((0, 10, 00,000), timestamp)
+                timestamp = shift_subtitles((0, int(time_interval), 00,000), timestamp)
             gen_stuff(final_path, timestamp)
             print(timestamp, final_path)
 
