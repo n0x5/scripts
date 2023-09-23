@@ -10,4 +10,4 @@
 
 ## Video summary screenshot:
 
-![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/GPT-Tools/test.png "Title")
+![alt text](https://raw.githubusercontent.com/n0x5/scripts/master/GPT-Tools/test2.png "Title")
