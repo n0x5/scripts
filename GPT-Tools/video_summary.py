@@ -4,7 +4,7 @@
 # set time_interval to desired time increments to parse video
 # Command:
 # 
-# python summary_video.py https://www.youtube.com/watch?v=WqkXif816-8
+# python video_summary.py https://www.youtube.com/watch?v=WqkXif816-8
 #
 
 import os
@@ -57,7 +57,7 @@ def gen_stuff(file3, timestamp):
         {
             'role': 'user',
             'content': '''
-    Summarize the following text in1 sentence. List the top 5 keywords of the topics in the text in a comma-delimited list within parentheses. Use the following steps to generate the response:
+    Summarize the following text in 1 sentence. List the top 5 keywords of the topics in the text in a comma-delimited list within parentheses. Use the following steps to generate the response:
 
     Here are examples of a response:
     `<Summary text> (<comma delimited list of keywords>)
