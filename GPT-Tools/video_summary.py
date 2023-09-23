@@ -1,5 +1,4 @@
 # Summarize videos from youtube and other sites downloaded with yt-dlp
-# Works with foreign language audio to varying success
 # create a config.txt file following the template in the github repo and fill in API key
 # Command:
 # 
@@ -105,7 +104,7 @@ time.sleep(1)
 
 for subdir, dirs, files in os.walk(cwd_final):
     for fn in files:
-        if '.m4a' in fn:
+        if  'm4a' in fn or '.mp4' in fn and 'output0' not in fn:
             os.chdir(subdir)
             cmd_spl = r'ffmpeg -i "{}" -c copy -map 0 -segment_time 00:10:00 -f segment output%03d.mp4' .format(os.path.join(subdir, fn))
             os.system(cmd_spl)
