@@ -97,7 +97,7 @@ cwd_final = os.path.join(os.path.dirname( __file__ ), 'video_summaries', filestr
 if not os.path.exists(cwd_final):
     os.makedirs(cwd_final)
 cwd = os.chdir(cwd_final)
-cmd = 'yt-dlp -f 139 {}' .format(url)
+cmd = 'yt-dlp -f worstaudio {}' .format(url)
 os.system(cmd)
 
 time.sleep(1)
