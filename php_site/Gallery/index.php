@@ -1,16 +1,27 @@
 <html>
-<body style='font-family:monospace'>
-
+<body style='font-family:monospace;'>
 
 
 <?php
-$path = (isset($_GET['path'])) ? htmlentities($_GET['path']) : '.'; 
+$path = (isset($_GET['path'])) ? htmlentities($_GET['path']) : '.';
+$loc_file = basename($_SERVER["SCRIPT_NAME"]);
+echo "<a style='text-decoration:none;' href='$loc_file'>Gallery</a> ->";
+$pieces = explode("/", $path);
+foreach ($pieces as $path_item) {
+    if (!str_contains(end($pieces), $path_item) && $path_item != ".") {
+        echo "<a style='text-decoration:none;' href='$loc_file?path=.%2F$path_item'> $path_item </a> -> ";
+    }
+    elseif ($path_item != ".") {
+        echo " $path_item";
+    }
+}
+
 $real_path = realpath($path);
 $thumbMaxSize = 200;
-$loc_file = basename($_SERVER["SCRIPT_NAME"]);
-echo "<a href='/$loc_file'>Home</a>";
-echo "<title>$path</title>";
-echo "<h1>$path Gallery</h1>";
+
+
+echo "<title>$path</title><br><br>";
+
 
 
 if (strpos($real_path, dirname(__DIR__)) !== 0) {
@@ -19,7 +30,7 @@ if (strpos($real_path, dirname(__DIR__)) !== 0) {
 $files = scandir($real_path);
 
 foreach($files as $file) {
-    if($file === "." || $file === ".." || $file === "thumbs" || $file === "OneDrive_Folder_Icon.png") continue;
+    if ($file === "." || $file === ".." || $file === "thumbs" || $file === "OneDrive_Folder_Icon.png") continue;
     $full_path = "$real_path/$file";
     if (is_dir($full_path)) {
         $url = '?path=' . urlencode("$path/$file");
@@ -63,6 +74,24 @@ function create_thumbnail($originalImage, $thumbnailImage, $thumbMaxSize){
 
         imagecopyresampled($thumbImg, $srcImg, 0, 0, 0, 0, $new_width, $new_height, $origWidth, $origHeight);
         imagejpeg($thumbImg, $thumbnailImage);
+        imagedestroy($srcImg);
+        imagedestroy($thumbImg);
+    }
+    if (str_contains($originalImage, '.png')) {
+        $thumbImg = imagecreatetruecolor($new_width, $new_height);
+        $srcImg = imagecreatefrompng($originalImage);
+
+        imagecopyresampled($thumbImg, $srcImg, 0, 0, 0, 0, $new_width, $new_height, $origWidth, $origHeight);
+        imagepng($thumbImg, $thumbnailImage);
+        imagedestroy($srcImg);
+        imagedestroy($thumbImg);
+    }
+    if (str_contains($originalImage, '.gif')) {
+        $thumbImg = imagecreatetruecolor($new_width, $new_height);
+        $srcImg = imagecreatefromgif($originalImage);
+
+        imagecopyresampled($thumbImg, $srcImg, 0, 0, 0, 0, $new_width, $new_height, $origWidth, $origHeight);
+        imagegif($thumbImg, $thumbnailImage);
         imagedestroy($srcImg);
         imagedestroy($thumbImg);
     }
