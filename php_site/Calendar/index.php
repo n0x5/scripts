@@ -1,12 +1,21 @@
 <?php
 # index.php?year=2023&month=12
+
+
+if (!isset($_GET['year'])) {
+    $year = date("Y");
+}
+if (!isset($_GET['month'])) {
+    $month = date("m");
+}
+
 $year = isset($_GET['year']) ? $_GET['year'] : date('Y');
 $month = isset($_GET['month']) ? $_GET['month'] : date('m');
 $daysInMonth = date('t', mktime(0, 0, 0, $month, 1, $year));
 $monthName = date('F', mktime(0, 0, 0, $month, 10));
 $backgroundImage = $year . '/' . $month . '_' . $monthName . '.jpg';
 
-$dt1 = strtotime($_GET['year'] .'-'. $_GET['month'] .'-'. '01');
+$dt1 = strtotime($year .'-'. $month .'-'. '01');
 $prev_month_int = strtotime("-1 month", $dt1);
 $prev_month = gmdate("m", $prev_month_int);
 
@@ -64,7 +73,7 @@ color: white;
 }
       </style>";
 echo "</head>";
-echo "<div class='nextones'><a href='index.php?year=$prev_year&month=$prev_month'>Previous month </a> | <a href='index.php?year=$next_year&month=$next_month'> Next month</a></div>";
+echo "<div class='nextones'><a href='/'>Home </a> | <a href='index.php?year=$prev_year&month=$prev_month'>Previous month </a> | <a href='index.php?year=$next_year&month=$next_month'> Next month</a></div>";
 echo "<body>";
 echo "<div class='titl'>$monthName $year</div>";
 echo "<div class='gallery'><img src='$backgroundImage' /> </div>";
