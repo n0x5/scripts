@@ -1,4 +1,6 @@
 # Script to automatically scan images and describe them with llamafile created by justine
+# It creates a description, a list of keywords and puts them as separate columns in DB.
+# Screenshot: https://raw.githubusercontent.com/n0x5/scripts/master/llama_scan_screenshot.jpg
 #
 # Change 'cwd' to the directory you want to scan. add .exe to end of llamafile on windows (maybe not needed but i did)
 # add llamafile to PATH
@@ -13,6 +15,7 @@
 # add "cl.exe" to PATH (C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x64\) on mine
 # guide: https://www.youtube.com/watch?v=d1Fnfvat6nM
 
+cwd = r'F:\archive\_personal\camera\2014'
 
 import subprocess
 import os
@@ -23,8 +26,6 @@ conn = sqlite3.connect('image_llama.db')
 cur = conn.cursor()
 cur.execute('''CREATE TABLE if not exists images
         (filename text, filepath text, description text, keywords text)''')
-
-cwd = r'F:\archive\_personal\camera\2014'
 
 for subdir, dirs, files in os.walk(cwd):
     for fn in files:
