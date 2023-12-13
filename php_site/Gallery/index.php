@@ -5,11 +5,11 @@
 <?php
 $path = (isset($_GET['path'])) ? htmlentities($_GET['path']) : '.';
 $loc_file = basename($_SERVER["SCRIPT_NAME"]);
-echo "<a style='text-decoration:none;' href='$loc_file'>Gallery</a> ->";
+echo "<a style='text-decoration:none;color:#007bff;' href='$loc_file'>Gallery</a> ->";
 $pieces = explode("/", $path);
 foreach ($pieces as $path_item) {
     if (!str_contains(end($pieces), $path_item) && $path_item != ".") {
-        echo "<a style='text-decoration:none;' href='$loc_file?path=.%2F$path_item'> $path_item </a> -> ";
+        echo "<a style='text-decoration:none;color:#007bff;' href='$loc_file?path=.%2F$path_item'> $path_item </a> -> ";
     }
     elseif ($path_item != ".") {
         echo " $path_item";
@@ -35,9 +35,10 @@ foreach($files as $file) {
     if (is_dir($full_path)) {
         $url = '?path=' . urlencode("$path/$file");
         echo "<div style='width:150px;float: left;margin: 10px;'><a href='$url'>
-                <img src=OneDrive_Folder_Icon.png /><div style='position: relative;top: -50px;color: black;font-weight: 900;font-size: 15px;text-align: center;' class='foldername'>$file</div></a></div></a></div>";
-    } elseif (is_readable($full_path)) {
-        
+                <img src=OneDrive_Folder_Icon.png /><div style='position: relative;top: -50px;color: black;font-weight: 900;
+                font-size: 15px;text-align: center;' class='foldername'>$file</div></a></div></a></div>";
+    }
+    elseif (is_readable($full_path)) {
         $thumbsfolder = $real_path . '/thumbs/';
         $thumbPath = $thumbsfolder . basename($full_path);
         if (!is_dir($thumbsfolder)) {
@@ -48,8 +49,10 @@ foreach($files as $file) {
         }
         list($width, $height) = getimagesize("$full_path");
         list($width_thumb, $height_thumb) = getimagesize("$thumbPath");
-        echo "<div class='img' style='width:$width_thumb;float:left;margin: 5px;'><a href=$path/$file><img src=$path/thumbs/$file /></a><div style='text-align:center;font-size:11px;line-height: 90%;'> $width x $height <br>-<br>$file</div></div>\n";
-    } else {
+        echo "<div class='img' style='width:$width_thumb;float:left;margin: 5px;'><a href=$path/$file><img src=$path/thumbs/$file /></a>
+                <div style='text-align:center;font-size:11px;line-height: 90%;'> $width x $height <br>-<br>$file</div></div>\n";
+    }
+    else {
         continue;
     }
 }
@@ -64,7 +67,8 @@ function create_thumbnail($originalImage, $thumbnailImage, $thumbMaxSize){
     if ($origWidth > $origHeight) {
         $new_height = $thumbMaxSize;
         $new_width = intval($origWidth*($new_height/$origHeight));
-    } else {
+    } 
+    else {
         $new_width = $thumbMaxSize;
         $new_height = intval($origHeight*($new_width/$origWidth));
     }
