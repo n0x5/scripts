@@ -1,11 +1,18 @@
 <html>
 <body style='font-family:monospace;'>
 
-
+<div class='nextones'><a href='/'>Home </a> 
 <?php
+session_start();
+if (isset($_COOKIE['userid'])) {
+    echo 'hello ' . $_COOKIE['userid'] . '<br>';
+}
+else {
+    echo 'no login<br>';
+}
 $path = (isset($_GET['path'])) ? htmlentities($_GET['path']) : '.';
 $loc_file = basename($_SERVER["SCRIPT_NAME"]);
-echo "<a style='text-decoration:none;color:#007bff;' href='$loc_file'>Gallery</a> ->";
+echo "<br><a style='text-decoration:none;color:#007bff;' href='$loc_file'>Gallery</a> ->";
 $pieces = explode("/", $path);
 foreach ($pieces as $path_item) {
     if (!str_contains(end($pieces), $path_item) && $path_item != ".") {
@@ -49,7 +56,7 @@ foreach($files as $file) {
         }
         list($width, $height) = getimagesize("$full_path");
         list($width_thumb, $height_thumb) = getimagesize("$thumbPath");
-        echo "<div class='img' style='width:$width_thumb;float:left;margin: 5px;'><a href=$path/$file><img src=$path/thumbs/$file /></a>
+        echo "<div class='img' style='width:$width_thumb;float:left;margin: 5px;'><a href='$path/$file'><img src='$path/thumbs/$file' /></a>
                 <div style='text-align:center;font-size:11px;line-height: 90%;'> $width x $height <br>-<br>$file</div></div>\n";
     }
     else {
