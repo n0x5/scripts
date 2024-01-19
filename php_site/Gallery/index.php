@@ -35,7 +35,7 @@ if (strpos($real_path, dirname(__DIR__)) !== 0) {
     die('Invalid path');
 }
 $files = scandir($real_path);
-
+sort($files, SORT_NATURAL | SORT_FLAG_CASE);
 foreach($files as $file) {
     if ($file === "." || $file === ".." || $file === "thumbs" || $file === "OneDrive_Folder_Icon.png") continue;
     $full_path = "$real_path/$file";
