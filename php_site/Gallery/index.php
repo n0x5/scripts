@@ -1,7 +1,7 @@
 <html>
 <body style='font-family:monospace;'>
 
-<div class='nextones'><a href='/'>Home </a> 
+<div class='nextones'><a href='/'>Home </a>
 <?php
 session_start();
 if (isset($_COOKIE['userid'])) {
@@ -43,13 +43,14 @@ foreach($files as $file) {
         $url = '?path=' . urlencode("$path/$file");
         echo "<div style='width:150px;float: left;margin: 10px;'><a href='$url'>
                 <img src=OneDrive_Folder_Icon.png /><div style='position: relative;top: -50px;color: black;font-weight: 900;
-                font-size: 15px;text-align: center;' class='foldername'>$file</div></a></div></a></div>";
+                font-size: 15px;text-align: center;word-break: break-word;' class='foldername'>$file</div></a></div></a></div>";
     }
     elseif (is_readable($full_path)) {
         $thumbsfolder = $real_path . '/thumbs/';
         $thumbPath = $thumbsfolder . basename($full_path);
         if (!is_dir($thumbsfolder)) {
             mkdir($thumbsfolder);
+            chmod($thumbsfolder, 0777);
         }
         if (!file_exists($thumbPath)) {
             $thumbnail = create_thumbnail($full_path, $thumbPath, $thumbMaxSize);
@@ -74,7 +75,7 @@ function create_thumbnail($originalImage, $thumbnailImage, $thumbMaxSize){
     if ($origWidth > $origHeight) {
         $new_height = $thumbMaxSize;
         $new_width = intval($origWidth*($new_height/$origHeight));
-    } 
+    }
     else {
         $new_width = $thumbMaxSize;
         $new_height = intval($origHeight*($new_width/$origWidth));
