@@ -27,6 +27,11 @@ l = (32 + 2 * e + 2 * i - h - k) % 7
 m = (a + 11 * h + 22 * l) // 451
 easter = datetime.date(year, (h + l - 7 * m + 114)//31, (h + l - 7 * m + 114) % 31 + 1)
 
+november = datetime.date(year, 11, 1)
+while november.weekday() != 6:
+    november += datetime.timedelta(days=1)
+
+allehelgensdag = november + datetime.timedelta(days=1)
 Palmesøndag = easter - datetime.timedelta(days=7)
 Skjærtorsdag = easter - datetime.timedelta(days=3)
 Langfredag = easter - datetime.timedelta(days=2)
@@ -35,7 +40,7 @@ Andrepåskedag = easter + datetime.timedelta(days=1)
 Himmelfartsdag = easter + datetime.timedelta(days=39)
 Førstepinsedag = easter + datetime.timedelta(days=49)
 Andrepinsedag = easter + datetime.timedelta(days=50)
-
+fastelavnssøndag = easter - datetime.timedelta(days=49)
 
 print('Bevegelige hellidager:')
 print('Palmesøndag: '+ Palmesøndag.strftime(format))
@@ -46,7 +51,10 @@ print('Andre påskedag: ' + Andrepåskedag.strftime(format))
 print('Himmelfartsdag: ' + Himmelfartsdag.strftime(format))
 print('Første pinsedag: ' + Førstepinsedag.strftime(format))
 print('Andre pinsedag: ' + Andrepinsedag.strftime(format))
+print('Fastelavnssøndag: ' + fastelavnssøndag.strftime(format))
+print('Allehelgensdag: ' + allehelgensdag.strftime(format))
 
+print('')
 print('Ubevegelige hellidager:')
 print('Nyttårsdag: ' + Nyttårsdag.strftime(format))
 print('Arbeidernes dag: ' + Arbeidernes.strftime(format))
