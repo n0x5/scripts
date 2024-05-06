@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Create sorted folders based on id3 tags
-# Creates 'Genres' and 'Group' folders in the 
+# Creates 'Genres' and 'Group' folders in the
 # folder you cd into to run the command
 
 
@@ -9,8 +9,7 @@ import shutil
 import os
 from mutagen.id3 import ID3
 
-cwd = os.getcwd()
-os.chdir(cwd)
+cwd = r'/home/user/mp3folder'
 
 for subdir, dirs, files in os.walk(cwd):
     for fn in files:
