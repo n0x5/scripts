@@ -72,10 +72,35 @@ switch($action) {
         } else {
             ?>
             <h2>Add Post</h2>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+<form action="upload.php" class="dropzone" id="my-dropzone"></form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+<script>
+Dropzone.autoDiscover = false;
+
+var myDropzone = new Dropzone("#my-dropzone", {
+    maxFilesize: 30,
+    acceptedFiles: 'image/*', 
+    init: function() {
+        this.on("success", function(file, response) {
+            console.log(response);
+            navigator.clipboard.writeText("/uploads/" + file.name);
+            document.getElementById("bodytext").value += "\r\n<a href='/uploads/"+file.name+"'>'<img width='500' src='/uploads/"+file.name+"' /></a>\r\n";
+        });
+        this.on("error", function(file, response) {
+            console.log(response);
+            document.getElementById('file-url').value = response.fileUrl;
+            var copyText = document.getElementById('file-url').value;
+        });
+    }
+});
+</script>
+
             <form method="post" action="?action=add">
                 Title: <input type="text" name="title"><br><br>
                 Content:<br>
-                <textarea name="content" rows="10" cols="50"></textarea><br><br>
+                <textarea name="content" id="bodytext" rows="10" cols="50"></textarea><br><br>
                 <input type="submit" value="Add Post">
             </form>
             <?php
@@ -180,30 +205,35 @@ switch($action) {
         <?php else: ?>
             <a href="?action=login">Login</a>
         <?php endif; ?>
-        <table border="1" cellpadding="5" cellspacing="0">
-            <tr>
-                <th>ID</th><th>Title</th><th>Content</th><th>Created At</th><th>Updated At</th>
+
+           
+                
                 <?php if (isset($_COOKIE['auth']) && $_COOKIE['auth'] === $expected_auth_value): ?>
-                    <th>Actions</th>
+                  
                 <?php endif; ?>
-            </tr>
+           
         <?php
         foreach ($posts as $post) {
-            echo "<tr>";
-            echo "<td>".htmlspecialchars($post['id'])."</td>";
-            echo "<td>".htmlspecialchars($post['title'])."</td>";
-            echo "<td>".nl2br(htmlspecialchars($post['content']))."</td>";
-            echo "<td>".htmlspecialchars($post['created_at'])."</td>";
-            echo "<td>".htmlspecialchars($post['updated_at'])."</td>";
+            //echo "<tr>";
+            //echo "<td>".htmlspecialchars($post['created_at'])."</td>";
+            //echo "<td>".htmlspecialchars($post['id'])."</td>";
+            //echo "<td>".htmlspecialchars($post['title'])."</td>";
+            //echo "<td>".nl2br(htmlspecialchars($post['content']))."</td>";
+            echo '<div class="post">';
+            echo '<h2 style="color:red;">' . $post['title'] . '</h2>';
+            echo '<div style="color:brown;">' . $post['created_at'] . '</div>';
+            echo $post['content'];
+            echo '</div><hr>';
+            //echo "<td>".htmlspecialchars($post['updated_at'])."</td>";
             if (isset($_COOKIE['auth']) && $_COOKIE['auth'] === $expected_auth_value) {
-                echo "<td>
+                echo "
                     <a href='?action=edit&id=".$post['id']."'>Edit</a> | 
                     <a href='?action=delete&id=".$post['id']."'>Delete</a>
-                    </td>";
+                    ";
             }
-            echo "</tr>";
+
         }
-        echo "</table>";
+
 
         echo "<div style='margin-top: 20px;'>";
         if ($page > 1) {
