@@ -7,6 +7,7 @@ if (!file_exists($targetDir)) {
 }
 
 if (!empty($_FILES['file'])) {
+    $tempFile = $_FILES['file']['tmp_name'];
     $fileName = $_FILES['file']['name'];
     $fileParts = pathinfo($fileName);
 
