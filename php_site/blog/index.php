@@ -1,3 +1,4 @@
+<Title>Second Sight</title>
 <?php
 session_start();
 
@@ -88,13 +89,13 @@ switch($action) {
 Dropzone.autoDiscover = false;
 
 var myDropzone = new Dropzone("#my-dropzone", {
-    maxFilesize: 30,
+    maxFilesize: 300,
     acceptedFiles: 'image/*', 
     init: function() {
         this.on("success", function(file, response) {
             console.log(response);
-            navigator.clipboard.writeText("/uploads/" + file.name);
-            document.getElementById("bodytext").value += "\r\n<a href='/uploads/"+file.name+"'>'<img width='500' src='/uploads/"+file.name+"' /></a>\r\n";
+            navigator.clipboard.writeText("uploads/" + file.name);
+            document.getElementById("bodytext").value += "\r\n<a href='uploads/"+file.name+"'>'<img width='500' src='uploads/"+file.name+"' /></a><br>\r\n";
         });
         this.on("error", function(file, response) {
             console.log(response);
@@ -307,7 +308,7 @@ case 'view_post':
                 break;
             }
         ?>
-        <a href="/">Home</a>
+        <a href="/blog">Home</a>
         <h2><?php echo htmlspecialchars($post['title']); ?></h2>
         <p><?php echo $post['content']; ?></p>
         <?php
@@ -329,7 +330,7 @@ case 'view_post':
             break;
         }
         ?>
-        <a href="/">Home</a>
+        <a href="/blog">Home</a>
         <h2><?php echo htmlspecialchars($page['title']); ?></h2>
         <p><?php echo $page['content']; ?></p>
         <?php
@@ -339,7 +340,7 @@ case 'view_post':
         $stmt = $db->query("SELECT * FROM pages ORDER BY created_at DESC");
         $pages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
-        <a href="/">Home</a>
+        <a href="/blog">Home</a>
         <h2>Pages</h2>
         <?php if (isset($_COOKIE['auth']) && $_COOKIE['auth'] === $expected_auth_value): ?>
             <a href="?action=add_page">Add New Page</a> | 
@@ -382,9 +383,10 @@ case 'view_post':
         $pages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         ?>
-        <h2>Blog Posts</h2>
+     <a href="/">Home</a>    
+    <h2>Blog Posts</h2>
         <?php if (isset($_COOKIE['auth']) && $_COOKIE['auth'] === $expected_auth_value): ?>
-            <a href="/">Home</a> |
+            <a href="/blog">Home</a> |
             <a href="?action=add">Add New Post</a> | 
             <a href="?action=view_pages">Manage Pages</a> | 
             <a href="?action=logout">Logout</a>
@@ -394,7 +396,7 @@ case 'view_post':
         <hr>
 
                 <?php if (isset($_COOKIE['auth']) && $_COOKIE['auth'] === $expected_auth_value): ?>
-                    <th>Actions</th>
+                    
                 <?php endif; ?>
             </tr>
         <?php
