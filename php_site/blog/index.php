@@ -265,6 +265,28 @@ switch($action) {
         }
         break;
 
+case 'view_post':
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        if (!$id) {
+            echo "Invalid page ID.";
+            break;
+        }
+
+        $stmt = $db->prepare("SELECT * FROM posts WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $post = $stmt->fetch(PDO::FETCH_ASSOC);
+            if(!$post) {
+                echo "Post not found.";
+                break;
+            }
+        ?>
+        <a href="/">Home</a>
+        <h2><?php echo htmlspecialchars($post['title']); ?></h2>
+        <p><?php echo $post['content']; ?></p>
+        <?php
+        break;
+
     case 'view_page':
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         if (!$id) {
@@ -281,8 +303,9 @@ switch($action) {
             break;
         }
         ?>
+        <a href="/">Home</a>
         <h2><?php echo htmlspecialchars($page['title']); ?></h2>
-        <p><?php echo nl2br(htmlspecialchars($page['content'])); ?></p>
+        <p><?php echo $page['content']; ?></p>
         <?php
         break;
 
@@ -351,8 +374,8 @@ switch($action) {
         <?php
        foreach ($posts as $post) {
             echo '<div class="post">';
-            echo '<h2 style="color:red;">' . $post['title'] . '</h2>';
-            echo '<div style="color:brown;">' . $post['created_at'] . '</div>';
+            echo '<h2><a href=?action=view_post&id='.$post['id'].'><div style="color:red;">' . $post['title'] . '</div></a></h2>';
+            echo '<a href=?action=view_post&id='.$post['id'].'><div style="color:brown;">' . $post['created_at'] . '</div></a>';
             echo $post['content'];
             echo '</div>';
             if (isset($_COOKIE['auth']) && $_COOKIE['auth'] === $expected_auth_value) {
