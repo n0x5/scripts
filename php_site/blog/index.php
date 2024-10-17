@@ -61,7 +61,7 @@ switch($action) {
         exit;
         break;
 
-    case 'add':
+  case 'add':
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $title = isset($_POST['title']) ? $_POST['title'] : '';
             $content = isset($_POST['content']) ? $_POST['content'] : '';
@@ -80,15 +80,41 @@ switch($action) {
         } else {
             ?>
             <h2>Add Post</h2>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+<form action="upload.php" class="dropzone" id="my-dropzone"></form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+<script>
+Dropzone.autoDiscover = false;
+
+var myDropzone = new Dropzone("#my-dropzone", {
+    maxFilesize: 30,
+    acceptedFiles: 'image/*', 
+    init: function() {
+        this.on("success", function(file, response) {
+            console.log(response);
+            navigator.clipboard.writeText("/uploads/" + file.name);
+            document.getElementById("bodytext").value += "\r\n<a href='/uploads/"+file.name+"'>'<img width='500' src='/uploads/"+file.name+"' /></a>\r\n";
+        });
+        this.on("error", function(file, response) {
+            console.log(response);
+            document.getElementById('file-url').value = response.fileUrl;
+            var copyText = document.getElementById('file-url').value;
+        });
+    }
+});
+</script>
+
             <form method="post" action="?action=add">
                 Title: <input type="text" name="title"><br><br>
                 Content:<br>
-                <textarea name="content" rows="10" cols="50"></textarea><br><br>
+                <textarea name="content" id="bodytext" rows="10" cols="50"></textarea><br><br>
                 <input type="submit" value="Add Post">
             </form>
             <?php
         }
         break;
+
 
     case 'edit':
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
