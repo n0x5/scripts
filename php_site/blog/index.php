@@ -1,4 +1,6 @@
+<!DOCTYPE HTML>
 <Title>Second Sight</title>
+
 
 <?php
 session_start();
@@ -106,13 +108,16 @@ var myDropzone = new Dropzone("#my-dropzone", {
     }
 });
 </script>
-
+<button id="wrapButtonlink">Link</button><button id="wrapButtonred">Red text</button><button id="wrapButtonblue">Blue text</button><button id="wrapButtongreen">Green text</button>
+<button id="wrapButtonh1">H1</button><button id="wrapButtonh2">H2</button><button id="wrapButtonh3">H3</button>
             <form method="post" action="?action=add">
                 Title: <input type="text" name="title"><br><br>
                 Content:<br>
-                <textarea name="content" id="bodytext" rows="10" cols="50"></textarea><br><br>
+
+                <textarea name="content" id="bodytext" rows="10" cols="50" ></textarea><br><br>
                 <input type="submit" value="Add Post">
             </form>
+
             <?php
         }
         break;
@@ -439,3 +444,185 @@ echo '<hr>';
         break;
 }
 ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('bodytext');
+    var button = document.getElementById('wrapButtonlink');
+
+    button.addEventListener('click', function() {
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+
+        var selectedText = textarea.value.substring(start, end);
+
+        var beforeText = '<a href="';
+        var afterText = '>Text link here</a>';
+
+        var newText = beforeText + selectedText + afterText;
+
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+
+        var cursorPosition = start + newText.length;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+
+        textarea.focus();
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('bodytext');
+    var button = document.getElementById('wrapButtonred');
+
+    button.addEventListener('click', function() {
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+
+        var selectedText = textarea.value.substring(start, end);
+
+        var beforeText = '<p style="color:red;">';
+        var afterText = '</p>';
+
+        var newText = beforeText + selectedText + afterText;
+
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+
+        var cursorPosition = start + newText.length;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+
+        textarea.focus();
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('bodytext');
+    var button = document.getElementById('wrapButtonblue');
+
+    button.addEventListener('click', function() {
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+
+        var selectedText = textarea.value.substring(start, end);
+
+        var beforeText = '<p style="color:#0070ff;">';
+        var afterText = '</p>';
+
+        var newText = beforeText + selectedText + afterText;
+
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+
+        var cursorPosition = start + newText.length;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+
+        textarea.focus();
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('bodytext');
+    var button = document.getElementById('wrapButtongreen');
+
+    button.addEventListener('click', function() {
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+
+        var selectedText = textarea.value.substring(start, end);
+
+        var beforeText = '<p style="color:#00c711;">';
+        var afterText = '</p>';
+
+        var newText = beforeText + selectedText + afterText;
+
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+
+        var cursorPosition = start + newText.length;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+
+        textarea.focus();
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('bodytext');
+    var button = document.getElementById('wrapButtonh1');
+
+    button.addEventListener('click', function() {
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+
+        var selectedText = textarea.value.substring(start, end);
+
+        var beforeText = '<h1>';
+        var afterText = '</h1>';
+
+        var newText = beforeText + selectedText + afterText;
+
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+
+        var cursorPosition = start + newText.length;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+
+        textarea.focus();
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('bodytext');
+    var button = document.getElementById('wrapButtonh2');
+
+    button.addEventListener('click', function() {
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+
+        var selectedText = textarea.value.substring(start, end);
+
+        var beforeText = '<h2>';
+        var afterText = '</h2>';
+
+        var newText = beforeText + selectedText + afterText;
+
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+
+        var cursorPosition = start + newText.length;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+
+        textarea.focus();
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('bodytext');
+    var button = document.getElementById('wrapButtonh3');
+
+    button.addEventListener('click', function() {
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+
+        var selectedText = textarea.value.substring(start, end);
+
+        var beforeText = '<h3>';
+        var afterText = '</h3>';
+
+        var newText = beforeText + selectedText + afterText;
+
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+
+        var cursorPosition = start + newText.length;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+
+        textarea.focus();
+    });
+});
+</script>
