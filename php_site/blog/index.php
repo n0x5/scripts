@@ -157,6 +157,8 @@ var myDropzone = new Dropzone("#my-dropzone", {
             }
             ?>
             <h2>Edit Post</h2>
+<button id="wrapButtonlink">Link</button><button id="wrapButtonred">Red text</button><button id="wrapButtonblue">Blue text</button><button id="wrapButtongreen">Green text</button>
+<button id="wrapButtonh1">H1</button><button id="wrapButtonh2">H2</button><button id="wrapButtonh3">H3</button>
             <form method="post" action="?action=edit&id=<?php echo $id; ?>">
                 Title: <input type="text" name="title" value="<?php echo htmlspecialchars($post['title']); ?>"><br><br>
                 Content:<br>
@@ -215,6 +217,8 @@ var myDropzone = new Dropzone("#my-dropzone", {
         } else {
             ?>
             <h2>Add Page</h2>
+<button id="wrapButtonlink">Link</button><button id="wrapButtonred">Red text</button><button id="wrapButtonblue">Blue text</button><button id="wrapButtongreen">Green text</button>
+<button id="wrapButtonh1">H1</button><button id="wrapButtonh2">H2</button><button id="wrapButtonh3">H3</button>
             <form method="post" action="?action=add_page">
                 Title: <input type="text" name="title"><br><br>
                 Content:<br>
@@ -259,6 +263,8 @@ var myDropzone = new Dropzone("#my-dropzone", {
             }
             ?>
             <h2>Edit Page</h2>
+<button id="wrapButtonlink">Link</button><button id="wrapButtonred">Red text</button><button id="wrapButtonblue">Blue text</button><button id="wrapButtongreen">Green text</button>
+<button id="wrapButtonh1">H1</button><button id="wrapButtonh2">H2</button><button id="wrapButtonh3">H3</button>
             <form method="post" action="?action=edit_page&id=<?php echo $id; ?>">
                 Title: <input type="text" name="title" value="<?php echo htmlspecialchars($page['title']); ?>"><br><br>
                 Content:<br>
