@@ -1,4 +1,6 @@
 <Title>Second Sight</title>
+<script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+
 <?php
 session_start();
 
@@ -109,7 +111,7 @@ var myDropzone = new Dropzone("#my-dropzone", {
             <form method="post" action="?action=add">
                 Title: <input type="text" name="title"><br><br>
                 Content:<br>
-                <textarea name="content" id="bodytext" rows="10" cols="50"></textarea><br><br>
+                <textarea name="content" id="bodytext" rows="10" cols="50" id="editor"></textarea><br><br>
                 <input type="submit" value="Add Post">
             </form>
             <?php
@@ -154,7 +156,7 @@ var myDropzone = new Dropzone("#my-dropzone", {
             <form method="post" action="?action=edit&id=<?php echo $id; ?>">
                 Title: <input type="text" name="title" value="<?php echo htmlspecialchars($post['title']); ?>"><br><br>
                 Content:<br>
-                <textarea name="content" rows="10" cols="50"><?php echo htmlspecialchars($post['content']); ?></textarea><br><br>
+                <textarea id="bodytext" name="content" rows="10" cols="50" id="editor"><?php echo htmlspecialchars($post['content']); ?></textarea><br><br>
                 <input type="submit" value="Update Post">
             </form>
             <?php
@@ -212,7 +214,7 @@ var myDropzone = new Dropzone("#my-dropzone", {
             <form method="post" action="?action=add_page">
                 Title: <input type="text" name="title"><br><br>
                 Content:<br>
-                <textarea name="content" rows="10" cols="50"></textarea><br><br>
+                <textarea id="bodytext" name="content" rows="10" cols="50" id="editor"></textarea><br><br>
                 <input type="submit" value="Add Page">
             </form>
             <?php
@@ -256,7 +258,7 @@ var myDropzone = new Dropzone("#my-dropzone", {
             <form method="post" action="?action=edit_page&id=<?php echo $id; ?>">
                 Title: <input type="text" name="title" value="<?php echo htmlspecialchars($page['title']); ?>"><br><br>
                 Content:<br>
-                <textarea name="content" rows="10" cols="50"><?php echo htmlspecialchars($page['content']); ?></textarea><br><br>
+                <textarea id="bodytext" name="content" rows="10" cols="50" id="editor"><?php echo htmlspecialchars($page['content']); ?></textarea><br><br>
                 <input type="submit" value="Update Page">
             </form>
             <?php
@@ -438,3 +440,6 @@ echo '<hr>';
         break;
 }
 ?>
+<script>
+    CKEDITOR.replace('bodytext');
+</script>
